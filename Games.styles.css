@@ -99,6 +99,25 @@ a[b-8ntxd7tj13] {
 
 
 
+/* /Pages/Poker.razor.rz.scp.css */
+
+.layout[b-c3ah7i6tz9] {
+    margin-left: auto;
+    margin-right: auto;
+    width: 98%;
+    text-align: center;
+}
+
+.area[b-c3ah7i6tz9] {
+    border-radius: 50%;
+    width: 512px;
+    height: 512px;
+    text-align: center;
+    background-color: darkgreen;
+    font-weight: bold;
+    display: inline-block;
+    align-items: center;
+}
 /* /Shared/MainLayout.razor.rz.scp.css */
 .page[b-5fm69uce70] {
     position: relative;
