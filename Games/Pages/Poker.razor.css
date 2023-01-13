@@ -5,11 +5,24 @@
     width: 98%;
     text-align: center;
 }
-
+/*
 .area {
     border-radius: 30%;
     width: 832px;
     height: 428px;
+    text-align: center;
+    background-color: #006000;
+    font-weight: bold;
+    display: inline-block;
+    align-items: center;
+    border: solid #463013 25px;
+}
+*/
+
+.area {
+    border-radius: 45%;
+    width: 60vw;
+    height: 30vw;
     text-align: center;
     background-color: #006000;
     font-weight: bold;
