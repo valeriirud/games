@@ -4,12 +4,6 @@
     color: #fff;
 }
 
-.profile-image-pic[b-8ntxd7tj13] {
-    height: 200px;
-    width: 200px;
-    object-fit: cover;
-}
-
 .cardbody-color[b-8ntxd7tj13] {
     background-color: #FCCD04;
 }
@@ -39,8 +33,70 @@ a[b-8ntxd7tj13] {
 .timecontrol[b-v9p7lovjpy] {
     width: 102px;
 }
+
+@media screen and (min-width: 800px) {
+    .space[b-v9p7lovjpy] {
+        height: 50px;
+        width: 50px;
+        padding: 2px;
+    }
+
+    .piece-red[b-v9p7lovjpy], .piece-none[b-v9p7lovjpy] {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .space[b-v9p7lovjpy] {
+        height: 60px;
+        width: 60px;
+        padding: 4px;
+    }
+
+    .piece-red[b-v9p7lovjpy], .piece-none[b-v9p7lovjpy] {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media screen and (min-width: 1300px) {
+    .space[b-v9p7lovjpy] {
+        height: 95px;
+        width: 95px;
+        padding: 10px;
+    }
+
+    .piece-red[b-v9p7lovjpy], .piece-none[b-v9p7lovjpy] {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+@media screen and (min-width: 1900px) {
+    .space[b-v9p7lovjpy] {
+        height: 120px;
+        width: 120px;
+        padding: 16px;
+    }
+
+    .piece-red[b-v9p7lovjpy], .piece-none[b-v9p7lovjpy] {
+        width: 80px;
+        height: 80px;
+    }
+}
+
 .space[b-v9p7lovjpy] {
-    width: 104px;
+    border: 1px #d7d7d7 solid;
+}
+
+.piece-red[b-v9p7lovjpy], .piece-none[b-v9p7lovjpy] {
+    border-radius: 50%;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
 }
 
 .timecontrol[b-v9p7lovjpy], .selectpicker[b-v9p7lovjpy], .space[b-v9p7lovjpy] {
@@ -56,22 +112,7 @@ a[b-8ntxd7tj13] {
     margin-right: 3px;
 }
 
-.space[b-v9p7lovjpy] {
-    height: 105px;
-    border: 1px #d7d7d7 solid;
-    padding: 14px;
-}
 
-.piece-red[b-v9p7lovjpy], .piece-none[b-v9p7lovjpy] {
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-    text-align: center;
-    color: #fff;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-}
 
 .piece-red[b-v9p7lovjpy] {
     background-color: #A64AC9;
@@ -109,14 +150,15 @@ a[b-8ntxd7tj13] {
 }
 
 .area[b-c3ah7i6tz9] {
-    border-radius: 50%;
-    width: 512px;
-    height: 512px;
+    border-radius: 30%;
+    width: 832px;
+    height: 428px;
     text-align: center;
-    background-color: darkgreen;
+    background-color: #006000;
     font-weight: bold;
     display: inline-block;
     align-items: center;
+    border: solid #463013 25px;
 }
 /* /Shared/MainLayout.razor.rz.scp.css */
 .page[b-5fm69uce70] {
