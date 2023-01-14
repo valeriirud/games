@@ -30,6 +30,7 @@
     align-items: center;
     border: solid #463013 25px;
     margin-top:5vw;
+    position: relative;
 }
 
 .croupier {
@@ -41,57 +42,57 @@
 }
 
 .position1 {
-    position: relative;
-    top: -13vw;
-    left: 34vw;
+    position: absolute;
+    top: -8vw;
+    left: 40vw;
 }
 
 .position2 {
-    position: relative;
-    top: -7vw;
-    left: 44vw;
+    position: absolute;
+    top: -1vw;
+    left: 55vw;
 }
 
 .position3 {
-    position: relative;
-    top: 14vw;
-    left: 38vw;
+    position: absolute;
+    top: 16vw;
+    left: 56vw;
 }
 
 .position4 {
-    position: relative;
-    top: 20vw;
-    left: 19vw;
+    position: absolute;
+    top: 25vw;
+    left: 42vw;
 }
 
 .position5 {
-    position: relative;
-    top: 21vw;
-    left: 0vw;
+    position: absolute;
+    top: 27vw;
+    left: 25vw;
 }
 
 .position6 {
-    position: relative;
-    top: 20vw;
-    left: -19vw;
+    position: absolute;
+    top: 25vw;
+    left: 9vw;
 }
 
 .position7 {
-    position: relative;
-    top: 14vw;
-    left: -38vw;
+    position: absolute;
+    top: 17vw;
+    left: -4vw;
 }
 
 .position8 {
-    position: relative;
-    top: -7vw;
-    left: -44vw;
+    position: absolute;
+    top: -2vw;
+    left: -4vw;
 }
 
-.position9{
-    position: relative;
-    top: -13vw;
-    left: -34vw;
+.position9 {
+    position: absolute;
+    top: -8vw;
+    left: 10vw;
 }
 
 
