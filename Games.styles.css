@@ -148,31 +148,18 @@ a[b-8ntxd7tj13] {
     width: 98%;
     text-align: center;
 }
-/*
-.area {
-    border-radius: 30%;
-    width: 832px;
-    height: 428px;
-    text-align: center;
-    background-color: #006000;
-    font-weight: bold;
-    display: inline-block;
-    align-items: center;
-    border: solid #463013 25px;
-}
-*/
 
 .area[b-c3ah7i6tz9] {
     border-radius: 45%;
-    width: 60vw;
-    height: 30vw;
+    width: 70vw;
+    height: 40vw;
     text-align: center;
     background-color: #006000;
     font-weight: bold;
     display: inline-block;
     align-items: center;
     border: solid #463013 25px;
-    margin-top:5vw;
+    margin-top:1vw;
     position: relative;
 }
 
@@ -182,30 +169,31 @@ a[b-8ntxd7tj13] {
     height: 5vw;
     margin: auto;
     border: groove #222 2vw;
+    position: relative;
 }
 
 .position1[b-c3ah7i6tz9] {
     position: absolute;
-    top: -8vw;
-    left: 40vw;
+    top: -7vw;
+    left: 45vw;
 }
 
 .position2[b-c3ah7i6tz9] {
     position: absolute;
     top: -1vw;
-    left: 55vw;
+    left: 61vw;
 }
 
 .position3[b-c3ah7i6tz9] {
     position: absolute;
-    top: 16vw;
+    top: 26vw;
     left: 56vw;
 }
 
 .position4[b-c3ah7i6tz9] {
     position: absolute;
-    top: 25vw;
-    left: 42vw;
+    top: 35vw;
+    left: 46vw;
 }
 
 .position5[b-c3ah7i6tz9] {
@@ -268,6 +256,26 @@ a[b-8ntxd7tj13] {
     .player[b-c3ah7i6tz9] {
         font-size: 1.8rem;
     }
+}
+
+.hands[b-c3ah7i6tz9] {
+    border: solid red 1px;
+    width: 15vw;
+    height: 12vw;
+}
+
+#hand1[b-c3ah7i6tz9] {
+    transform: rotate(11deg);    
+    position: absolute;
+    top: 1vw;
+    left: 38vw;
+}
+
+#hand2[b-c3ah7i6tz9] {
+    transform: rotate(40deg);
+    position: absolute;
+    top: 6vw;
+    left: 49vw;
 }
 /* /Shared/MainLayout.razor.rz.scp.css */
 .page[b-5fm69uce70] {
