@@ -2,35 +2,22 @@
 @inherits PokerBase
 
 <h3 class="text-center fw-bold">Texas hold'em</h3>
-
+<input class="btn btn-primary unfocus" style="position:absolute;" type="button" value="New Game" onclick="@(() => NewGame())">
 <div class="layout">
     <div class="area">
         <div class="croupier">
-            <img src="images/1.svg" style="width:4vw"/>
+            <img src="@CroupierImage" class="card-item"/>
         </div>
-        <i class="bi bi-person-fill position1 player"></i>
-        <div id="hand1" class="hands">
-            <img src="images/2.svg" style="width:4vw"/>
-            <img src="images/3.svg" style="width:4vw"/>
-            <img src="images/4.svg" style="width:4vw"/>
-            <img src="images/5.svg" style="width:4vw"/>
-
-        </div>
-        <i class="bi bi-person-fill position2 player"></i>
-        <div id="hand2" class="hands">
-            <img src="images/2.svg" style="width:4vw"/>
-            <img src="images/3.svg" style="width:4vw"/>
-            <img src="images/4.svg" style="width:4vw"/>
-            <img src="images/5.svg" style="width:4vw"/>
-
-        </div>
-
-        <i class="bi bi-person-fill position3 player"></i>
-        <i class="bi bi-person-fill position4 player"></i>
-        <i class="bi bi-person position5 player"></i>
-        <i class="bi bi-person-fill position6 player"></i>
-        <i class="bi bi-person-fill position7 player"></i> 
-        <i class="bi bi-person-fill position8 player"></i>
-        <i class="bi bi-person-fill position9 player"></i>
+        @for(int i = 0; i < 9; i ++)
+        {
+            string fill = i+1 != 5 ? "-fill" : string.Empty;
+            <i class="bi bi-person@(fill) position@((i+1).ToString()) player"></i>
+            <div id="hand@((i+1).ToString())" class="hands">
+                @for(int j = 0; j < 5; j ++)
+                {
+                    <img src="@(Images[i, j])" class="card-item"/>
+                }
+            </div>
+        }
     </div>
 </div>

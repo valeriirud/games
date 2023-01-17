@@ -8,14 +8,14 @@
 
 .area {
     border-radius: 45%;
-    width: 70vw;
-    height: 40vw;
+    width: 80vw;
+    height: 35vw;
     text-align: center;
     background-color: #006000;
     font-weight: bold;
     display: inline-block;
     align-items: center;
-    border: solid #463013 25px;
+    border: solid #463013 2vw;
     margin-top:1vw;
     position: relative;
 }
@@ -29,61 +29,68 @@
     position: relative;
 }
 
+.hands {
+    width: 14vw;
+    height: 12vw;
+}
+
+.card-item {
+    width: 3.6vw;
+}
+
 .position1 {
     position: absolute;
-    top: -7vw;
-    left: 45vw;
+    top: -8vw;
+    left: 46vw;
 }
 
 .position2 {
     position: absolute;
-    top: -1vw;
+    top: -5vw;
     left: 61vw;
 }
 
 .position3 {
     position: absolute;
-    top: 26vw;
-    left: 56vw;
+    top: 28vw;
+    left: 63vw;
 }
 
 .position4 {
     position: absolute;
-    top: 35vw;
-    left: 46vw;
+    top: 31vw;
+    left: 49vw;
 }
 
 .position5 {
     position: absolute;
-    top: 27vw;
-    left: 25vw;
+    top: 32vw;
+    left: 35vw;
 }
 
 .position6 {
     position: absolute;
-    top: 25vw;
-    left: 9vw;
+    top: 31vw;
+    left: 21vw;
 }
 
 .position7 {
     position: absolute;
-    top: 17vw;
-    left: -4vw;
+    top: 29vw;
+    left: 7vw;
 }
 
 .position8 {
     position: absolute;
-    top: -2vw;
-    left: -4vw;
+    top: -4vw;
+    left: 7vw;
 }
 
 .position9 {
     position: absolute;
     top: -8vw;
-    left: 10vw;
+    left: 24vw;
 }
-
-
 
 @media screen and (min-width: 600px) {
     .player {
@@ -115,22 +122,78 @@
     }
 }
 
-.hands {
-    border: solid red 1px;
-    width: 15vw;
-    height: 12vw;
-}
+
 
 #hand1 {
-    transform: rotate(11deg);    
+    transform: rotate(3deg);    
     position: absolute;
     top: 1vw;
-    left: 38vw;
+    left: 42vw;
 }
 
 #hand2 {
-    transform: rotate(40deg);
+    transform: rotate(20deg);
     position: absolute;
-    top: 6vw;
-    left: 49vw;
+    top: 4vw;
+    left: 55vw;
+}
+
+#hand3 {
+    transform: rotate(162deg);
+    position: absolute;
+    top: 15vw;
+    left: 56vw;
+}
+
+#hand4 {
+    transform: rotate(175deg);
+    position: absolute;
+    top: 18vw;
+    left: 44vw;
+}
+
+#hand5 {
+    transform: rotate(180deg);
+    position: absolute;
+    top: 19vw;
+    left: 31vw;
+}
+
+#hand6 {
+    transform: rotate(-173deg);
+    position: absolute;
+    top: 18vw;
+    left: 18vw;
+}
+
+#hand7 {
+    transform: rotate(-158deg);
+    position: absolute;
+    top: 15vw;
+    left: 6vw;
+}
+
+#hand8 {
+    transform: rotate(-22deg);
+    position: absolute;
+    top: 4vw;
+    left: 6vw;
+}
+
+#hand9 {
+    transform: rotate(-3deg);
+    position: absolute;
+    top: 1vw;
+    left: 20vw;
+}
+
+.unfocus:focus, .unfocus:active {
+    outline: none;
+    box-shadow: none;
+}
+
+.btn-primary, .btn-primary:hover, .unfocus:focus, .unfocus:active {
+    color: #0e1c36;
+    background-color: #fff;
+    border-color: #d7d7d7;
 }
