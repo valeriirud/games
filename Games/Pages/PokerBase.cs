@@ -63,19 +63,20 @@ public class PokerBase : ComponentBase
             @"images\spades_king.svg",
             @"images\spades_ace.svg"
         };
-    public void NewGame()
+    public async Task NewGame()
     {
         Clear();
-        int index = GetIndex();
-        CroupierImage = _images[index];
-        for (int i = 0; i < 9; i++)
-        {
-            for (int j = 0; j < 5; j++)
-            {
-                index = GetIndex();
-                Images[i, j] = _images[index];
-            }
-        }
+        await DealerSelection();
+        //int index = GetIndex();
+        //CroupierImage = _images[index];
+        //for (int i = 0; i < 9; i++)
+        //{
+        //    for (int j = 0; j < 5; j++)
+        //    {
+        //        index = GetIndex();
+        //        Images[i, j] = _images[index];
+        //    }
+        //}
     }
 
     void Clear()
@@ -108,5 +109,20 @@ public class PokerBase : ComponentBase
             }
         }
         return index;
+    }
+
+    async Task DealerSelection()
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            int index = GetIndex();
+            CroupierImage = _images[index];
+            StateHasChanged();
+            await Task.Delay(200);
+            CroupierImage = string.Empty;
+            StateHasChanged();
+            Images[i, 0] = _images[index];
+            StateHasChanged();
+        }
     }
 }

@@ -2,7 +2,7 @@
 @inherits PokerBase
 
 <h3 class="text-center fw-bold">Texas hold'em</h3>
-<input class="btn btn-primary unfocus" style="position:absolute;" type="button" value="New Game" onclick="@(() => NewGame())">
+<input class="btn btn-primary unfocus" style="position:absolute;" type="button" value="New Game" onclick="@(async () => await NewGame())" />
 <div class="layout">
     <div class="area">
         <div class="croupier">
