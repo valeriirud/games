@@ -38,6 +38,10 @@
     width: 3.6vw;
 }
 
+.dialer {
+    width: 3.5vw;
+}
+
 .position1 {
     position: absolute;
     top: -8vw;

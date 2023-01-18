@@ -11,12 +11,14 @@
         @for(int i = 0; i < 9; i ++)
         {
             string fill = i+1 != 5 ? "-fill" : string.Empty;
-            <i class="bi bi-person@(fill) position@((i+1).ToString()) player"></i>
-            <div id="hand@((i+1).ToString())" class="hands">
+            string dialer = i == DialerId ? ImageDialer : string.Empty;
+            <i class="bi bi-person@(fill) position@((i+1).ToString()) player"></i>            
+            <div id="hand@((i+1).ToString())" class="hands">                
                 @for(int j = 0; j < 5; j ++)
                 {
                     <img src="@(Images[i, j])" class="card-item"/>
-                }
+                }                
+                <img src="@dialer" class="dialer" />
             </div>
         }
     </div>
