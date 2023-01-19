@@ -8,16 +8,44 @@
 
 .area {
     border-radius: 45%;
-    width: 80vw;
-    height: 35vw;
+    width: 70vw;
+    height: 30vw;
     text-align: center;
     background-color: #006000;
     font-weight: bold;
     display: inline-block;
     align-items: center;
     border: solid #463013 2vw;
-    margin-top:1vw;
+    margin-top: 4vw;
     position: relative;
+}
+
+.area-text {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    color: yellow;
+    font-size: 8vw;
+    padding-top: 6vw;
+}
+
+#board {
+    border: solid yellow 0.2vw;
+    width: 28vw;
+    height: 7vw;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+#board img{
+    margin: 0.5vw;
 }
 
 .croupier {
@@ -32,14 +60,24 @@
 .hands {
     width: 14vw;
     height: 12vw;
+    font-weight: bold;
 }
 
 .card-item {
-    width: 3.6vw;
+    width: 4.0vw;
 }
 
 .dialer {
     width: 3.5vw;
+}
+
+#bank {
+    position: absolute;
+    top: 12vw;
+    left: 62vw;
+    width: 5vw;
+    height: 3vw;
+    background-color: #ccc;
 }
 
 .position1 {
@@ -96,99 +134,201 @@
     left: 24vw;
 }
 
+@media screen and (min-width: 400px) {
+    .text, #bank, .head {
+        font-size: 0.2rem;
+    }
+}
+
 @media screen and (min-width: 600px) {
-    .player {
-        font-size: 2.0rem;
+    .text, #bank, .head {
+        font-size: 0.4rem;
     }
 }
 
 @media screen and (min-width: 800px) {
-    .player {
-        font-size: 3.0rem;
+    .text, #bank, .head {
+        font-size: 0.6rem;
     }
 }
 
 @media screen and (min-width: 1000px) {
-    .player {
-        font-size: 4.0rem;
+    .text, #bank, .head {
+        font-size: 0.8rem;
     }
 }
 
 @media screen and (min-width: 1300px) {
-    .player {
-        font-size: 5.0rem;
+    .text, #bank, .head {
+        font-size: 1.0rem;
     }
 }
 
 @media screen and (min-width: 1900px) {
-    .player {
+    .text, #bank, .head {
         font-size: 1.8rem;
     }
 }
 
+.text, .text-you, .head {
+    color: #fff;
+    padding-left: 0.5vw;
+}
 
+.text-top {
+    border-radius: 3vw 3vw 0 0;
+    border: 5vw;
+}
+
+.text-you {
+    background-color: #ddd;
+    color: #000;
+}
+
+.text {
+    color: #fff;
+    text-align: left;
+}
+
+.text, .no-think {
+    background-color: #555;
+}
+
+.think {
+    background-color: red;
+}
+
+.head {
+    border-radius: 50%;
+    width: 4.0vw;
+    height: 4.0vw;
+    margin: auto;
+    color: #fff;
+    padding-top:0.5vw;
+    text-align: left;
+}
+
+.players {
+    width: 5.5vw;
+    height: 7.0vw;
+    vertical-align: top;
+}
+
+#player1 {
+    position: absolute;
+    top: -7vw;
+    left: 42vw;
+}
+
+#player2 {
+    position: absolute;
+    top: -4vw;
+    left: 57vw;
+}
+
+#player3 {
+    position: absolute;
+    top: 24vw;
+    left: 57vw;
+}
+
+#player4 {
+    position: absolute;
+    top: 28vw;
+    left: 43vw;
+}
+
+#player5 {
+    position: absolute;
+    top: 28.5vw;
+    left: 30vw;
+}
+
+#player6 {
+    position: absolute;
+    top: 28vw;
+    left: 16vw;
+}
+
+#player7 {
+    position: absolute;
+    top: 24vw;
+    left: 3vw;
+}
+
+#player8 {
+    position: absolute;
+    top: -4vw;
+    left: 3vw;
+}
+
+#player9 {
+    position: absolute;
+    top: -7vw;
+    left: 18vw;
+}
 
 #hand1 {
     transform: rotate(3deg);    
     position: absolute;
     top: 1vw;
-    left: 42vw;
+    left:38vw;
 }
 
 #hand2 {
     transform: rotate(20deg);
     position: absolute;
     top: 4vw;
-    left: 55vw;
+    left: 49vw;
 }
 
 #hand3 {
     transform: rotate(162deg);
     position: absolute;
-    top: 15vw;
-    left: 56vw;
+    top: 10vw;
+    left: 48vw;
 }
 
 #hand4 {
     transform: rotate(175deg);
     position: absolute;
-    top: 18vw;
-    left: 44vw;
+    top: 12vw;
+    left: 38vw;
 }
 
 #hand5 {
     transform: rotate(180deg);
     position: absolute;
-    top: 19vw;
-    left: 31vw;
+    top: 13vw;
+    left: 26vw;
 }
 
 #hand6 {
     transform: rotate(-173deg);
     position: absolute;
-    top: 18vw;
-    left: 18vw;
+    top: 12vw;
+    left: 13vw;
 }
 
 #hand7 {
     transform: rotate(-158deg);
     position: absolute;
-    top: 15vw;
-    left: 6vw;
+    top: 10vw;
+    left: 3vw;
 }
 
 #hand8 {
     transform: rotate(-22deg);
     position: absolute;
     top: 4vw;
-    left: 6vw;
+    left: 3vw;
 }
 
 #hand9 {
     transform: rotate(-3deg);
     position: absolute;
     top: 1vw;
-    left: 20vw;
+    left: 14vw;
 }
 
 .unfocus:focus, .unfocus:active {

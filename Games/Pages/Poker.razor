@@ -1,18 +1,45 @@
 ﻿@page "/poker"
 @inherits PokerBase
 
-<h3 class="text-center fw-bold">Texas hold'em</h3>
 <input class="btn btn-primary unfocus" style="position:absolute;" type="button" value="New Game" onclick="@(async () => await NewGame())" />
 <div class="layout">
     <div class="area">
+        <div class="area-text"><p>@Title</p></div>
         <div class="croupier">
             <img src="@CroupierImage" class="card-item"/>
         </div>
-        @for(int i = 0; i < 9; i ++)
+        @{
+            string style = Title == string.Empty ? string.Empty : "display:none";
+            <div id="bank" style="@style">
+                <div>Bank</div>
+                <div>$@Bank</div>
+            </div>            
+            <div id="board" style="@style">
+            @for(int i = 0; i < 5; i ++)
+            {
+                <img src="@(Board[i])" class="card-item"/>
+            }
+            </div>
+        }
+        @for(int i = 0; i < PLAYERS_COUNT; i ++)
         {
-            string fill = i+1 != 5 ? "-fill" : string.Empty;
+            int myId = PLAYERS_COUNT / 2;
+            string fill = i != myId ? "-fill" : string.Empty;
             string dialer = i == DialerId ? ImageDialer : string.Empty;
-            <i class="bi bi-person@(fill) position@((i+1).ToString()) player"></i>            
+            string think = "no-think";
+            <div id="player@((i+1).ToString())" class="players">
+                @if(! string.IsNullOrEmpty(Actions[i]))
+                {
+                    think = "think";
+                }
+                <div class="head @think">@Actions[i]</div>
+                @{
+                    string player = i == myId ? "You" : $"Player {(i+1).ToString()}";
+                    string className = i == myId ? "text-you" : "text";
+                    <div class="text-top @className">@player</div>
+                    <div class="@className">$@Bankroll[i]</div>
+                }
+            </div>
             <div id="hand@((i+1).ToString())" class="hands">                
                 @for(int j = 0; j < 5; j ++)
                 {
