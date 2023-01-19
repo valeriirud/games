@@ -25,8 +25,12 @@
         {
             int myId = PLAYERS_COUNT / 2;
             string fill = i != myId ? "-fill" : string.Empty;
-            string dialer = i == DialerId ? ImageDialer : string.Empty;
+            string dialer = i == DealerId ? ImageDialer : string.Empty;
             string think = "no-think";
+            if (Bet[i] > 0)
+            {
+                <div id="bet@((i+1).ToString())" class="bets">$@Bet[i]</div>
+            }
             <div id="player@((i+1).ToString())" class="players">
                 @if(! string.IsNullOrEmpty(Actions[i]))
                 {

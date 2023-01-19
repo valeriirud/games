@@ -16,7 +16,7 @@
     display: inline-block;
     align-items: center;
     border: solid #463013 2vw;
-    margin-top: 4vw;
+    margin-top: 6vw;
     position: relative;
 }
 
@@ -80,6 +80,71 @@
     background-color: #ccc;
 }
 
+.bets {
+    width: 3vw;
+    height: 3vw;
+    background-color: darkblue;
+    color: #fff;
+    border-radius: 50%;
+    padding-top: 0.6vw;
+}
+
+#bet1 {
+    position: absolute;
+    top: 7vw;
+    left: 46vw;
+}
+
+#bet2 {
+    position: absolute;
+    top: 10vw;
+    left: 54vw;
+}
+
+#bet3 {
+    position: absolute;
+    top: 14vw;
+    left: 53vw;
+}
+
+#bet4 {
+    position: absolute;
+    top: 16vw;
+    left: 46vw;
+}
+
+#bet5 {
+    position: absolute;
+    top: 17vw;
+    left: 32vw;
+}
+
+#bet6 {
+    position: absolute;
+    top: 17vw;
+    left: 23vw;
+}
+
+#bet7 {
+    position: absolute;
+    top: 13vw;
+    left: 9vw;
+}
+
+#bet8 {
+    position: absolute;
+    top: 9vw;
+    left: 12vw;
+}
+
+#bet9 {
+    position: absolute;
+    top: 6vw;
+    left: 25vw;
+}
+
+
+/*
 .position1 {
     position: absolute;
     top: -8vw;
@@ -133,39 +198,39 @@
     top: -8vw;
     left: 24vw;
 }
-
+*/
 @media screen and (min-width: 400px) {
-    .text, #bank, .head {
+    .text, .text-you, #bank, .head, .bets {
         font-size: 0.2rem;
     }
 }
 
 @media screen and (min-width: 600px) {
-    .text, #bank, .head {
+    .text, .text-you, #bank, .head, .bets {
         font-size: 0.4rem;
     }
 }
 
 @media screen and (min-width: 800px) {
-    .text, #bank, .head {
+    .text, .text-you, #bank, .head, .bets {
         font-size: 0.6rem;
     }
 }
 
 @media screen and (min-width: 1000px) {
-    .text, #bank, .head {
+    .text, .text-you, #bank, .head, .bets {
         font-size: 0.8rem;
     }
 }
 
 @media screen and (min-width: 1300px) {
-    .text, #bank, .head {
+    .text, .text-you, #bank, .head, .bets {
         font-size: 1.0rem;
     }
 }
 
 @media screen and (min-width: 1900px) {
-    .text, #bank, .head {
+    .text, .text-you, #bank, .head, .bets {
         font-size: 1.8rem;
     }
 }
@@ -216,13 +281,13 @@
 
 #player1 {
     position: absolute;
-    top: -7vw;
+    top: -8vw;
     left: 42vw;
 }
 
 #player2 {
     position: absolute;
-    top: -4vw;
+    top: -5vw;
     left: 57vw;
 }
 
@@ -258,13 +323,13 @@
 
 #player8 {
     position: absolute;
-    top: -4vw;
+    top: -5vw;
     left: 3vw;
 }
 
 #player9 {
     position: absolute;
-    top: -7vw;
+    top: -8vw;
     left: 18vw;
 }
 
@@ -285,28 +350,28 @@
 #hand3 {
     transform: rotate(162deg);
     position: absolute;
-    top: 10vw;
+    top: 11vw;
     left: 48vw;
 }
 
 #hand4 {
     transform: rotate(175deg);
     position: absolute;
-    top: 12vw;
+    top: 13vw;
     left: 38vw;
 }
 
 #hand5 {
     transform: rotate(180deg);
     position: absolute;
-    top: 13vw;
+    top: 14vw;
     left: 26vw;
 }
 
 #hand6 {
     transform: rotate(-173deg);
     position: absolute;
-    top: 12vw;
+    top: 13vw;
     left: 13vw;
 }
 

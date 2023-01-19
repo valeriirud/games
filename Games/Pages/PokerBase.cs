@@ -12,13 +12,15 @@ public class PokerBase : ComponentBase
     public string[] Board { get; } = new string[5];
     public string CroupierImage { get; set; } = string.Empty;
     public string ImageDialer { get; } = @"images\dialer.svg";
-    public int DialerId { get; set; } = -1;
+    public int DealerId { get; set; } = -1;
     public int Bank { get; set; } = 0;
 
     public string[] Actions { get; } = new string[PLAYERS_COUNT];
     
 
     public int[] Bankroll { get; } = new int[PLAYERS_COUNT];
+
+    public int[] Bet { get; } = new int[PLAYERS_COUNT];
 
     readonly List<Tuple<int,int>> _indexes = new();
     readonly List<Tuple<int, int>>[] _hands = new List<Tuple<int, int>>[PLAYERS_COUNT];
@@ -94,19 +96,10 @@ public class PokerBase : ComponentBase
         {
             _hands[i] = new ();
             Bankroll[i] = MAX_BANKROLL;
+            Bet[i] = 0;
             Bank = 0;
-            DialerId = -1;
+            DealerId = -1;
         }
-    }
-    public async Task NewGame()
-    {
-        Inint();
-        Clear();
-        await DealerSelection();
-        await SmallBlind();
-        await BigBlind();
-        await Task.Delay(3000);
-        await PocketDistribution();
     }
 
     void Clear()
@@ -122,6 +115,18 @@ public class PokerBase : ComponentBase
                 Images[i,j] = string.Empty;
             }
         }                
+    }
+
+    public async Task NewGame()
+    {
+        Inint();
+        Clear();
+        await DealerSelection();
+        await SmallBlind();
+        await BigBlind();
+        await Task.Delay(3000);
+        await PocketDistribution();
+        await PreFlop();
     }
 
     Tuple<int, int> GetIndex()
@@ -182,7 +187,7 @@ public class PokerBase : ComponentBase
         await Task.Delay(5000);
         StateHasChanged();
         Clear();
-        DialerId = id;
+        DealerId = id;
         await Task.Delay(3000);
         StateHasChanged();
     }
@@ -229,18 +234,18 @@ public class PokerBase : ComponentBase
     async Task SmallBlind()
     {
         int id = Blind(1, MIN_BET / 2);
-        Actions[id] = "Small Blind";
-        await Task.Delay(3000);
-        StateHasChanged();
-        Actions[id] = string.Empty;
-        await Task.Delay(3000);
-        StateHasChanged();
+        await ShowAction(id, "Small Blind");
     }
 
     async Task BigBlind()
     {
         int id = Blind(2, MIN_BET);
-        Actions[id] = "Big Blind";
+        await ShowAction(id, "Big Blind");
+    }
+
+    async Task ShowAction(int id, string message)
+    {
+        Actions[id] = message;
         await Task.Delay(3000);
         StateHasChanged();
         Actions[id] = string.Empty;
@@ -252,13 +257,14 @@ public class PokerBase : ComponentBase
     {
         int id = GetNextId(n);
         Bankroll[id] -= bet;
+        Bet[id] += bet;
         Bank += bet;
         return id;
     }
 
     int GetNextId(int n)
     {
-        int id = DialerId + n;
+        int id = DealerId + n;
         if (id >= PLAYERS_COUNT)
         {
             id = id - PLAYERS_COUNT;
@@ -275,13 +281,13 @@ public class PokerBase : ComponentBase
             for (int i = 0; i < PLAYERS_COUNT; i++)
             {
                 Tuple<int, int> index = GetIndex();
-                string image = nextId != PLAYERS_COUNT / 2 ? CardBack : _images[index.Item1, index.Item2];
+                string image = CardBack;
                 CroupierImage = image;
                 StateHasChanged();
                 await Task.Delay(200);
                 CroupierImage = string.Empty;
                 StateHasChanged();
-                Images[nextId, j] = image;
+                Images[nextId, j] = image = nextId != PLAYERS_COUNT / 2 ? CardBack : _images[index.Item1, index.Item2]; ;
                 _hands[nextId].Add(index);
                 StateHasChanged();
                 nextId++;
@@ -294,6 +300,28 @@ public class PokerBase : ComponentBase
         
         await Task.Delay(3000);
         StateHasChanged();
+    }
+
+    async Task PreFlop()
+    {
+        int id = DealerId + 3;
+        for (int i = 0; i < PLAYERS_COUNT; i++)
+        {
+            if (id >= PLAYERS_COUNT)
+            {
+                id -= PLAYERS_COUNT;
+            }
+            DoBet(id, MIN_BET);
+            await ShowAction(id, "Call");
+            id++;
+        }        
+    }
+
+    void DoBet(int id, int value)
+    {
+        Bet[id] += value;
+        Bankroll[id] -= value;
+        Bank += value;
     }
 
     async Task CommonDistribution()
