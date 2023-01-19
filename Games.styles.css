@@ -151,16 +151,44 @@ a[b-8ntxd7tj13] {
 
 .area[b-c3ah7i6tz9] {
     border-radius: 45%;
-    width: 80vw;
-    height: 35vw;
+    width: 70vw;
+    height: 30vw;
     text-align: center;
     background-color: #006000;
     font-weight: bold;
     display: inline-block;
     align-items: center;
     border: solid #463013 2vw;
-    margin-top:1vw;
+    margin-top: 4vw;
     position: relative;
+}
+
+.area-text[b-c3ah7i6tz9] {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    color: yellow;
+    font-size: 8vw;
+    padding-top: 6vw;
+}
+
+#board[b-c3ah7i6tz9] {
+    border: solid yellow 0.2vw;
+    width: 28vw;
+    height: 7vw;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+#board img[b-c3ah7i6tz9]{
+    margin: 0.5vw;
 }
 
 .croupier[b-c3ah7i6tz9] {
@@ -175,14 +203,24 @@ a[b-8ntxd7tj13] {
 .hands[b-c3ah7i6tz9] {
     width: 14vw;
     height: 12vw;
+    font-weight: bold;
 }
 
 .card-item[b-c3ah7i6tz9] {
-    width: 3.6vw;
+    width: 4.0vw;
 }
 
 .dialer[b-c3ah7i6tz9] {
     width: 3.5vw;
+}
+
+#bank[b-c3ah7i6tz9] {
+    position: absolute;
+    top: 12vw;
+    left: 62vw;
+    width: 5vw;
+    height: 3vw;
+    background-color: #ccc;
 }
 
 .position1[b-c3ah7i6tz9] {
@@ -239,99 +277,201 @@ a[b-8ntxd7tj13] {
     left: 24vw;
 }
 
+@media screen and (min-width: 400px) {
+    .text[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9] {
+        font-size: 0.2rem;
+    }
+}
+
 @media screen and (min-width: 600px) {
-    .player[b-c3ah7i6tz9] {
-        font-size: 2.0rem;
+    .text[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9] {
+        font-size: 0.4rem;
     }
 }
 
 @media screen and (min-width: 800px) {
-    .player[b-c3ah7i6tz9] {
-        font-size: 3.0rem;
+    .text[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9] {
+        font-size: 0.6rem;
     }
 }
 
 @media screen and (min-width: 1000px) {
-    .player[b-c3ah7i6tz9] {
-        font-size: 4.0rem;
+    .text[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9] {
+        font-size: 0.8rem;
     }
 }
 
 @media screen and (min-width: 1300px) {
-    .player[b-c3ah7i6tz9] {
-        font-size: 5.0rem;
+    .text[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9] {
+        font-size: 1.0rem;
     }
 }
 
 @media screen and (min-width: 1900px) {
-    .player[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9] {
         font-size: 1.8rem;
     }
 }
 
+.text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9] {
+    color: #fff;
+    padding-left: 0.5vw;
+}
 
+.text-top[b-c3ah7i6tz9] {
+    border-radius: 3vw 3vw 0 0;
+    border: 5vw;
+}
+
+.text-you[b-c3ah7i6tz9] {
+    background-color: #ddd;
+    color: #000;
+}
+
+.text[b-c3ah7i6tz9] {
+    color: #fff;
+    text-align: left;
+}
+
+.text[b-c3ah7i6tz9], .no-think[b-c3ah7i6tz9] {
+    background-color: #555;
+}
+
+.think[b-c3ah7i6tz9] {
+    background-color: red;
+}
+
+.head[b-c3ah7i6tz9] {
+    border-radius: 50%;
+    width: 4.0vw;
+    height: 4.0vw;
+    margin: auto;
+    color: #fff;
+    padding-top:0.5vw;
+    text-align: left;
+}
+
+.players[b-c3ah7i6tz9] {
+    width: 5.5vw;
+    height: 7.0vw;
+    vertical-align: top;
+}
+
+#player1[b-c3ah7i6tz9] {
+    position: absolute;
+    top: -7vw;
+    left: 42vw;
+}
+
+#player2[b-c3ah7i6tz9] {
+    position: absolute;
+    top: -4vw;
+    left: 57vw;
+}
+
+#player3[b-c3ah7i6tz9] {
+    position: absolute;
+    top: 24vw;
+    left: 57vw;
+}
+
+#player4[b-c3ah7i6tz9] {
+    position: absolute;
+    top: 28vw;
+    left: 43vw;
+}
+
+#player5[b-c3ah7i6tz9] {
+    position: absolute;
+    top: 28.5vw;
+    left: 30vw;
+}
+
+#player6[b-c3ah7i6tz9] {
+    position: absolute;
+    top: 28vw;
+    left: 16vw;
+}
+
+#player7[b-c3ah7i6tz9] {
+    position: absolute;
+    top: 24vw;
+    left: 3vw;
+}
+
+#player8[b-c3ah7i6tz9] {
+    position: absolute;
+    top: -4vw;
+    left: 3vw;
+}
+
+#player9[b-c3ah7i6tz9] {
+    position: absolute;
+    top: -7vw;
+    left: 18vw;
+}
 
 #hand1[b-c3ah7i6tz9] {
     transform: rotate(3deg);    
     position: absolute;
     top: 1vw;
-    left: 42vw;
+    left:38vw;
 }
 
 #hand2[b-c3ah7i6tz9] {
     transform: rotate(20deg);
     position: absolute;
     top: 4vw;
-    left: 55vw;
+    left: 49vw;
 }
 
 #hand3[b-c3ah7i6tz9] {
     transform: rotate(162deg);
     position: absolute;
-    top: 15vw;
-    left: 56vw;
+    top: 10vw;
+    left: 48vw;
 }
 
 #hand4[b-c3ah7i6tz9] {
     transform: rotate(175deg);
     position: absolute;
-    top: 18vw;
-    left: 44vw;
+    top: 12vw;
+    left: 38vw;
 }
 
 #hand5[b-c3ah7i6tz9] {
     transform: rotate(180deg);
     position: absolute;
-    top: 19vw;
-    left: 31vw;
+    top: 13vw;
+    left: 26vw;
 }
 
 #hand6[b-c3ah7i6tz9] {
     transform: rotate(-173deg);
     position: absolute;
-    top: 18vw;
-    left: 18vw;
+    top: 12vw;
+    left: 13vw;
 }
 
 #hand7[b-c3ah7i6tz9] {
     transform: rotate(-158deg);
     position: absolute;
-    top: 15vw;
-    left: 6vw;
+    top: 10vw;
+    left: 3vw;
 }
 
 #hand8[b-c3ah7i6tz9] {
     transform: rotate(-22deg);
     position: absolute;
     top: 4vw;
-    left: 6vw;
+    left: 3vw;
 }
 
 #hand9[b-c3ah7i6tz9] {
     transform: rotate(-3deg);
     position: absolute;
     top: 1vw;
-    left: 20vw;
+    left: 14vw;
 }
 
 .unfocus:focus[b-c3ah7i6tz9], .unfocus:active[b-c3ah7i6tz9] {
