@@ -28,7 +28,7 @@
     right: 0;
     margin: auto;
     color: yellow;
-    font-size: 8vw;
+    font-size: 7vw;
     padding-top: 6vw;
 }
 
@@ -241,21 +241,23 @@
 }
 
 .text-top {
-    border-radius: 3vw 3vw 0 0;
-    border: 5vw;
+    /*border-radius: 3vw 3vw 0 0;
+    border: 5vw;*/
 }
 
-.text-you {
+.text-you, .players-you {
     background-color: #ddd;
     color: #000;
 }
 
 .text {
     color: #fff;
+}
+.text-you, .text{
     text-align: left;
 }
 
-.text, .no-think {
+.text, .no-think, .players {
     background-color: #555;
 }
 
@@ -264,73 +266,81 @@
 }
 
 .head {
+    border-style: outset;
     border-radius: 50%;
     width: 4.0vw;
     height: 4.0vw;
     margin: auto;
     color: #fff;
-    padding-top:0.5vw;
+    padding-top: 0.5vw;
     text-align: left;
+    float: left;
+    display: block;
 }
 
-.players {
-    width: 5.5vw;
-    height: 7.0vw;
-    vertical-align: top;
+.body {
+    float: left;
+    display: block;
+    width: 6.0vw;
+}
+
+.players, .players-you {
+    border-radius: 3vw 1vw 1vw 3vw;
+    border: solid #000 0.5vw;
 }
 
 #player1 {
     position: absolute;
-    top: -8vw;
-    left: 42vw;
+    top: -6vw;
+    left: 40vw;
 }
 
 #player2 {
     position: absolute;
-    top: -5vw;
-    left: 57vw;
+    top: -3vw;
+    left: 55vw;
 }
 
 #player3 {
     position: absolute;
     top: 24vw;
-    left: 57vw;
+    left: 52vw;
 }
 
 #player4 {
     position: absolute;
     top: 28vw;
-    left: 43vw;
+    left: 40vw;
 }
 
 #player5 {
     position: absolute;
-    top: 28.5vw;
-    left: 30vw;
+    top: 28vw;
+    left: 27vw;
 }
 
 #player6 {
     position: absolute;
     top: 28vw;
-    left: 16vw;
+    left: 14vw;
 }
 
 #player7 {
     position: absolute;
     top: 24vw;
-    left: 3vw;
+    left: 1vw;
 }
 
 #player8 {
     position: absolute;
-    top: -5vw;
-    left: 3vw;
+    top: -3vw;
+    left: 1vw;
 }
 
 #player9 {
     position: absolute;
-    top: -8vw;
-    left: 18vw;
+    top: -6vw;
+    left: 16vw;
 }
 
 #hand1 {

@@ -15,7 +15,7 @@
                 <div>$@Bank</div>
             </div>            
             <div id="board" style="@style">
-            @for(int i = 0; i < 5; i ++)
+            @for(int i = 0; i < COMMON_COUNT; i ++)
             {
                 <img src="@(Board[i])" class="card-item"/>
             }
@@ -31,21 +31,24 @@
             {
                 <div id="bet@((i+1).ToString())" class="bets">$@Bet[i]</div>
             }
-            <div id="player@((i+1).ToString())" class="players">
+            string className = i == myId ? "-you" : "";
+            <div id="player@((i+1).ToString())" class="players@(className)">
                 @if(! string.IsNullOrEmpty(Actions[i]))
                 {
                     think = "think";
                 }
                 <div class="head @think">@Actions[i]</div>
+                <div class="body">
                 @{
                     string player = i == myId ? "You" : $"Player {(i+1).ToString()}";
-                    string className = i == myId ? "text-you" : "text";
-                    <div class="text-top @className">@player</div>
-                    <div class="@className">$@Bankroll[i]</div>
+                    
+                    <div class="text-top text@(className)">@player</div>
+                    <div class="text@(className)">$@Bankroll[i]</div>
                 }
+                </div>
             </div>
             <div id="hand@((i+1).ToString())" class="hands">                
-                @for(int j = 0; j < 5; j ++)
+                @for(int j = 0; j < HANDS_COUNT; j ++)
                 {
                     <img src="@(Images[i, j])" class="card-item"/>
                 }                
