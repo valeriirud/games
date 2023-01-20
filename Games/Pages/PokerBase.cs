@@ -113,6 +113,10 @@ public class PokerBase : ComponentBase
             }
         }
         _board.Clear();
+        for (int j = 0; j < COMMON_COUNT; j++)
+        {
+            Board[j] = string.Empty;
+        }
     }
 
     public async Task NewGame()
