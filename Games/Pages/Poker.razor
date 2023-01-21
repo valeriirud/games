@@ -3,6 +3,7 @@
 
 <input class="btn btn-primary unfocus" style="position:absolute;" type="button" value="New Game" onclick="@(async () => await NewGame())" />
 <div class="layout">
+    <div class="border">
     <div class="area">
         <div class="area-text"><p>@Title</p></div>
         <div class="croupier">
@@ -55,5 +56,6 @@
                 <img src="@dialer" class="dialer" />
             </div>
         }
+    </div>
     </div>
 </div>
