@@ -5,33 +5,13 @@
     width: 98%;
     height: 98%;
     text-align: center;
-    background-color: #000;
+    background-color: #F5F5F5;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #0a0a0a;
-    background-size: 0.7vw 0.7vw;
-}
-.layout{
+    /*background-size: 0.3vw 0.3vw;
     background-image: -webkit-repeating-linear-gradient(315deg, #232323, #232323 10%, transparent 10%, transparent 50% ), -webkit-repeating-linear-gradient(225deg, #232323, #232323 10%, transparent 10%, transparent 50% );
-    background-image: repeating-linear-gradient(135deg, #232323, #232323 10%, transparent 10%, transparent 50% ), repeating-linear-gradient(-135deg, #232323, #232323 10%, transparent 10%, transparent 50% );
-    
-}
-
-.area {
-    border-radius: 45%;
-    width: 70vw;
-    height: 30vw;
-    text-align: center;
-    background-color: #006000;
-    font-weight: bold;
-    display: inline-block;
-    align-items: center;
-    margin: auto;
-    position: relative;
-    background-image: -webkit-repeating-radial-gradient( circle, #293c4e, #293c4e 45%, transparent 45%, transparent 60%, #293c4e 60%, #293c4e 100% );
-    background-image: repeating-radial-gradient( circle, #3a4e63, #3a4e63 45%, transparent 45%, transparent 60%, #3a4e63 60%, #3a4e63 100% );
-    background-size: 0.7vw 0.7vw;
+    background-image: repeating-linear-gradient(135deg, #232323, #232323 10%, transparent 10%, transparent 50% ), repeating-linear-gradient(-135deg, #232323, #232323 10%, transparent 10%, transparent 50% );*/
 }
 
 .border {
@@ -49,20 +29,40 @@
     box-shadow: inset -0.5vw -0.5vw 0.5vw 0 rgba(0,0,0,.5), inset 0.5vw 0.5vw 0.5vw 0 rgba(255,255,255,0.5);
 }
 
+.area {
+    border-radius: 45%;
+    width: 70vw;
+    height: 30vw;
+    text-align: center;
+    background-color: #21421E;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    margin: auto;
+    position: relative;
+}
+
 .area-text {
+    margin: auto;
+    color: yellow;
+    font-size: 7vw;
+}
+
+.croupier {
+    background-color: #555;
+    width: 10vw;
+    height: 5vw;
+    border: groove #222 2vw;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    margin: auto;
-    color: yellow;
-    font-size: 7vw;
-    padding-top: 6vw;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #board {
-    border: solid yellow 0.2vw;
     width: 28vw;
     height: 7vw;
     position: absolute;
@@ -78,15 +78,6 @@
     margin: 0.5vw;
 }
 
-.croupier {
-    background-color: #555;
-    width: 10vw;
-    height: 5vw;
-    margin: auto;
-    border: groove #222 2vw;
-    position: relative;
-}
-
 .hands {
     width: 14vw;
     height: 12vw;
@@ -96,6 +87,16 @@
 .card-item {
     width: 4.0vw;
 }
+.common-cards {
+    border: solid yellow 0.2vw;
+    width: 5vw;
+    height: 7vw;
+    float: left;
+    margin-left: 0.5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 .dialer {
     width: 3.5vw;
@@ -103,11 +104,14 @@
 
 #bank {
     position: absolute;
-    top: 12vw;
+    top: 10vw;
     left: 62vw;
-    width: 5vw;
-    height: 3vw;
-    background-color: #ccc;
+    width: 10vw;
+    height: 8vw;
+    font-weight:bold;
+    color: #fff;
+    background: url(images/pot.svg) 100% 100% no-repeat;
+    padding-top: 5vw;
 }
 
 .bets {
@@ -115,6 +119,7 @@
     height: 3vw;
     background-color: darkblue;
     color: #fff;
+    border:solid #fff 0.2vw;
     border-radius: 50%;
     padding-top: 0.6vw;
 }
@@ -127,85 +132,103 @@
 
 #bet2 {
     position: absolute;
-    top: 10vw;
+    top: 9vw;
     left: 54vw;
 }
 
 #bet3 {
     position: absolute;
-    top: 14vw;
-    left: 53vw;
+    top: 17vw;
+    left: 54vw;
 }
 
 #bet4 {
     position: absolute;
-    top: 16vw;
+    top: 20vw;
     left: 46vw;
 }
 
 #bet5 {
     position: absolute;
-    top: 17vw;
+    top: 20vw;
     left: 32vw;
 }
 
 #bet6 {
     position: absolute;
-    top: 17vw;
-    left: 23vw;
+    top: 19vw;
+    left: 21vw;
 }
 
 #bet7 {
     position: absolute;
-    top: 13vw;
+    top: 16vw;
     left: 9vw;
 }
 
 #bet8 {
     position: absolute;
-    top: 9vw;
+    top: 10vw;
     left: 12vw;
 }
 
 #bet9 {
     position: absolute;
-    top: 6vw;
-    left: 25vw;
+    top: 8vw;
+    left: 23vw;
 }
 
 @media screen and (min-width: 400px) {
     .text, .text-you, #bank, .head, .bets {
         font-size: 0.2rem;
     }
-}
-
-@media screen and (min-width: 600px) {
-    .text, .text-you, #bank, .head, .bets {
-        font-size: 0.4rem;
+    #bank {
+        font-size: 0.3rem;
     }
 }
 
-@media screen and (min-width: 800px) {
-    .text, .text-you, #bank, .head, .bets {
+@media screen and (min-width: 600px) {
+    .text, .text-you, .head, .bets {
+        font-size: 0.4rem;
+    }
+    #bank {
         font-size: 0.6rem;
     }
 }
 
-@media screen and (min-width: 1000px) {
-    .text, .text-you, #bank, .head, .bets {
-        font-size: 0.8rem;
+@media screen and (min-width: 800px) {
+    .text, .text-you, .head, .bets {
+        font-size: 0.6rem;
     }
-}
-
-@media screen and (min-width: 1300px) {
-    .text, .text-you, #bank, .head, .bets {
+    #bank {
         font-size: 1.0rem;
     }
 }
 
+@media screen and (min-width: 1000px) {
+    .text, .text-you, .head, .bets {
+        font-size: 0.8rem;
+    }
+    #bank {
+        font-size: 1.2rem;
+    }
+}
+
+@media screen and (min-width: 1300px) {
+    .text, .text-you, .head, .bets {
+        font-size: 1.0rem;
+    }
+    #bank {
+        font-size: 1.5rem;
+    }
+}
+
 @media screen and (min-width: 1900px) {
-    .text, .text-you, #bank, .head, .bets {
+    .text, .text-you, .head, .bets {
         font-size: 1.8rem;
+    }
+    #bank {
+        font-size: 2.0rem;
     }
 }
 
@@ -219,7 +242,7 @@
     border: 5vw;*/
 }
 
-.text-you, .players-you {
+.text-you {
     background-color: #ddd;
     color: #000;
 }
@@ -231,25 +254,24 @@
     text-align: left;
 }
 
-.text, .no-think, .players {
+.text, .no-think {
     background-color: #555;
 }
 
 .think {
     background-color: red;
+    padding-bottom:0.8vw;
 }
 
 .head {
-    border-style: outset;
     border-radius: 50%;
     width: 4.0vw;
-    height: 4.0vw;
+    height: 2.0vw;
     margin: auto;
-    color: #fff;
     padding-top: 0.5vw;
     text-align: left;
-    float: left;
     display: block;
+    position: absolute;
 }
 
 .body {
@@ -259,126 +281,129 @@
 }
 
 .players, .players-you {
-    border-radius: 3vw 1vw 1vw 3vw;
+/*    border-radius: 3vw 1vw 1vw 3vw;
     border: solid #000 0.5vw;
-    box-shadow: inset -0.5vw -0.5vw 0.5vw 0 rgba(0,0,0,.5), inset 0.5vw 0.5vw 0.5vw 0 rgba(255,255,255,0.5);
-    display: none;
+    box-shadow: inset -0.5vw -0.5vw 0.5vw 0 rgba(0,0,0,.5), inset 0.5vw 0.5vw 0.5vw 0 rgba(255,255,255,0.5);*/
+}
+
+.players img, .players-you img {
+    width: 4.0vw;
 }
 
 #player1 {
     position: absolute;
-    top: -6vw;
-    left: 40vw;
+    top: -5vw;
+    left: 46vw;
 }
 
 #player2 {
     position: absolute;
-    top: -3vw;
-    left: 55vw;
+    top: -1vw;
+    left: 61vw;
 }
 
 #player3 {
     position: absolute;
-    top: 24vw;
-    left: 52vw;
+    top: 27vw;
+    left: 61vw;
 }
 
 #player4 {
     position: absolute;
-    top: 28vw;
-    left: 40vw;
+    top: 31vw;
+    left: 46vw;
 }
 
 #player5 {
     position: absolute;
-    top: 28vw;
-    left: 27vw;
+    top: 31vw;
+    left: 31vw;
 }
 
 #player6 {
     position: absolute;
-    top: 28vw;
-    left: 14vw;
+    top: 30vw;
+    left: 16vw;
 }
 
 #player7 {
     position: absolute;
-    top: 24vw;
-    left: 1vw;
+    top: 26vw;
+    left: 3vw;
 }
 
 #player8 {
     position: absolute;
-    top: -3vw;
-    left: 1vw;
+    top: 0vw;
+    left: 3vw;
 }
 
 #player9 {
     position: absolute;
-    top: -6vw;
-    left: 16vw;
+    top: -5vw;
+    left: 18vw;
 }
 
 #hand1 {
     transform: rotate(3deg);    
     position: absolute;
     top: 1vw;
-    left:38vw;
+    left:40vw;
 }
 
 #hand2 {
     transform: rotate(20deg);
     position: absolute;
     top: 4vw;
-    left: 49vw;
+    left: 51vw;
 }
 
 #hand3 {
     transform: rotate(162deg);
     position: absolute;
-    top: 11vw;
-    left: 48vw;
+    top: 14vw;
+    left: 50vw;
 }
 
 #hand4 {
     transform: rotate(175deg);
     position: absolute;
-    top: 13vw;
+    top: 17vw;
     left: 38vw;
 }
 
 #hand5 {
     transform: rotate(180deg);
     position: absolute;
-    top: 14vw;
+    top: 17vw;
     left: 26vw;
 }
 
 #hand6 {
     transform: rotate(-173deg);
     position: absolute;
-    top: 13vw;
+    top: 16vw;
     left: 13vw;
 }
 
 #hand7 {
     transform: rotate(-158deg);
     position: absolute;
-    top: 10vw;
+    top: 13vw;
     left: 3vw;
 }
 
 #hand8 {
     transform: rotate(-22deg);
     position: absolute;
-    top: 4vw;
+    top: 5vw;
     left: 3vw;
 }
 
 #hand9 {
     transform: rotate(-3deg);
     position: absolute;
-    top: 1vw;
+    top: 2vw;
     left: 14vw;
 }
 

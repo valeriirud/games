@@ -1,25 +1,30 @@
 ﻿@page "/poker"
 @inherits PokerBase
 
+@{
+    string style = Title == string.Empty ? string.Empty : "display:none";
+}
+
 <input class="btn btn-primary unfocus" style="position:absolute;" type="button" value="New Game" onclick="@(async () => await NewGame())" />
 <div class="layout">
     <div class="border">
     <div class="area">
         <div class="area-text"><p>@Title</p></div>
-        <div class="croupier">
-            <img src="@CroupierImage" class="card-item"/>
-        </div>
-        @{
-            string style = Title == string.Empty ? string.Empty : "display:none";
+        @{            
+            <div class="croupier" style="@style">
+                <img src="@CroupierImage" class="card-item"/>
+            </div>
             <div id="bank" style="@style">
-                <div>Bank</div>
-                <div>$@Bank</div>
+                <p>$@Bank</p>
             </div>            
             <div id="board" style="@style">
             @for(int i = 0; i < COMMON_COUNT; i ++)
             {
-                <img src="@(Board[i])" class="card-item"/>
+                <div class="common-cards">
+                    <img align="middle" src="@(Board[i])" class="card-item"/>
+                </div>
             }
+            <div style="clear:both;"></div>
             </div>
         }
         @for(int i = 0; i < PLAYERS_COUNT; i ++)
@@ -33,20 +38,22 @@
                 <div id="bet@((i+1).ToString())" class="bets">$@Bet[i]</div>
             }
             string className = i == myId ? "-you" : "";
-            <div id="player@((i+1).ToString())" class="players@(className)">
+            <div id="player@((i+1).ToString())" class="players@(className)" style="@style">
                 @if(! string.IsNullOrEmpty(Actions[i]))
                 {
                     think = "think";
+                    <div class="head @think">@Actions[i]</div>
                 }
-                <div class="head @think">@Actions[i]</div>
-                <div class="body">
+                
+                <!-- <div class="body"> -->
                 @{
                     string player = i == myId ? "You" : $"Player {(i+1).ToString()}";
                     
-                    <div class="text-top text@(className)">@player</div>
-                    <div class="text@(className)">$@Bankroll[i]</div>
+                        <!-- <div class="text-top text@(className)">@player</div>
+                        <div class="text@(className)">$@Bankroll[i]</div> -->
                 }
-                </div>
+                <!-- </div> -->
+                <img src="images\person@(className).svg" />
             </div>
             <div id="hand@((i+1).ToString())" class="hands">                
                 @for(int j = 0; j < HANDS_COUNT; j ++)

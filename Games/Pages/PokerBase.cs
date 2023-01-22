@@ -237,13 +237,13 @@ public class PokerBase : ComponentBase
     async Task SmallBlind()
     {
         int id = Blind(1, MIN_BET / 2);
-        await ShowAction(id, "Small Blind");
+        await ShowAction(id, "SB");
     }
 
     async Task BigBlind()
     {
         int id = Blind(2, MIN_BET);
-        await ShowAction(id, "Big Blind");
+        await ShowAction(id, "BB");
     }
 
     async Task PocketDistribution()
