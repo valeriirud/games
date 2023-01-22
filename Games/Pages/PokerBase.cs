@@ -15,6 +15,7 @@ public class PokerBase : ComponentBase
     public string CroupierImage { get; set; } = string.Empty;
     public string ImageDialer { get; } = @"images\dialer.svg";
     public int DealerId { get; set; } = -1;
+    int _betId = -1;
     public int Bank { get; set; } = 0;
     public string[] Actions { get; } = new string[PLAYERS_COUNT];
     public int[] Bankroll { get; } = new int[PLAYERS_COUNT];
@@ -93,10 +94,9 @@ public class PokerBase : ComponentBase
         {
             _hands[i] = new ();
             Bankroll[i] = MAX_BANKROLL;
-            Bet[i] = 0;
-            Bank = 0;
-            DealerId = -1;
+            Bet[i] = 0;            
         }
+        DealerId = -1;        
     }
 
     void Clear()
@@ -117,6 +117,8 @@ public class PokerBase : ComponentBase
         {
             Board[j] = string.Empty;
         }
+        Bank = 0;
+        _betId = -1;
     }
 
     public async Task NewGame()
@@ -126,10 +128,16 @@ public class PokerBase : ComponentBase
         await DealerSelection();
         await SmallBlind();
         await BigBlind();
-        await Task.Delay(3000);
-        await PocketDistribution();
+        await Task.Delay(3000);        
         await PreFlop();
+        await Task.Delay(3000);
         await Flop();
+        await Task.Delay(3000);
+        await Turn();
+        await Task.Delay(3000);
+        await River();
+        await Task.Delay(3000);
+        await Shutdown();
     }
 
     Tuple<int, int> GetIndex()
@@ -287,6 +295,8 @@ public class PokerBase : ComponentBase
                 if (string.IsNullOrEmpty(Board[j]))
                 {
                     Board[j] = _images[index.Item1, index.Item2];
+                    await Task.Delay(1000);
+                    StateHasChanged();
                     break;
                 }
             }            
@@ -297,24 +307,48 @@ public class PokerBase : ComponentBase
 
     async Task PreFlop()
     {
-        int id = DealerId + 3;
-        for (int i = 0; i < PLAYERS_COUNT; i++)
-        {
-            if (id >= PLAYERS_COUNT)
-            {
-                id -= PLAYERS_COUNT;
-            }
-            int bet = CheckHand(id);
-            DoBet(id, bet);
-            await ShowAction(id, "Call");
-            if(IsCircleClosed()) break;
-            id++;
-        }        
+        await PocketDistribution();
+        await Bargaining(3);
     }
 
     async Task Flop()
     {
         await CommonDistribution(3);
+        await Bargaining(1);
+    }
+
+    async Task Turn()
+    {
+        await CommonDistribution(1);
+        await Bargaining(1);
+    }
+
+    async Task River()
+    {
+        await CommonDistribution(1);
+        await Bargaining(1);
+    }
+
+    async Task Shutdown()
+    {
+        int id = _betId;
+        for (int i = 0; i < PLAYERS_COUNT; i++)
+        {
+            if (id >= PLAYERS_COUNT)
+            {
+                id -= PLAYERS_COUNT;
+            }            
+            List<Tuple<int, int>> hand = _hands[id];
+            int j = 0;
+            foreach (Tuple<int, int> index in hand)
+            {
+                Images[id, j] = _images[index.Item1, index.Item2];
+                await Task.Delay(500);
+                StateHasChanged();
+                j++;
+            }
+            id++;
+        }
     }
 
     bool IsCircleClosed() => Bet.All(b => b == Bet[0]);
@@ -324,6 +358,24 @@ public class PokerBase : ComponentBase
         Bet[id] += value;
         Bankroll[id] -= value;
         Bank += value;
+        _betId = id;
+    }
+
+    async Task Bargaining(int n)
+    {
+        int id = DealerId + n;
+        for (int i = 0; i < PLAYERS_COUNT; i++)
+        {
+            if (id >= PLAYERS_COUNT)
+            {
+                id -= PLAYERS_COUNT;
+            }
+            int bet = CheckHand(id, i == 0);
+            DoBet(id, bet);
+            await ShowAction(id, "Call");
+            if (IsCircleClosed()) break;
+            id++;
+        }
     }
 
     async Task ShowAction(int id, string message)
@@ -353,9 +405,10 @@ public class PokerBase : ComponentBase
         return id;
     }
 
-    int CheckHand(int id)
+    int CheckHand(int id, bool first = false)
     {
         int bet = MIN_BET;
+        if (first) return bet;
         int[] otherBets = Bet.Where((_, i) => i != id).ToArray();
         if(otherBets.All(b => b == otherBets[0]))
         {
