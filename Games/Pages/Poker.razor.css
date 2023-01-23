@@ -2,13 +2,14 @@
 .layout {
     margin-left: auto;
     margin-right: auto;
-    width: 98%;
-    height: 98%;
+    width: 99%;
+    height: 99%;
     text-align: center;
     background-color: #F5F5F5;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     /*background-size: 0.3vw 0.3vw;
     background-image: -webkit-repeating-linear-gradient(315deg, #232323, #232323 10%, transparent 10%, transparent 50% ), -webkit-repeating-linear-gradient(225deg, #232323, #232323 10%, transparent 10%, transparent 50% );
     background-image: repeating-linear-gradient(135deg, #232323, #232323 10%, transparent 10%, transparent 50% ), repeating-linear-gradient(-135deg, #232323, #232323 10%, transparent 10%, transparent 50% );*/
@@ -21,8 +22,8 @@
     background-color: #463013;
     margin-top: 6vw;
     margin-bottom: 5vw;
-    margin-left: 2vw;
-    margin-right: 2vw;
+    /*margin-left: 2vw;
+    margin-right: 2vw;*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -179,7 +180,7 @@
 }
 
 @media screen and (min-width: 400px) {
-    .text, .text-you, #bank, .head, .bets {
+    .text, .text-you, #bank, .head, .bets, #new-game, #panel input {
         font-size: 0.2rem;
     }
     #bank {
@@ -188,7 +189,7 @@
 }
 
 @media screen and (min-width: 600px) {
-    .text, .text-you, .head, .bets {
+    .text, .text-you, .head, .bets, #new-game, #panel input {
         font-size: 0.4rem;
     }
     #bank {
@@ -197,7 +198,7 @@
 }
 
 @media screen and (min-width: 800px) {
-    .text, .text-you, .head, .bets {
+    .text, .text-you, .head, .bets, #new-game, #panel input {
         font-size: 0.6rem;
     }
     #bank {
@@ -206,7 +207,7 @@
 }
 
 @media screen and (min-width: 1000px) {
-    .text, .text-you, .head, .bets {
+    .text, .text-you, .head, .bets, #new-game, #panel input {
         font-size: 0.8rem;
     }
     #bank {
@@ -215,7 +216,7 @@
 }
 
 @media screen and (min-width: 1300px) {
-    .text, .text-you, .head, .bets {
+    .text, .text-you, .head, .bets, #new-game, #panel input {
         font-size: 1.0rem;
     }
     #bank {
@@ -224,7 +225,7 @@
 }
 
 @media screen and (min-width: 1900px) {
-    .text, .text-you, .head, .bets {
+    .text, .text-you, .head, .bets, #new-game, #panel input {
         font-size: 1.8rem;
     }
     #bank {
@@ -234,7 +235,7 @@
 
 .text, .text-you, .head {
     color: #fff;
-    padding-left: 0.5vw;
+    padding-left: 0.1vw;
 }
 
 .text-top {
@@ -287,7 +288,7 @@
 }
 
 .players img, .players-you img {
-    width: 4.0vw;
+    width: 3.0vw;
 }
 
 #player1 {
@@ -304,14 +305,14 @@
 
 #player3 {
     position: absolute;
-    top: 27vw;
+    top: 26vw;
     left: 61vw;
 }
 
 #player4 {
     position: absolute;
     top: 31vw;
-    left: 46vw;
+    left: 41vw;
 }
 
 #player5 {

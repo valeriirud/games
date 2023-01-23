@@ -7,8 +7,8 @@ public class PokerBase : ComponentBase
     public const int HANDS_COUNT = 2;
     public const int COMMON_COUNT = 5;
     public const int PLAYERS_COUNT = 9;
-    const int MAX_BANKROLL = 100;
-    const int MIN_BET = 10;
+    const int MAX_BANKROLL = 1000;
+    public const int MIN_BET = 10;
     const int TIMEOUT = 1000;
     const int SHORT_TIMEOUT = 500;
     public string Title { get; set; } = "TEXAS HOLD'EM";

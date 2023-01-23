@@ -5,27 +5,27 @@
     string style = Title == string.Empty ? string.Empty : "display:none";
 }
 
-<input class="btn btn-primary unfocus" style="position:absolute;" type="button" value="New Game" onclick="@(async () => await NewGame())" />
 <div class="layout">
+    <input class="btn btn-primary unfocus" id="new-game" style="position:absolute; top: 0; left: 0;" type="button" value="New Game" onclick="@(async () => await NewGame())" />
     <div class="border">
     <div class="area">
         <div class="area-text"><p>@Title</p></div>
         @{            
-            <div class="croupier" style="@style">
-                <img src="@CroupierImage" class="card-item"/>
-            </div>
-            <div id="bank" style="@style">
-                <p>@Bank</p>
-            </div>            
-            <div id="board" style="@style">
-            @for(int i = 0; i < COMMON_COUNT; i ++)
+                                                <div class="croupier" style="@style">
+                                                    <img src="@CroupierImage" class="card-item"/>
+                                                </div>
+                                                <div id="bank" style="@style">
+                                                    <p>@Bank</p>
+                                                </div>            
+                                                <div id="board" style="@style">
+                                                @for(int i = 0; i < COMMON_COUNT; i ++)
             {
-                <div class="common-cards">
-                    <img align="middle" src="@(Board[i])" class="card-item"/>
-                </div>
+                                                    <div class="common-cards">
+                                                        <img align="middle" src="@(Board[i])" class="card-item"/>
+                                                    </div>
             }
-            <div style="clear:both;"></div>
-            </div>
+                                                <div style="clear:both;"></div>
+                                                </div>
         }
         @for(int i = 0; i < PLAYERS_COUNT; i ++)
         {
@@ -49,7 +49,7 @@
                 @{
                     string player = i == myId ? "You" : $"Player {(i+1).ToString()}";
                     
-                        <!-- <div class="text-top text@(className)">@player</div> -->
+                                                            <!-- <div class="text-top text@(className)">@player</div> -->
                          
                 }
                 <!-- </div> -->
@@ -66,5 +66,10 @@
             </div>
         }
     </div>
+    </div>
+    <div id="panel" style="position:absolute; bottom:0; right:0; background:#aaa; width:25vw; height:5vw; text-align:left;">
+        <input class="btn btn-primary unfocus" type="button" value="Fold" onclick="@(async () => await NewGame())" />
+        <input class="btn btn-primary unfocus" type="button" value="Check" onclick="@(async () => await NewGame())" />
+        <input class="btn btn-primary unfocus" type="button" value="Bet@(MIN_BET)" onclick="@(async () => await NewGame())" />
     </div>
 </div>
