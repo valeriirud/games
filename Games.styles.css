@@ -145,13 +145,14 @@ a[b-8ntxd7tj13] {
 .layout[b-c3ah7i6tz9] {
     margin-left: auto;
     margin-right: auto;
-    width: 98%;
-    height: 98%;
+    width: 99%;
+    height: 99%;
     text-align: center;
     background-color: #F5F5F5;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     /*background-size: 0.3vw 0.3vw;
     background-image: -webkit-repeating-linear-gradient(315deg, #232323, #232323 10%, transparent 10%, transparent 50% ), -webkit-repeating-linear-gradient(225deg, #232323, #232323 10%, transparent 10%, transparent 50% );
     background-image: repeating-linear-gradient(135deg, #232323, #232323 10%, transparent 10%, transparent 50% ), repeating-linear-gradient(-135deg, #232323, #232323 10%, transparent 10%, transparent 50% );*/
@@ -164,8 +165,8 @@ a[b-8ntxd7tj13] {
     background-color: #463013;
     margin-top: 6vw;
     margin-bottom: 5vw;
-    margin-left: 2vw;
-    margin-right: 2vw;
+    /*margin-left: 2vw;
+    margin-right: 2vw;*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -322,7 +323,7 @@ a[b-8ntxd7tj13] {
 }
 
 @media screen and (min-width: 400px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], #panel input[b-c3ah7i6tz9] {
         font-size: 0.2rem;
     }
     #bank[b-c3ah7i6tz9] {
@@ -331,7 +332,7 @@ a[b-8ntxd7tj13] {
 }
 
 @media screen and (min-width: 600px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], #panel input[b-c3ah7i6tz9] {
         font-size: 0.4rem;
     }
     #bank[b-c3ah7i6tz9] {
@@ -340,7 +341,7 @@ a[b-8ntxd7tj13] {
 }
 
 @media screen and (min-width: 800px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], #panel input[b-c3ah7i6tz9] {
         font-size: 0.6rem;
     }
     #bank[b-c3ah7i6tz9] {
@@ -349,7 +350,7 @@ a[b-8ntxd7tj13] {
 }
 
 @media screen and (min-width: 1000px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], #panel input[b-c3ah7i6tz9] {
         font-size: 0.8rem;
     }
     #bank[b-c3ah7i6tz9] {
@@ -358,7 +359,7 @@ a[b-8ntxd7tj13] {
 }
 
 @media screen and (min-width: 1300px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], #panel input[b-c3ah7i6tz9] {
         font-size: 1.0rem;
     }
     #bank[b-c3ah7i6tz9] {
@@ -367,7 +368,7 @@ a[b-8ntxd7tj13] {
 }
 
 @media screen and (min-width: 1900px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], #panel input[b-c3ah7i6tz9] {
         font-size: 1.8rem;
     }
     #bank[b-c3ah7i6tz9] {
@@ -377,7 +378,7 @@ a[b-8ntxd7tj13] {
 
 .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9] {
     color: #fff;
-    padding-left: 0.5vw;
+    padding-left: 0.1vw;
 }
 
 .text-top[b-c3ah7i6tz9] {
@@ -430,7 +431,7 @@ a[b-8ntxd7tj13] {
 }
 
 .players img[b-c3ah7i6tz9], .players-you img[b-c3ah7i6tz9] {
-    width: 4.0vw;
+    width: 3.0vw;
 }
 
 #player1[b-c3ah7i6tz9] {
@@ -447,14 +448,14 @@ a[b-8ntxd7tj13] {
 
 #player3[b-c3ah7i6tz9] {
     position: absolute;
-    top: 27vw;
+    top: 26vw;
     left: 61vw;
 }
 
 #player4[b-c3ah7i6tz9] {
     position: absolute;
     top: 31vw;
-    left: 46vw;
+    left: 41vw;
 }
 
 #player5[b-c3ah7i6tz9] {
