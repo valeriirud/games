@@ -9,6 +9,8 @@ public class PokerBase : ComponentBase
     public const int PLAYERS_COUNT = 9;
     const int MAX_BANKROLL = 100;
     const int MIN_BET = 10;
+    const int TIMEOUT = 1000;
+    const int SHORT_TIMEOUT = 500;
     public string Title { get; set; } = "TEXAS HOLD'EM";
     public string[,] Images { get; }  = new string[PLAYERS_COUNT, HANDS_COUNT];
     public string[] Board { get; } = new string[COMMON_COUNT];
@@ -104,13 +106,19 @@ public class PokerBase : ComponentBase
         Title = string.Empty;
         _indexes.Clear();
         CroupierImage = string.Empty;
-        for(int i = 0; i < PLAYERS_COUNT; i ++)
+        ClearBoard();
+    }
+
+    void ClearBoard()
+    {
+        for (int i = 0; i < PLAYERS_COUNT; i++)
         {
             _hands[i].Clear();
             for (int j = 0; j < HANDS_COUNT; j++)
             {
-                Images[i,j] = string.Empty;
+                Images[i, j] = string.Empty;
             }
+            Bet[i] = 0;
         }
         _board.Clear();
         for (int j = 0; j < COMMON_COUNT; j++)
@@ -128,16 +136,22 @@ public class PokerBase : ComponentBase
         await DealerSelection();
         await SmallBlind();
         await BigBlind();
-        await Task.Delay(3000);        
-        await PreFlop();
-        await Task.Delay(3000);
-        await Flop();
-        await Task.Delay(3000);
-        await Turn();
-        await Task.Delay(3000);
-        await River();
-        await Task.Delay(3000);
-        await Shutdown();
+        for (int i = 0; i < 2; i++)
+        {
+            await Task.Delay(TIMEOUT);
+            await PreFlop(i);
+            await Task.Delay(TIMEOUT);
+            await Flop();
+            await Task.Delay(TIMEOUT);
+            await Turn();
+            await Task.Delay(TIMEOUT);
+            await River();
+            await Task.Delay(TIMEOUT);
+            await Shutdown();
+            await Task.Delay(TIMEOUT);
+            DealerId = GetNextId(1);
+            StateHasChanged();
+        }
     }
 
     Tuple<int, int> GetIndex()
@@ -195,11 +209,11 @@ public class PokerBase : ComponentBase
             id = maxHands[0];
             break;
         }
-        await Task.Delay(5000);
+        await Task.Delay(TIMEOUT*2);
         StateHasChanged();
         Clear();
         DealerId = id;
-        await Task.Delay(3000);
+        await Task.Delay(TIMEOUT);
         StateHasChanged();
     }
 
@@ -280,7 +294,7 @@ public class PokerBase : ComponentBase
             }
         }
         
-        await Task.Delay(3000);
+        await Task.Delay(TIMEOUT);
         StateHasChanged();
     }
 
@@ -295,20 +309,20 @@ public class PokerBase : ComponentBase
                 if (string.IsNullOrEmpty(Board[j]))
                 {
                     Board[j] = _images[index.Item1, index.Item2];
-                    await Task.Delay(1000);
+                    await Task.Delay(SHORT_TIMEOUT);
                     StateHasChanged();
                     break;
                 }
             }            
         }
-        await Task.Delay(3000);
+        await Task.Delay(TIMEOUT);
         StateHasChanged();
     }
 
-    async Task PreFlop()
+    async Task PreFlop(int i)
     {
         await PocketDistribution();
-        await Bargaining(3);
+        await Bargaining(i == 0 ? 3 : 1);
     }
 
     async Task Flop()
@@ -349,9 +363,53 @@ public class PokerBase : ComponentBase
             }
             id++;
         }
+
+        List<int> winners = GetWinners();
+        foreach(int win in winners)
+        {
+            Bankroll[win] += Bank / winners.Count();
+        }
+
+        await Task.Delay(SHORT_TIMEOUT);
+        StateHasChanged();
+
+        ClearBoard();
+
+        await Task.Delay(SHORT_TIMEOUT);
+        StateHasChanged();
     }
 
     bool IsCircleClosed() => Bet.All(b => b == Bet[0]);
+
+    List<int> GetWinners()
+    {
+        List<int> winners = new();
+        for(int i = 0; i < PLAYERS_COUNT; i ++)
+        {
+            if(CheckRoyalFlash(i))
+            {
+                winners.Add(i);
+            }
+        }
+        if(winners.Any()) return winners;
+
+        return winners;
+    }
+
+    bool CheckRoyalFlash(int id)
+    {
+        List<Tuple<int, int>> hand = GetFullHand(id);
+        return id == 3;
+    }
+
+    List<Tuple<int, int>> GetFullHand(int id)
+    { 
+        List<Tuple<int, int>> hand = _hands[id];
+        List<Tuple<int, int>> fullHand = new();
+        fullHand.AddRange(_board);
+        fullHand.AddRange(hand);
+        return fullHand;
+    }
 
     void DoBet(int id, int value)
     {
@@ -381,10 +439,10 @@ public class PokerBase : ComponentBase
     async Task ShowAction(int id, string message)
     {
         Actions[id] = message;
-        await Task.Delay(3000);
+        await Task.Delay(TIMEOUT);
         StateHasChanged();
         Actions[id] = string.Empty;
-        await Task.Delay(3000);
+        await Task.Delay(TIMEOUT);
         StateHasChanged();
     }
 

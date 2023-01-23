@@ -15,7 +15,7 @@
                 <img src="@CroupierImage" class="card-item"/>
             </div>
             <div id="bank" style="@style">
-                <p>$@Bank</p>
+                <p>@Bank</p>
             </div>            
             <div id="board" style="@style">
             @for(int i = 0; i < COMMON_COUNT; i ++)
@@ -35,7 +35,7 @@
             string think = "no-think";
             if (Bet[i] > 0)
             {
-                <div id="bet@((i+1).ToString())" class="bets">$@Bet[i]</div>
+                <div id="bet@((i+1).ToString())" class="bets">@Bet[i]</div>
             }
             string className = i == myId ? "-you" : "";
             <div id="player@((i+1).ToString())" class="players@(className)" style="@style">
@@ -49,11 +49,13 @@
                 @{
                     string player = i == myId ? "You" : $"Player {(i+1).ToString()}";
                     
-                        <!-- <div class="text-top text@(className)">@player</div>
-                        <div class="text@(className)">$@Bankroll[i]</div> -->
+                        <!-- <div class="text-top text@(className)">@player</div> -->
+                         
                 }
                 <!-- </div> -->
                 <img src="images\person@(className).svg" />
+                <div class="text@(className)">@Bankroll[i]</div>
+
             </div>
             <div id="hand@((i+1).ToString())" class="hands">                
                 @for(int j = 0; j < HANDS_COUNT; j ++)
