@@ -4,10 +4,11 @@ namespace Games.Pages;
 
 public class PokerBase : ComponentBase
 {
+    public const int MY_ID = 4;
     public const int HANDS_COUNT = 2;
     public const int COMMON_COUNT = 5;
     public const int PLAYERS_COUNT = 9;
-    const int MAX_BANKROLL = 1000;
+    public const int MAX_BANKROLL = 1000;
     public const int MIN_BET = 10;
     const int TIMEOUT = 1000;
     const int SHORT_TIMEOUT = 500;
@@ -17,6 +18,7 @@ public class PokerBase : ComponentBase
     public string CroupierImage { get; set; } = string.Empty;
     public string ImageDialer { get; } = @"images\dialer.svg";
     public int DealerId { get; set; } = -1;
+    public int MyBet { get; set; } = MIN_BET;
     int _betId = -1;
     public int Bank { get; set; } = 0;
     public string[] Actions { get; } = new string[PLAYERS_COUNT];
@@ -473,5 +475,12 @@ public class PokerBase : ComponentBase
             return otherBets[0] - Bet[id];
         }
         return bet;
+    }
+
+    public async Task ChangeMyBet()
+    {
+        int val = MyBet;
+        await Task.Delay(TIMEOUT);
+        StateHasChanged();
     }
 }

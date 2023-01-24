@@ -10,6 +10,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    border: solid red 1px;
     /*background-size: 0.3vw 0.3vw;
     background-image: -webkit-repeating-linear-gradient(315deg, #232323, #232323 10%, transparent 10%, transparent 50% ), -webkit-repeating-linear-gradient(225deg, #232323, #232323 10%, transparent 10%, transparent 50% );
     background-image: repeating-linear-gradient(135deg, #232323, #232323 10%, transparent 10%, transparent 50% ), repeating-linear-gradient(-135deg, #232323, #232323 10%, transparent 10%, transparent 50% );*/
@@ -20,7 +21,7 @@
     width: 72vw;
     height: 32vw;
     background-color: #463013;
-    margin-top: 6vw;
+    margin-top: 5vw;
     margin-bottom: 5vw;
     /*margin-left: 2vw;
     margin-right: 2vw;*/
@@ -444,3 +445,41 @@ a.button:active {
     background: linear-gradient(rgb(76,77,82), rgb(56,57,62)) rgb(76,77,82);
     box-shadow: 0 0 0.1vw rgba(0,0,0,.5) inset, 0 0.2vw 0.3vw rgba(0,0,0,.5) inset, 0 0.1vw 0.1vw rgba(255,255,255,.1);
 }
+
+/*** slider ***/
+.slider {
+    -webkit-appearance: none;
+    width: 80%;
+    height: 1vw;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1vw;
+    height: 1vw;
+    background: linear-gradient(rgb(76,77,82), rgb(56,57,62)) rgb(76,77,82);
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 1vw;
+    height: 1vw;
+    background: linear-gradient(rgb(76,77,82), rgb(56,57,62)) rgb(76,77,82);
+    cursor: pointer;
+}
+
+.bet-size {
+    width: 15%;
+    height: 1vw;
+}
+

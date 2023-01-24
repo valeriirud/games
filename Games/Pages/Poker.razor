@@ -28,33 +28,28 @@
             </div>
         @for(int i = 0; i < PLAYERS_COUNT; i ++)
         {
-            int myId = PLAYERS_COUNT / 2;
-            string fill = i != myId ? "-fill" : string.Empty;
+            string fill = i != MY_ID ? "-fill" : string.Empty;
             string dialer = i == DealerId ? ImageDialer : string.Empty;
             string think = "no-think";
             if (Bet[i] > 0)
             {
                 <div id="bet@((i+1).ToString())" class="bets">@Bet[i]</div>
             }
-            string className = i == myId ? "-you" : "";
-            <div id="player@((i+1).ToString())" class="players@(className)" style="@style">
+            string className = i == MY_ID ? "-you" : "";
+            <div id="player@((i+1).ToString())" class="players@(className)">
                 @if(! string.IsNullOrEmpty(Actions[i]))
                 {
                     think = "think";
                     <div class="head @think">@Actions[i]</div>
                 }
-                
                 <!-- <div class="body"> -->
                 @{
-                    string player = i == myId ? "You" : $"Player {(i+1).ToString()}";
-                    
-                                                                <!-- <div class="text-top text@(className)">@player</div> -->
-                         
+                    string player = i == MY_ID ? "You" : $"Player {(i+1).ToString()}";
+                                <!-- <div class="text-top text@(className)">@player</div> -->                 
                 }
                 <!-- </div> -->
                 <img src="images\person@(className).svg" />
                 <div class="text@(className)">@Bankroll[i]</div>
-
             </div>
             <div id="hand@((i+1).ToString())" class="hands">                
                 @for(int j = 0; j < HANDS_COUNT; j ++)
@@ -66,10 +61,20 @@
         }
         </div>
     </div>
-    <div id="panel" style="position:absolute; bottom:0; right:0; background:#aaa; width:25vw; height:5vw; text-align:left;">
+    <div id="panel" style="position:absolute; bottom:0; right:0; background:#aaa; width:25vw; height:5vw; text-align:left; padding:0.3vw; 
+display: flex; justify-content:left; align-items:start; flex-wrap: wrap; gap: 0.3vw;">
+    <div style="width:99%">
+        <a class="button" onclick="@(async () => await NewGame())">1/2</a>
+        <a class="button" onclick="@(async () => await NewGame())">Min</a>
+        <a class="button" onclick="@(async () => await NewGame())">x2</a>
+    </div>
+        <input type="text" class="bet-size" @bind="MyBet"/>
+        <input type="range" min="1" max="@(Bankroll[MY_ID])" @bind="MyBet" @bind:event="oninput" class="slider" />
         <a class="button" onclick="@(async () => await NewGame())">Fold</a>
         <a class="button" onclick="@(async () => await NewGame())">Check</a>
-        <a class="button" onclick="@(async () => await NewGame())">Bet&nbsp;@(MIN_BET)</a>
+        <a class="button" onclick="@(async () => await NewGame())">Bet&nbsp;@(MyBet)</a>
+
+        
         <!--<input class="btn btn-primary unfocus" type="button" value="Fold" onclick="@(async () => await NewGame())" />
         <input class="btn btn-primary unfocus" type="button" value="Check" onclick="@(async () => await NewGame())" />
         <input class="btn btn-primary unfocus" type="button" value="Bet@(MIN_BET)" onclick="@(async () => await NewGame())" />-->
