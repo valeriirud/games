@@ -6,27 +6,26 @@
 }
 
 <div class="layout">
-    <input class="btn btn-primary unfocus" id="new-game" style="position:absolute; top: 0; left: 0;" type="button" value="New Game" onclick="@(async () => await NewGame())" />
+    <!--<input class="btn btn-primary unfocus" id="new-game" style="position:absolute; top: 0; left: 0;" type="button" value="New Game" onclick="@(async () => await NewGame())" />-->
+    <a class="button" style="position:absolute; top: 0; left: 0;" onclick="@(async () => await NewGame())">New Game</a>
     <div class="border">
     <div class="area">
-        <div class="area-text"><p>@Title</p></div>
-        @{            
-                                                <div class="croupier" style="@style">
-                                                    <img src="@CroupierImage" class="card-item"/>
-                                                </div>
-                                                <div id="bank" style="@style">
-                                                    <p>@Bank</p>
-                                                </div>            
-                                                <div id="board" style="@style">
-                                                @for(int i = 0; i < COMMON_COUNT; i ++)
+        <div class="area-text"><p>@Title</p></div>           
+            <div class="croupier" style="@style">
+                <img src="@CroupierImage" class="card-item"/>
+            </div>
+            <div id="bank" style="@style">
+                <p>@Bank</p>
+            </div>            
+            <div id="board" style="@style">
+            @for(int i = 0; i < COMMON_COUNT; i ++)
             {
-                                                    <div class="common-cards">
-                                                        <img align="middle" src="@(Board[i])" class="card-item"/>
-                                                    </div>
+                <div class="common-cards">
+                    <img align="middle" src="@(Board[i])" class="card-item"/>
+                </div>
             }
-                                                <div style="clear:both;"></div>
-                                                </div>
-        }
+            <div style="clear:both;"></div>
+            </div>
         @for(int i = 0; i < PLAYERS_COUNT; i ++)
         {
             int myId = PLAYERS_COUNT / 2;
@@ -49,7 +48,7 @@
                 @{
                     string player = i == myId ? "You" : $"Player {(i+1).ToString()}";
                     
-                                                            <!-- <div class="text-top text@(className)">@player</div> -->
+                                                                <!-- <div class="text-top text@(className)">@player</div> -->
                          
                 }
                 <!-- </div> -->
@@ -65,11 +64,14 @@
                 <img src="@dialer" class="dialer" />
             </div>
         }
-    </div>
+        </div>
     </div>
     <div id="panel" style="position:absolute; bottom:0; right:0; background:#aaa; width:25vw; height:5vw; text-align:left;">
-        <input class="btn btn-primary unfocus" type="button" value="Fold" onclick="@(async () => await NewGame())" />
+        <a class="button" onclick="@(async () => await NewGame())">Fold</a>
+        <a class="button" onclick="@(async () => await NewGame())">Check</a>
+        <a class="button" onclick="@(async () => await NewGame())">Bet&nbsp;@(MIN_BET)</a>
+        <!--<input class="btn btn-primary unfocus" type="button" value="Fold" onclick="@(async () => await NewGame())" />
         <input class="btn btn-primary unfocus" type="button" value="Check" onclick="@(async () => await NewGame())" />
-        <input class="btn btn-primary unfocus" type="button" value="Bet@(MIN_BET)" onclick="@(async () => await NewGame())" />
+        <input class="btn btn-primary unfocus" type="button" value="Bet@(MIN_BET)" onclick="@(async () => await NewGame())" />-->
     </div>
 </div>
