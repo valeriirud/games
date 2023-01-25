@@ -5,12 +5,12 @@
     string style = Title == string.Empty ? string.Empty : "display:none";
 }
 
-<div class="layout">
-    <!--<input class="btn btn-primary unfocus" id="new-game" style="position:absolute; top: 0; left: 0;" type="button" value="New Game" onclick="@(async () => await NewGame())" />-->
+<div class="layout">    
     <a class="button" style="position:absolute; top: 0; left: 0;" onclick="@(async () => await NewGame())">New Game</a>
+    <div style="clear:both"></div>
     <div class="border">
-    <div class="area">
-        <div class="area-text"><p>@Title</p></div>           
+        <div class="area">
+            <div class="area-text"><p>@Title</p></div>           
             <div class="croupier" style="@style">
                 <img src="@CroupierImage" class="card-item"/>
             </div>
@@ -18,13 +18,11 @@
                 <p>@Bank</p>
             </div>            
             <div id="board" style="@style">
-            @for(int i = 0; i < COMMON_COUNT; i ++)
-            {
-                <div class="common-cards">
-                    <img align="middle" src="@(Board[i])" class="card-item"/>
-                </div>
-            }
-            <div style="clear:both;"></div>
+                @for(int i = 0; i < COMMON_COUNT; i ++)
+                {
+                    <div class="common-cards"><img align="middle" src="@(Board[i])" class="card-item"/></div>
+                }
+                <div style="clear:both;"></div>
             </div>
         @for(int i = 0; i < PLAYERS_COUNT; i ++)
         {
@@ -61,22 +59,23 @@
         }
         </div>
     </div>
-    <div id="panel" style="position:absolute; bottom:0; right:0; background:#aaa; width:25vw; height:5vw; text-align:left; padding:0.3vw; 
-display: flex; justify-content:left; align-items:start; flex-wrap: wrap; gap: 0.3vw;">
-    <div style="width:99%">
-        <a class="button" onclick="@(async () => await NewGame())">1/2</a>
-        <a class="button" onclick="@(async () => await NewGame())">Min</a>
-        <a class="button" onclick="@(async () => await NewGame())">x2</a>
-    </div>
-        <input type="text" class="bet-size" @bind="MyBet"/>
-        <input type="range" min="1" max="@(Bankroll[MY_ID])" @bind="MyBet" @bind:event="oninput" class="slider" />
-        <a class="button" onclick="@(async () => await NewGame())">Fold</a>
-        <a class="button" onclick="@(async () => await NewGame())">Check</a>
-        <a class="button" onclick="@(async () => await NewGame())">Bet&nbsp;@(MyBet)</a>
-
-        
-        <!--<input class="btn btn-primary unfocus" type="button" value="Fold" onclick="@(async () => await NewGame())" />
-        <input class="btn btn-primary unfocus" type="button" value="Check" onclick="@(async () => await NewGame())" />
-        <input class="btn btn-primary unfocus" type="button" value="Bet@(MIN_BET)" onclick="@(async () => await NewGame())" />-->
+    <div id="panel">
+        <div class="panel-container">
+            <a class="button" onclick="">1/2</a>
+            <a class="button" onclick="">Min</a>
+            <a class="button" onclick="">x2</a>
+            <div style="clear:both"></div>
+        </div>
+        <div class="panel-container">
+            <input type="text" class="bet-size" @bind="MyBet"/>
+            <input type="range" min="1" max="@(Bankroll[MY_ID])" @bind="MyBet" @bind:event="oninput" class="slider" />
+            <div style="clear:both"></div>
+        </div>
+        <div class="panel-container">
+            <a class="button" onclick="">Fold</a>
+            <a class="button" onclick="">Check</a>
+            <a class="button" onclick="">Bet&nbsp;@(MyBet)</a>
+            <div style="clear:both"></div>
+        </div>
     </div>
 </div>
