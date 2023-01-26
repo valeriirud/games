@@ -12,18 +12,22 @@ public class PokerBase : ComponentBase
     public const int MIN_BET = 10;
     const int TIMEOUT = 1000;
     const int SHORT_TIMEOUT = 500;
+    const int TINY_TIMEOUT = 100;
     public string Title { get; set; } = "TEXAS HOLD'EM";
     public string[,] Images { get; }  = new string[PLAYERS_COUNT, HANDS_COUNT];
     public string[] Board { get; } = new string[COMMON_COUNT];
     public string CroupierImage { get; set; } = string.Empty;
     public string ImageDialer { get; } = @"images\dialer.svg";
     public int DealerId { get; set; } = -1;
-    public int MyBet { get; set; } = MIN_BET;
+    public int MyBet { get; set; } = 0;
     int _betId = -1;
+    public bool Started { get; set; } = false;
+    public bool WaitYou { get; set; } = false;
     public int Bank { get; set; } = 0;
     public string[] Actions { get; } = new string[PLAYERS_COUNT];
     public int[] Bankroll { get; } = new int[PLAYERS_COUNT];
     public int[] Bet { get; } = new int[PLAYERS_COUNT];
+    public List<int>[] Bets { get; } = new List<int>[PLAYERS_COUNT];
     readonly List<Tuple<int,int>> _indexes = new();
     readonly List<Tuple<int, int>>[] _hands = new List<Tuple<int, int>>[PLAYERS_COUNT];
     readonly List<Tuple<int, int>> _board = new();
@@ -92,13 +96,44 @@ public class PokerBase : ComponentBase
             }
         };
 
+    public async Task NewGame()
+    {
+        if (Started) return;
+        Inint();
+        Clear();
+        Started = true;
+        StateHasChanged();
+        await DealerSelection();        
+        for (int i = 0; i < 2; i++)
+        {
+            await SmallBlind();
+            await BigBlind();
+            await Task.Delay(TIMEOUT);
+            await PreFlop(0);
+            await Task.Delay(TIMEOUT);
+            await Flop();
+            await Task.Delay(TIMEOUT);
+            await Turn();
+            await Task.Delay(TIMEOUT);
+            await River();
+            await Task.Delay(TIMEOUT);
+            await Shutdown();
+            await Task.Delay(TIMEOUT);
+            DealerId = GetNextId(1);
+            StateHasChanged();
+        }
+        Started = false;
+        StateHasChanged();
+    }
+
     void Inint()
     {
         for (int i = 0; i < PLAYERS_COUNT; i++)
         {
             _hands[i] = new ();
             Bankroll[i] = MAX_BANKROLL;
-            Bet[i] = 0;            
+            Bet[i] = 0;
+            Bets[i] = new();
         }
         DealerId = -1;        
     }
@@ -129,31 +164,6 @@ public class PokerBase : ComponentBase
         }
         Bank = 0;
         _betId = -1;
-    }
-
-    public async Task NewGame()
-    {
-        Inint();
-        Clear();
-        await DealerSelection();
-        await SmallBlind();
-        await BigBlind();
-        for (int i = 0; i < 2; i++)
-        {
-            await Task.Delay(TIMEOUT);
-            await PreFlop(i);
-            await Task.Delay(TIMEOUT);
-            await Flop();
-            await Task.Delay(TIMEOUT);
-            await Turn();
-            await Task.Delay(TIMEOUT);
-            await River();
-            await Task.Delay(TIMEOUT);
-            await Shutdown();
-            await Task.Delay(TIMEOUT);
-            DealerId = GetNextId(1);
-            StateHasChanged();
-        }
     }
 
     Tuple<int, int> GetIndex()
@@ -236,7 +246,6 @@ public class PokerBase : ComponentBase
                 maxHands.Add(i);
             }
         }
-
         return maxHands;
     }
 
@@ -419,6 +428,7 @@ public class PokerBase : ComponentBase
         Bankroll[id] -= value;
         Bank += value;
         _betId = id;
+        Bets[id].Add(value);
     }
 
     async Task Bargaining(int n)
@@ -430,9 +440,34 @@ public class PokerBase : ComponentBase
             {
                 id -= PLAYERS_COUNT;
             }
-            int bet = CheckHand(id, i == 0);
-            DoBet(id, bet);
-            await ShowAction(id, "Call");
+
+            if (id == MY_ID)
+            {
+                WaitYou = true;
+                while(WaitYou)
+                {
+                    await Task.Delay(TINY_TIMEOUT);
+                    StateHasChanged();                    
+                }
+            }
+            else
+            {
+                int bet = CheckHand(id, i == 0);
+                DoBet(id, bet);                
+            }
+            string action = "Call";
+            //int lastId = _betId - 1;
+            //if(lastId < 0)
+            //{
+            //    lastId = PLAYERS_COUNT - 1; 
+            //}
+            //if (Bets[id][Bets[id].Count() - 1] > Bets[lastId][Bets[lastId].Count() - 1])
+            if( Bet.Where((_, i) => i != id).ToArray().All(b => b < Bet[id]) )
+            {
+                action = "Raise";
+            }
+
+            await ShowAction(id, action);
             if (IsCircleClosed()) break;
             id++;
         }
@@ -482,5 +517,26 @@ public class PokerBase : ComponentBase
         int val = MyBet;
         await Task.Delay(TIMEOUT);
         StateHasChanged();
+    }
+
+    public void SetMyBet(double d, int id = MY_ID)
+    {
+        if(d == -1)
+        {
+            MyBet = Bankroll[id];
+            return;
+        }
+        int bet = Convert.ToInt32(MIN_BET * d);
+        if (bet > Bankroll[id]) return;
+        MyBet = bet;
+    }
+
+    public void ApplyMyBet(int bet, int id)
+    {
+        DoBet(id, bet); 
+        if (id == MY_ID)
+        {
+            WaitYou = false;
+        }
     }
 }

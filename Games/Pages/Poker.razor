@@ -2,11 +2,14 @@
 @inherits PokerBase
 
 @{
-    string style = Title == string.Empty ? string.Empty : "display:none";
+    string style = Title == string.Empty ? string.Empty : "display:none";    
 }
 
-<div class="layout">    
-    <a class="button" style="position:absolute; top: 0; left: 0;" onclick="@(async () => await NewGame())">New Game</a>
+<div class="layout">   
+    @{
+        string newGameDisabled = Started == true ? "is-disabled" : "";
+        <a class="button new-game @(newGameDisabled)" onclick="@(async () => await NewGame())">New Game</a>
+    }
     <div style="clear:both"></div>
     <div class="border">
         <div class="area">
@@ -34,14 +37,12 @@
                 <div id="bet@((i+1).ToString())" class="bets">@Bet[i]</div>
             }
             string className = i == MY_ID ? "-you" : "";
-            <div id="player@((i+1).ToString())" class="players@(className)">
-                
+            <div id="player@((i+1).ToString())" class="players@(className)">                
                 <div class="body">
                 @{
-                    string player = i == MY_ID ? "You" : $"Player {(i+1).ToString()}";
-                                    <!-- <div class="text-top text@(className)">@player</div> -->                 
-                }
-                
+                    string player = i == MY_ID ? "You" : $"{(i+1).ToString()}";
+                        <div class="text-top@(className)">@player</div>                
+                }                
                 <img src="images\person@(className).svg" />
                     <img src="images\briefcase@(className).svg" align="left" class="briefcase" />
                     <div class="text@(className)">@Bankroll[i]</div>
@@ -64,9 +65,10 @@
     </div>
     <div id="panel">
         <div class="panel-container">
-            <a class="button" onclick="">1/2</a>
-            <a class="button" onclick="">Min</a>
-            <a class="button" onclick="">x2</a>
+            <a class="button" onclick="@(() => SetMyBet(0.5))">1/2</a>
+            <a class="button" onclick="@(() => SetMyBet(1))">Min</a>
+            <a class="button" onclick="@(() => SetMyBet(2))">x2</a>
+            <a class="button" onclick="@(() => SetMyBet(-1))">All-in</a>            
             <div style="clear:both"></div>
         </div>
         <div class="panel-container">
@@ -75,9 +77,12 @@
             <div style="clear:both"></div>
         </div>
         <div class="panel-container">
-            <a class="button" onclick="">Fold</a>
-            <a class="button" onclick="">Check</a>
-            <a class="button" onclick="">Bet&nbsp;@(MyBet)</a>
+            @{
+                string waitYouDsabled = WaitYou == true ? "" : "is-disabled";
+            }
+            <a class="button @(waitYouDsabled)" onclick="">Fold</a>
+            <a class="button @(waitYouDsabled)" onclick="">Check</a>
+            <a class="button @(waitYouDsabled)" onclick="@(() => ApplyMyBet(MyBet, MY_ID))">Bet&nbsp;@(MyBet)</a>
             <div style="clear:both"></div>
         </div>
     </div>
