@@ -35,19 +35,22 @@
             }
             string className = i == MY_ID ? "-you" : "";
             <div id="player@((i+1).ToString())" class="players@(className)">
+                
+                <div class="body">
+                @{
+                    string player = i == MY_ID ? "You" : $"Player {(i+1).ToString()}";
+                                    <!-- <div class="text-top text@(className)">@player</div> -->                 
+                }
+                
+                <img src="images\person@(className).svg" />
+                    <img src="images\briefcase@(className).svg" align="left" class="briefcase" />
+                    <div class="text@(className)">@Bankroll[i]</div>
+                </div>
                 @if(! string.IsNullOrEmpty(Actions[i]))
                 {
                     think = "think";
                     <div class="head @think">@Actions[i]</div>
                 }
-                <!-- <div class="body"> -->
-                @{
-                    string player = i == MY_ID ? "You" : $"Player {(i+1).ToString()}";
-                                <!-- <div class="text-top text@(className)">@player</div> -->                 
-                }
-                <!-- </div> -->
-                <img src="images\person@(className).svg" />
-                <div class="text@(className)">@Bankroll[i]</div>
             </div>
             <div id="hand@((i+1).ToString())" class="hands">                
                 @for(int j = 0; j < HANDS_COUNT; j ++)
