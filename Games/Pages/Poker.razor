@@ -78,11 +78,12 @@
         </div>
         <div class="panel-container">
             @{
-                string waitYouDisabled = ( WaitYou == true ) ? "" : "is-disabled";
+                string foldDisabled = "is-disabled";
+                string checkDisabled = ( WaitYou == true && IsCheckAvailable(MY_ID) ) ? "" : "is-disabled";
                 string myBetDisabled = ( WaitYou == true && MyBetOk() ) ? "" : "is-disabled";
             }
-            <a class="button @(waitYouDisabled)" onclick="">Fold</a>
-            <a class="button @(waitYouDisabled)" onclick="">Check</a>
+            <a class="button @(foldDisabled)" onclick="">Fold</a>
+            <a class="button @(checkDisabled)" onclick="@(() => Check(MY_ID))">Check</a>
             <a class="button @(myBetDisabled)" onclick="@(() => ApplyMyBet(MyBet, MY_ID))">Bet&nbsp;@(MyBet)</a>
             <div style="clear:both"></div>
         </div>

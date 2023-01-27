@@ -15,6 +15,8 @@ public class PokerBase : ComponentBase
     const int TIMEOUT = 1000;
     const int SHORT_TIMEOUT = 500;
     const int TINY_TIMEOUT = 100;
+
+    GameState GameState { get; set; }   
     public string Title { get; set; } = "TEXAS HOLD'EM";
     public string[,] Images { get; }  = new string[PLAYERS_COUNT, HANDS_COUNT];
     public string[] Board { get; } = new string[COMMON_COUNT];
@@ -29,7 +31,7 @@ public class PokerBase : ComponentBase
     public string[] Actions { get; } = new string[PLAYERS_COUNT];
     public int[] Bankroll { get; } = new int[PLAYERS_COUNT];
     public int[] Bet { get; } = new int[PLAYERS_COUNT];
-    public List<int>[] Bets { get; } = new List<int>[PLAYERS_COUNT];
+    public List<Tuple<int, int>>[] Bets { get; } = new List<Tuple<int, int>>[PLAYERS_COUNT];
     readonly List<Tuple<int,int>> _indexes = new();
     readonly List<Tuple<int, int>>[] _hands = new List<Tuple<int, int>>[PLAYERS_COUNT];
     readonly List<Tuple<int, int>> _board = new();
@@ -108,11 +110,13 @@ public class PokerBase : ComponentBase
         await DealerSelection();        
         for (int i = 0; i < 2; i++)
         {
+            GameState = GameState.PreFlop;
             await SmallBlind();
             await BigBlind();
             await Task.Delay(TIMEOUT);
             await PreFlop();
             await Task.Delay(TIMEOUT);
+            GameState = GameState.PostFlop;
             await Flop();
             await Task.Delay(TIMEOUT);
             await Turn();
@@ -392,7 +396,16 @@ public class PokerBase : ComponentBase
         StateHasChanged();
     }
 
-    bool IsCircleClosed() => Bet.All(b => b == Bet[0]);
+    //bool IsCircleClosed() => Bets.All(b => b.Count == Bets[0].Count) &&  Bet.All(b => b == Bet[0]);
+    bool IsCircleClosed()
+    {
+        int count = Bets[0].Where(b => b.Item2 == _board.Count).ToList().Count;
+        foreach (List<Tuple<int, int>> bet in Bets)
+        {
+            if (bet.Where(b => b.Item2 == _board.Count).ToList().Count != count) return false;
+        }
+        return Bet.All(b => b == Bet[0]);
+    }
 
     List<int> GetWinners()
     {
@@ -435,6 +448,7 @@ public class PokerBase : ComponentBase
                 {
                     id -= PLAYERS_COUNT;
                 }
+                string action = "Call";
                 if (id == MY_ID)
                 {
                     WaitYou = true;
@@ -444,13 +458,24 @@ public class PokerBase : ComponentBase
                         StateHasChanged();
                         await Task.Delay(SHORT_TIMEOUT);
                     }
+                    if (Bets[id].Where(b => b.Item2 == _board.Count).ToList()[^1].Item1 == 0)
+                    {
+                        action = "Check";
+                    }
                 }
                 else
                 {
-                    int bet = CheckHand(id);
-                    DoBet(id, bet);
-                }
-                string action = "Call";
+                    if (IsCheckAvailable(id))
+                    {
+                        Check(id);
+                        action = "Check";
+                    }
+                    else
+                    {
+                        int bet = CheckHand(id);
+                        DoBet(id, bet);
+                    }
+                }                
                 if (Bet.Where((_, i) => i != id).ToArray().All(b => b < Bet[id]))
                 {
                     action = "Raise";
@@ -535,6 +560,8 @@ public class PokerBase : ComponentBase
         MyBet = bet;
     }
 
+    public void Check(int id) => ApplyMyBet(0, id);
+
     public void ApplyMyBet(int bet, int id)
     {
         DoBet(id, bet); 
@@ -546,11 +573,47 @@ public class PokerBase : ComponentBase
 
     public bool MyBetOk() => MyBet >= GetMinBet(MY_ID);
 
-    int GetMinBet(int id)
+    public bool IsCheckAvailable(int id)
     {
-        int preId = GetPrevId(id);
-        return Bet[preId] - Bet[id];
+        bool ret = false;
+        switch(GameState)
+        {
+            case GameState.PreFlop:
+                if( id == GetBigBlendId() && Bet.All(b => b == Bet[id]) )
+                {
+                    ret = true;
+                }
+                break;
+            case GameState.PostFlop:
+                if ( (DealerId == GetPrevId(id) && Bet.All(b => b == Bet[id])) || IsAllCheck(id)
+                    //Bets.Where(b => b.Count > Bets[id].Count).All(l => l[^1] == 0) 
+                    )
+                {
+                    ret = true;
+                }
+                break;
+        }
+
+        return ret;
     }
+
+    bool IsAllCheck(int id)
+    {
+        foreach(List<Tuple<int, int>> bet in Bets)
+        {
+            if (!bet.Where(b => b.Item2 == _board.Count).Any()) continue;
+            if ( ! (bet.Where(b => b.Item2 == _board.Count).ToList()[^1].Item1 == 0) ) return false;
+        }
+        //int nextId = GetNextId(DealerId);
+        //while (id != nextId)
+        //{
+        //    if ( ! Bets[nextId].Where(b => b.Item2 == _board.Count).ToList().All(i => i.Item1 == 0) ) return false;
+        //    nextId = GetNextId(nextId);
+        //}
+        return true;
+    }
+
+    int GetMinBet(int id) => Bet[GetPrevId(id)] - Bet[id];
 
     void DoBet(int id, int value)
     {
@@ -558,6 +621,12 @@ public class PokerBase : ComponentBase
         Bankroll[id] -= value;
         Bank += value;
         _betId = id;
-        Bets[id].Add(value);
+        Bets[id].Add(new Tuple<int, int>(value, _board.Count));
     }
+}
+
+public enum GameState
+{
+    PreFlop,
+    PostFlop
 }
