@@ -10,6 +10,8 @@ public class PokerBase : ComponentBase
     public const int PLAYERS_COUNT = 9;
     public const int MAX_BANKROLL = 1000;
     public const int MIN_BET = 10;
+    const int D_BB = 2;
+    const int D_SB = 1;
     const int TIMEOUT = 1000;
     const int SHORT_TIMEOUT = 500;
     const int TINY_TIMEOUT = 100;
@@ -109,7 +111,7 @@ public class PokerBase : ComponentBase
             await SmallBlind();
             await BigBlind();
             await Task.Delay(TIMEOUT);
-            await PreFlop(0);
+            await PreFlop();
             await Task.Delay(TIMEOUT);
             await Flop();
             await Task.Delay(TIMEOUT);
@@ -269,13 +271,13 @@ public class PokerBase : ComponentBase
 
     async Task SmallBlind()
     {
-        int id = Blind(1, MIN_BET / 2);
+        int id = Blind(D_SB, MIN_BET / 2);
         await ShowAction(id, "SB");
     }
 
     async Task BigBlind()
     {
-        int id = Blind(2, MIN_BET);
+        int id = Blind(D_BB, MIN_BET);
         await ShowAction(id, "BB");
     }
 
@@ -330,10 +332,10 @@ public class PokerBase : ComponentBase
         StateHasChanged();
     }
 
-    async Task PreFlop(int i)
+    async Task PreFlop()
     {
         await PocketDistribution();
-        await Bargaining(i == 0 ? 3 : 1);
+        await Bargaining(3);
     }
 
     async Task Flop()
@@ -422,54 +424,42 @@ public class PokerBase : ComponentBase
         return fullHand;
     }
 
-    void DoBet(int id, int value)
-    {
-        Bet[id] += value;
-        Bankroll[id] -= value;
-        Bank += value;
-        _betId = id;
-        Bets[id].Add(value);
-    }
-
     async Task Bargaining(int n)
     {
         int id = DealerId + n;
-        for (int i = 0; i < PLAYERS_COUNT; i++)
+        while (true)
         {
-            if (id >= PLAYERS_COUNT)
+            for (int i = 0; i < PLAYERS_COUNT; i++)
             {
-                id -= PLAYERS_COUNT;
-            }
-
-            if (id == MY_ID)
-            {
-                WaitYou = true;
-                while(WaitYou)
+                if (id >= PLAYERS_COUNT)
                 {
-                    await Task.Delay(TINY_TIMEOUT);
-                    StateHasChanged();                    
+                    id -= PLAYERS_COUNT;
                 }
+                if (id == MY_ID)
+                {
+                    WaitYou = true;
+                    while (WaitYou)
+                    {
+                        await ShowAction(id, "My Bet");
+                        StateHasChanged();
+                        await Task.Delay(SHORT_TIMEOUT);
+                    }
+                }
+                else
+                {
+                    int bet = CheckHand(id);
+                    DoBet(id, bet);
+                }
+                string action = "Call";
+                if (Bet.Where((_, i) => i != id).ToArray().All(b => b < Bet[id]))
+                {
+                    action = "Raise";
+                }
+                await ShowAction(id, action);
+                if (IsCircleClosed()) break;
+                id++;
             }
-            else
-            {
-                int bet = CheckHand(id, i == 0);
-                DoBet(id, bet);                
-            }
-            string action = "Call";
-            //int lastId = _betId - 1;
-            //if(lastId < 0)
-            //{
-            //    lastId = PLAYERS_COUNT - 1; 
-            //}
-            //if (Bets[id][Bets[id].Count() - 1] > Bets[lastId][Bets[lastId].Count() - 1])
-            if( Bet.Where((_, i) => i != id).ToArray().All(b => b < Bet[id]) )
-            {
-                action = "Raise";
-            }
-
-            await ShowAction(id, action);
-            if (IsCircleClosed()) break;
-            id++;
+            if (Bet.All(b => b == Bet[0])) break;
         }
     }
 
@@ -490,7 +480,7 @@ public class PokerBase : ComponentBase
         return id;
     }
 
-    int GetNextId(int n)
+    int GetNextId(int n = 1)
     {
         int id = DealerId + n;
         if (id >= PLAYERS_COUNT)
@@ -500,14 +490,28 @@ public class PokerBase : ComponentBase
         return id;
     }
 
-    int CheckHand(int id, bool first = false)
+    int GetBigBlendId() => GetNextId(D_BB);
+    int GetPrevId(int myId)
     {
-        int bet = MIN_BET;
-        if (first) return bet;
+        int id = myId - 1;
+        if(id < 0)
+        {
+            id += PLAYERS_COUNT;
+        }
+        return id;
+    }
+
+    int CheckHand(int id)
+    {
+        int bet = GetMinBet(id);
         int[] otherBets = Bet.Where((_, i) => i != id).ToArray();
         if(otherBets.All(b => b == otherBets[0]))
         {
-            return otherBets[0] - Bet[id];
+            bet = otherBets[0] - Bet[id];
+        }
+        if(bet == 0)
+        {
+            bet = MIN_BET;
         }
         return bet;
     }
@@ -538,5 +542,22 @@ public class PokerBase : ComponentBase
         {
             WaitYou = false;
         }
+    }
+
+    public bool MyBetOk() => MyBet >= GetMinBet(MY_ID);
+
+    int GetMinBet(int id)
+    {
+        int preId = GetPrevId(id);
+        return Bet[preId] - Bet[id];
+    }
+
+    void DoBet(int id, int value)
+    {
+        Bet[id] += value;
+        Bankroll[id] -= value;
+        Bank += value;
+        _betId = id;
+        Bets[id].Add(value);
     }
 }
