@@ -7,7 +7,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "Games.dll": "sha256-m8YOf0MANj00CzAk56yawr\/g2ZWNVkMpAjKVzP8\/40E=",
+      "Games.dll": "sha256-ABa3QD1s7bZ46YnBL3+t1anuIcKG92bs9Pyc3PfJ07Q=",
       "Microsoft.AspNetCore.Components.dll": "sha256-SaQG+RjMkmKMZ6edq852ONhNFmdBxrNXaq77jjgbfRE=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-Cc3w7WK\/B\/kt7v1kSJrfa0m9ywGlvbVIpxmLxSSqi4E=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-OfawION\/UfFO75U4pMPDVhHt71EbKuF3qxDeiPFGqKo=",
