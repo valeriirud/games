@@ -8,7 +8,14 @@
 <div class="layout">   
     @{
         string newGameDisabled = Started == true ? "is-disabled" : "";
-        <a class="button new-game @(newGameDisabled)" onclick="@(async () => await NewGame())">New Game</a>
+        string continueGameDisabled = (Started == true || ContinueGame == true) ? "is-disabled" : "";
+            <div class="new-game">
+            <div class="panel-container">
+                <a class="button button-geom @(newGameDisabled)" onclick="@(async () => await NewGame())">New&nbsp;Game</a><br/>
+                <a class="button button-geom @(continueGameDisabled)" onclick="@(async () => await Continue())">Continue</a>
+                <div style="clear:both"></div>
+            </div>
+            </div>
     }
     <div style="clear:both"></div>
     <div class="border">
@@ -23,7 +30,10 @@
             <div id="board" style="@style">
                 @for(int i = 0; i < COMMON_COUNT; i ++)
                 {
-                    <div class="common-cards"><img align="middle" src="@(Board[i])" class="card-item"/></div>
+                    string highlight = WinnerCards.Contains(Board[i]) ? "highlight" : string.Empty;
+                    <div class="common-cards">
+                        <img align="middle" src="@(Board[i])" class="card-item @(highlight)"/>
+                    </div>
                 }
                 <div style="clear:both;"></div>
             </div>
@@ -41,7 +51,7 @@
                 <div class="body">
                 @{
                     string player = i == MY_ID ? "You" : $"{(i+1).ToString()}";
-                        <div class="text-top@(className)">@player</div>                
+                                <div class="text-top@(className)">@player</div>                
                 }                
                 <img src="images\person@(className).svg" />
                     <img src="images\briefcase@(className).svg" align="left" class="briefcase" />
@@ -49,21 +59,25 @@
                 </div>
                 @if(! string.IsNullOrEmpty(Actions[i]))
                 {
-                    think = "think";
+                    think = Actions[i];
                     <div class="head @think">@Actions[i]</div>
                 }
             </div>
             <div id="hand@((i+1).ToString())" class="hands">                
                 @for(int j = 0; j < HANDS_COUNT; j ++)
                 {
-                    <img src="@(Images[i, j])" class="card-item"/>
+                    string highlight = WinnerCards.Contains(Images[i, j]) ? "highlight" : string.Empty;
+                    <img src="@(Images[i, j])" class="card-item @(highlight)"/>
                 }                
                 <img src="@dialer" class="dialer" />
             </div>
         }
         </div>
     </div>
-    <div id="panel">
+    @{
+        string show = WaitYou == true ? string.Empty : "display:none"; 
+    }
+    <div id="panel" style="@(show)">
         <div class="panel-container">
             <a class="button" onclick="@(() => SetMyBet(0.5))">1/2</a>
             <a class="button" onclick="@(() => SetMyBet(1))">Min</a>
@@ -78,11 +92,11 @@
         </div>
         <div class="panel-container">
             @{
-                string foldDisabled = "is-disabled";
+                string foldDisabled = ( WaitYou == true ) ? "" : "is-disabled";
                 string checkDisabled = ( WaitYou == true && IsCheckAvailable(MY_ID) ) ? "" : "is-disabled";
                 string myBetDisabled = ( WaitYou == true && MyBetOk() ) ? "" : "is-disabled";
             }
-            <a class="button @(foldDisabled)" onclick="">Fold</a>
+            <a class="button @(foldDisabled)" onclick="@(() => Fold(MY_ID))">Fold</a>
             <a class="button @(checkDisabled)" onclick="@(() => Check(MY_ID))">Check</a>
             <a class="button @(myBetDisabled)" onclick="@(() => ApplyMyBet(MyBet, MY_ID))">Bet&nbsp;@(MyBet)</a>
             <div style="clear:both"></div>
