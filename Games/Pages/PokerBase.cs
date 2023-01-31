@@ -9,7 +9,7 @@ public class PokerBase : ComponentBase
     public const int COMMON_COUNT = 5;
     public const int PLAYERS_COUNT = 9;
     public const int MAX_BANKROLL = 1000;
-    public const int MIN_BET = 10;
+    public const int MIN_BET = 2;
     const int D_BB = 2;
     const int D_SB = 1;
     const int TIMEOUT = 1000;
@@ -110,6 +110,10 @@ public class PokerBase : ComponentBase
         StateHasChanged();
         await Task.Delay(TIMEOUT);
         await StartNewGame();
+
+        //await Test();
+        //Started = false;
+        //StateHasChanged();
     }
 
     async Task StartNewGame()
@@ -153,7 +157,7 @@ public class PokerBase : ComponentBase
                 await Shutdown();
                 await Task.Delay(TIMEOUT);
             }
-            List<Tuple<int, int>> winners = await ShowWinners();
+            await ShowWinners();
             ContinueGame = false;
             Started = false;
             StateHasChanged();
@@ -318,27 +322,139 @@ public class PokerBase : ComponentBase
         return maxHands;
     }
 
-    void CompareHands(List<Tuple<int, int>> winners)
+    void CompareHands(List<Tuple<int, Hands>> winners)
     {
-        List<Tuple<int, int>> items = new(); 
-        foreach(Tuple<int, int> win in winners)
+        if (!winners.Any()) return;
+        Hands hand = winners.ElementAt(0).Item2;
+        switch(hand)
         {
-            if (win.Item2 != 2) continue;
+            case Hands.Pair:
+                ComparePair(winners);
+                break;
+            case Hands.TwoPairs:
+                CompareTwoPairs(winners);
+                break;
+            case Hands.ThreeOfKind:
+                CompareThreeOfKind(winners);
+                break;
+            case Hands.Flush:
+                CompareFlush(winners);
+                break;
+            case Hands.FourOfKind:
+                CompareFourOfKind(winners);
+                break;
+            default:
+                break;
+        }
+    }
+
+    List<Tuple<int, int>> GetIdenticalCardIds(List<Tuple<int, Hands>> winners, int n)
+    {
+        List<Tuple<int, int>> items = new();
+        foreach (Tuple<int, Hands> win in winners)
+        {
             List<Tuple<int, int>> hand = GetFullHand(win.Item1);
-            List<Tuple<int, int>> cards = GetIdenticalCards(hand, 2);
+            List<Tuple<int, int>> cards = GetIdenticalCards(hand, n);
             List<int> cardIds = cards.Select(x => x.Item2).Distinct().ToList();
             cardIds.ForEach(c => items.Add(new Tuple<int, int>(win.Item1, c)));
         }
+        return items;
+    }
+
+    void CompareFlush(List<Tuple<int, Hands>> winners, Hands hand = Hands.Flush)
+    {
+        List<Tuple<int, int>> cards = new();
+        foreach(Tuple<int, Hands> win in winners)
+        {
+            List<Tuple<int, int>> fullHand = GetFullHand(win.Item1);
+            int suit = GetSuitByCardNumber(fullHand, 5);
+            List<int> items = fullHand.Where(h => h.Item1 == suit).Select(h => h.Item2).ToList();
+            items.ForEach(i => cards.Add(new Tuple<int, int>(win.Item1, i)));
+        }
+        cards = cards.OrderByDescending(h => h.Item2).ToList();
+        winners.Clear();
+        foreach (Tuple<int, int> item in cards)
+        {
+            if (item.Item2 != cards.ElementAt(0).Item2) break;
+            winners.Add(new Tuple<int, Hands>(item.Item1, hand));
+        }
+        if (!winners.Any()) return;
+        FillWinnerCardsBySuit(winners, 5);
+
+    }
+
+    void CompareTwoPairs(List<Tuple<int, Hands>> winners, Hands hand = Hands.TwoPairs)
+    {
+        List<Tuple<int, int>> items = GetIdenticalCardIds(winners, 2);
         List<Tuple<int, int>> sorted = items.OrderByDescending(i => i.Item2).ToList();
         if (!sorted.Any()) return;
-        Tuple<int, int> item = sorted.ElementAt(0);
-        winners.Clear();
-        winners.Add(new Tuple<int, int>(item.Item1, 2));
-        WinnerCards.Clear();
-        List<Tuple<int, int>> hand1 = GetFullHand(item.Item1);
-        List<Tuple<int, int>> cards1 = GetIdenticalCards(hand1, 2);
-        cards1.ForEach(c => WinnerCards.Add(_images[c.Item1, c.Item2]));
+        //Dictionary<int, int> dict = new();
+        //foreach (Tuple<int, int> item in sorted)
+        //{
+        //    if(! dict.ContainsKey(item.Item1))
+        //    {
+        //        dict.Add(item.Item1, sorted.IndexOf(item));
+        //        continue;
+        //    }
+        //    dict[item.Item1] += sorted.IndexOf(item);
+        //}
+        //List<KeyValuePair<int, int>> pairs = dict.ToList();
+        //pairs = pairs.OrderBy(x => x.Value).ToList();
+        //if (! pairs.Any()) return;
+        //winners.Clear();
+        //foreach (KeyValuePair<int, int> pair in pairs)
+        //{
+        //    if (pair.Value != pairs.ElementAt(0).Value) break;
+        //    winners.Add(new Tuple<int, Hands>(pair.Key, Hands.TwoPairs));
+        //}
+        //FillWinnerCards(winners, 2);
+        foreach (Tuple<int, int> item in sorted)
+        {
+            if (item.Item2 != sorted.ElementAt(0).Item2) break;
+            winners.Add(new Tuple<int, Hands>(item.Item1, hand));
+        }
+        FillWinnerCardsById(winners, 2);
+    }
 
+    void CompareThreeOfKind(List<Tuple<int, Hands>> winners) => ComparePair(winners, 3, Hands.ThreeOfKind);
+    void CompareFourOfKind(List<Tuple<int, Hands>> winners) => ComparePair(winners, 4, Hands.FourOfKind);
+
+    void ComparePair(List<Tuple<int, Hands>> winners, int n = 2, Hands hand = Hands.Pair)
+    {
+        List<Tuple<int, int>> items = GetIdenticalCardIds(winners, n);
+        List<Tuple<int, int>> sorted = items.OrderByDescending(i => i.Item2).ToList();
+        if (!sorted.Any()) return;
+        winners.Clear();
+        foreach (Tuple<int, int> item in sorted)
+        {
+            if (item.Item2 != sorted.ElementAt(0).Item2) break;
+            winners.Add(new Tuple<int, Hands>(item.Item1, hand));
+        }
+        FillWinnerCardsById(winners, n);
+    }
+
+    void FillWinnerCardsBySuit(List<Tuple<int, Hands>> winners, int count)
+    {
+        WinnerCards.Clear();
+        foreach (Tuple<int, Hands> win in winners)
+        {
+            List<Tuple<int, int>> hand = GetFullHand(win.Item1);
+            int suit = GetSuitByCardNumber(hand, count);
+            List<Tuple<int, int>> cards = hand.Where(h => h.Item1 == suit).OrderByDescending(h => h.Item2).
+                Take(count).ToList();
+            cards.ForEach(c => WinnerCards.Add(_images[c.Item1, c.Item2]));
+        }
+    }
+
+    void FillWinnerCardsById(List<Tuple<int, Hands>> winners, int n)
+    {
+        WinnerCards.Clear();
+        foreach (Tuple<int, Hands> win in winners)
+        {
+            List<Tuple<int, int>> hand = GetFullHand(win.Item1);
+            List<Tuple<int, int>> cards = GetIdenticalCards(hand, n);
+            cards.ForEach(c => WinnerCards.Add(_images[c.Item1, c.Item2]));
+        }
     }
 
     static int CompareHands(List<Tuple<int, int>> hand1, List<Tuple<int, int>> hand2)
@@ -472,9 +588,9 @@ public class PokerBase : ComponentBase
         StateHasChanged();
     }
 
-    async Task<List<Tuple<int, int>>> ShowWinners()
+    async Task<List<Tuple<int, Hands>>> ShowWinners()
     {
-        List<Tuple<int, int>> winners = GetWinners();
+        List<Tuple<int, Hands>> winners = GetWinners();
         winners.ForEach(w => Bankroll[w.Item1] += Bank / winners.Count);
         List<int> ids = winners.Select(w => w.Item1).ToList();
         await ShowAction(ids, "Winner", TIMEOUT);
@@ -500,45 +616,45 @@ public class PokerBase : ComponentBase
 
     List<int> GetFoldList() => _fold;
 
-    List<Tuple<int, int>> GetWinners()
+    List<Tuple<int, Hands>> GetWinners()
     {
-        List<Tuple<int, int>> winners = new();
+        List<Tuple<int, Hands>> winners = new();
         List<int> foldList = GetFoldList();
         if (foldList.Count == PLAYERS_COUNT - 1)
         {
-            winners.Add( new Tuple<int, int>(GetNextActiveId(), 0) );
+            winners.Add( new Tuple<int, Hands>(GetNextActiveId(), Hands.None) );
             return winners;
         }
-        winners = GetWinners(CheckRoyalFlush, 10);
+        winners = GetWinners(CheckRoyalFlush, Hands.RoyalFlush);
         if(winners.Any()) return winners;
-        winners = GetWinners(CheckStraightFlush, 9);
+        winners = GetWinners(CheckStraightFlush, Hands.StraightFlush);
         if (winners.Any()) return winners;
-        winners = GetWinners(CheckFourOfKind, 8);
+        winners = GetWinners(CheckFourOfKind, Hands.FourOfKind);
         if (winners.Any()) return winners;
-        winners = GetWinners(CheckFullHouse, 7);
+        winners = GetWinners(CheckFullHouse, Hands.FullHouse);
         if (winners.Any()) return winners;
-        winners = GetWinners(CheckFlush, 6);
+        winners = GetWinners(CheckFlush, Hands.Flush);
         if (winners.Any()) return winners;
-        winners = GetWinners(CheckStraight, 5);
+        winners = GetWinners(CheckStraight, Hands.Straight);
         if (winners.Any()) return winners;
-        winners = GetWinners(CheckThreeOfKind, 4);
+        winners = GetWinners(CheckThreeOfKind, Hands.ThreeOfKind);
         if (winners.Any()) return winners;
-        winners = GetWinners(CheckTwoPair, 3);
+        winners = GetWinners(CheckTwoPair, Hands.TwoPairs);
         if (winners.Any()) return winners;
-        winners = GetWinners(CheckPair, 2);
+        winners = GetWinners(CheckPair, Hands.Pair);
         if (winners.Any()) return winners;
-        winners = GetWinners(CheckHighCard, 1);
+        winners = GetWinners(CheckHighCard, Hands.HightCard);
         if (winners.Any()) return winners;    
-        return new List<Tuple<int, int>>();
+        return new List<Tuple<int, Hands>>();
     }
 
-    List<Tuple<int, int>> GetWinners(Func<int, bool> func, int n)
+    List<Tuple<int, Hands>> GetWinners(Func<int, bool> func, Hands hand)
     {
-        List<Tuple<int, int>> winners = new();
+        List<Tuple<int, Hands>> winners = new();
         for(int i = 0; i < PLAYERS_COUNT; i ++)
         {
             if (!func(i)) continue;
-            winners.Add(new Tuple<int, int>(i, n));
+            winners.Add(new Tuple<int, Hands>(i, hand));
         }
         if(winners.Count > 1)
         {
@@ -550,12 +666,11 @@ public class PokerBase : ComponentBase
     static int GetSuitByCardNumber(List<Tuple<int, int>> hand, int n)
     {
         List<int> suits = hand.Select(h => h.Item1).OrderBy(Item1 => Item1).ToList();
-        int count = 0;
         int suit = -1;
         foreach (int item in suits.Distinct())
         {
-            count = suits.Count(x => x == item);
-            if (count == n)
+            int count = suits.Count(x => x == item);
+            if (count >= n)
             {
                 suit = item;
                 break;
@@ -964,6 +1079,304 @@ public class PokerBase : ComponentBase
             Bets[id].Add(new Tuple<int, int>(value, _board.Count));
         }
     }
+
+    async Task Test()
+    {
+        Inint();
+        Title = string.Empty;
+        MakeTestData();
+        Hands hand = Hands.TwoPairs;
+        List<Tuple<int, Hands>> winners = new() { 
+            Tuple.Create(0, hand), 
+            Tuple.Create(1, hand), 
+            Tuple.Create(2, hand)//,
+            //Tuple.Create(3, hand)
+        };
+        //ComparePair(winners);
+        //CompareTwoPairs(winners);
+        //CompareThreeOfKind(winners);
+
+        //foreach(Tuple<int, Hands> win in winners)
+        //{
+        //    if (!CheckFlush(win.Item1)) continue;
+        //    int n = win.Item1;
+        //}
+
+        await Task.Delay(SHORT_TIMEOUT);
+    }
+
+    void MakeTestDataPair1()
+    {
+        _hands[0].Add(Tuple.Create(1, 0));
+        _hands[0].Add(Tuple.Create(2, 0));
+        Images[0, 0] = _images[1, 0];
+        Images[0, 1] = _images[2, 0];
+
+        _hands[1].Add(Tuple.Create(1, 1));
+        _hands[1].Add(Tuple.Create(2, 1));
+        Images[1, 0] = _images[1, 1];
+        Images[1, 1] = _images[2, 1];
+
+        _hands[2].Add(Tuple.Create(1, 2));
+        _hands[2].Add(Tuple.Create(2, 2));
+        Images[2, 0] = _images[1, 2];
+        Images[2, 1] = _images[2, 2];
+
+        _board.Add(Tuple.Create(0, 3));
+        _board.Add(Tuple.Create(1, 5));
+        _board.Add(Tuple.Create(2, 7));
+        _board.Add(Tuple.Create(3, 9));
+        _board.Add(Tuple.Create(0, 11));
+
+        Board[4] = _images[0, 3];
+        Board[3] = _images[1, 5];
+        Board[2] = _images[2, 7];
+        Board[1] = _images[3, 9];
+        Board[0] = _images[0, 11];
+    }
+
+    void MakeTestDataPair1_1()
+    {
+        _hands[0].Add(Tuple.Create(1, 0));
+        _hands[0].Add(Tuple.Create(2, 4));
+        Images[0, 0] = _images[1, 0];
+        Images[0, 1] = _images[2, 4];
+
+        _hands[1].Add(Tuple.Create(1, 1));
+        _hands[1].Add(Tuple.Create(2, 0));
+        Images[1, 0] = _images[1, 1];
+        Images[1, 1] = _images[2, 0];
+
+        _board.Add(Tuple.Create(0, 3));
+        _board.Add(Tuple.Create(1, 5));
+        _board.Add(Tuple.Create(2, 7));
+        _board.Add(Tuple.Create(3, 0));
+        _board.Add(Tuple.Create(0, 11));
+
+        Board[4] = _images[0, 3];
+        Board[3] = _images[1, 5];
+        Board[2] = _images[2, 7];
+        Board[1] = _images[3, 0];
+        Board[0] = _images[0, 11];
+    }
+
+    void MakeTestDataPair2()
+    {
+        _hands[0].Add(Tuple.Create(1, 0));
+        _hands[0].Add(Tuple.Create(0, 3));
+        Images[0, 0] = _images[1, 0];
+        Images[0, 1] = _images[0, 3];
+
+        _hands[1].Add(Tuple.Create(1, 1));
+        _hands[1].Add(Tuple.Create(1, 5));
+        Images[1, 0] = _images[1, 1];
+        Images[1, 1] = _images[1, 5];
+
+        _hands[2].Add(Tuple.Create(1, 2));
+        _hands[2].Add(Tuple.Create(2, 7));
+        Images[2, 0] = _images[1, 2];
+        Images[2, 1] = _images[2, 7];
+
+        _board.Add(Tuple.Create(2, 0));
+        _board.Add(Tuple.Create(2, 1));
+        _board.Add(Tuple.Create(2, 2));
+        _board.Add(Tuple.Create(3, 9));
+        _board.Add(Tuple.Create(0, 11));
+
+        Board[4] = _images[2, 0];
+        Board[3] = _images[2, 1];
+        Board[2] = _images[2, 2];
+        Board[1] = _images[3, 9];
+        Board[0] = _images[0, 11];
+    }
+
+    void MakeTestDataPair3()
+    {
+        _hands[0].Add(Tuple.Create(1, 0));
+        _hands[0].Add(Tuple.Create(0, 3));
+        Images[0, 0] = _images[1, 0];
+        Images[0, 1] = _images[0, 3];
+
+        _hands[1].Add(Tuple.Create(1, 1));
+        _hands[1].Add(Tuple.Create(1, 5));
+        Images[1, 0] = _images[1, 1];
+        Images[1, 1] = _images[1, 5];
+
+        _hands[2].Add(Tuple.Create(1, 2));
+        _hands[2].Add(Tuple.Create(2, 6));
+        Images[2, 0] = _images[1, 2];
+        Images[2, 1] = _images[2, 6];
+
+        _hands[3].Add(Tuple.Create(1, 7));
+        _hands[3].Add(Tuple.Create(2, 9));
+        Images[3, 0] = _images[1, 7];
+        Images[3, 1] = _images[2, 9];
+
+        _board.Add(Tuple.Create(2, 0));
+        _board.Add(Tuple.Create(2, 1));
+        _board.Add(Tuple.Create(2, 2));
+        _board.Add(Tuple.Create(3, 7));
+        _board.Add(Tuple.Create(0, 11));
+
+        Board[4] = _images[2, 0];
+        Board[3] = _images[2, 1];
+        Board[2] = _images[2, 2];
+        Board[1] = _images[3, 7];
+        Board[0] = _images[0, 11];
+    }
+
+    void MakeTestDataPair4()
+    {
+        _hands[0].Add(Tuple.Create(1, 7));
+        _hands[0].Add(Tuple.Create(0, 3));
+        Images[0, 0] = _images[1, 7];
+        Images[0, 1] = _images[0, 3];
+
+        _hands[1].Add(Tuple.Create(1, 1));
+        _hands[1].Add(Tuple.Create(1, 5));
+        Images[1, 0] = _images[1, 1];
+        Images[1, 1] = _images[1, 5];
+
+        _hands[2].Add(Tuple.Create(1, 2));
+        _hands[2].Add(Tuple.Create(2, 6));
+        Images[2, 0] = _images[1, 2];
+        Images[2, 1] = _images[2, 6];
+
+        _hands[3].Add(Tuple.Create(1, 7));
+        _hands[3].Add(Tuple.Create(2, 9));
+        Images[3, 0] = _images[1, 7];
+        Images[3, 1] = _images[2, 9];
+
+        _board.Add(Tuple.Create(2, 0));
+        _board.Add(Tuple.Create(2, 1));
+        _board.Add(Tuple.Create(2, 2));
+        _board.Add(Tuple.Create(3, 7));
+        _board.Add(Tuple.Create(0, 11));
+
+        Board[4] = _images[2, 0];
+        Board[3] = _images[2, 1];
+        Board[2] = _images[2, 2];
+        Board[1] = _images[3, 7];
+        Board[0] = _images[0, 11];
+    }
+
+    void MakeTestDataTwoPair1()
+    {
+        _hands[0].Add(Tuple.Create(1, 0));
+        _hands[0].Add(Tuple.Create(2, 1));
+        Images[0, 0] = _images[1, 0];
+        Images[0, 1] = _images[2, 1];
+
+        _hands[1].Add(Tuple.Create(1, 2));
+        _hands[1].Add(Tuple.Create(2, 3));
+        Images[1, 0] = _images[1, 2];
+        Images[1, 1] = _images[2, 3];
+
+        _board.Add(Tuple.Create(0, 0));
+        _board.Add(Tuple.Create(1, 1));
+        _board.Add(Tuple.Create(2, 2));
+        _board.Add(Tuple.Create(3, 3));
+        _board.Add(Tuple.Create(0, 11));
+
+        Board[4] = _images[0, 0];
+        Board[3] = _images[1, 1];
+        Board[2] = _images[2, 2];
+        Board[1] = _images[3, 3];
+        Board[0] = _images[0, 11];
+    }
+
+    void MakeTestDataSet1()
+    {
+        _hands[0].Add(Tuple.Create(0, 0));
+        _hands[0].Add(Tuple.Create(0, 0));
+        Images[0, 0] = _images[0, 0];
+        Images[0, 1] = _images[0, 0];
+
+        _hands[1].Add(Tuple.Create(1, 1));
+        _hands[1].Add(Tuple.Create(2, 1));
+        Images[1, 0] = _images[1, 1];
+        Images[1, 1] = _images[2, 1];
+
+        _board.Add(Tuple.Create(0, 0));
+        _board.Add(Tuple.Create(0, 1));
+        _board.Add(Tuple.Create(2, 7));
+        _board.Add(Tuple.Create(3, 9));
+        _board.Add(Tuple.Create(0, 11));
+
+        Board[4] = _images[0, 0];
+        Board[3] = _images[0, 1];
+        Board[2] = _images[2, 7];
+        Board[1] = _images[3, 9];
+        Board[0] = _images[0, 11];
+    }
+
+    void MakeTestDataTwoPair2()
+    {
+        _hands[0].Add(Tuple.Create(0, 7));
+        _hands[0].Add(Tuple.Create(0, 12));
+        Images[0, 0] = _images[0, 7];
+        Images[0, 1] = _images[0, 12];
+
+        _hands[1].Add(Tuple.Create(0, 10));
+        _hands[1].Add(Tuple.Create(2, 12));
+        Images[1, 0] = _images[0, 10];
+        Images[1, 1] = _images[2, 12];
+
+        _board.Add(Tuple.Create(3, 1));
+        _board.Add(Tuple.Create(3, 12));
+        _board.Add(Tuple.Create(0, 8));
+        _board.Add(Tuple.Create(3, 8));
+        _board.Add(Tuple.Create(0, 3));
+
+        Board[4] = _images[3, 1];
+        Board[3] = _images[3, 12];
+        Board[2] = _images[0, 8];
+        Board[1] = _images[3, 8];
+        Board[0] = _images[0, 3];
+    }
+
+    void MakeTestDataFlush1()
+    {
+        _hands[0].Add(Tuple.Create(3, 5));
+        _hands[0].Add(Tuple.Create(3, 9));
+        Images[0, 0] = _images[3, 5];
+        Images[0, 1] = _images[3, 9];
+
+        _hands[1].Add(Tuple.Create(0, 7));
+        _hands[1].Add(Tuple.Create(0, 12));
+        Images[1, 0] = _images[0, 7];
+        Images[1, 1] = _images[0, 12];
+
+        _hands[2].Add(Tuple.Create(0, 10));
+        _hands[2].Add(Tuple.Create(2, 12));
+        Images[2, 0] = _images[0, 10];
+        Images[2, 1] = _images[2, 12];
+
+        _board.Add(Tuple.Create(3, 1));
+        _board.Add(Tuple.Create(3, 12));
+        _board.Add(Tuple.Create(0, 8));
+        _board.Add(Tuple.Create(3, 8));
+        _board.Add(Tuple.Create(0, 3));
+
+        Board[4] = _images[3, 1];
+        Board[3] = _images[3, 12];
+        Board[2] = _images[0, 8];
+        Board[1] = _images[3, 8];
+        Board[0] = _images[0, 3];
+    }
+
+    void MakeTestData()
+    {
+        //MakeTestDataPair1();
+        //MakeTestDataPair2();
+        //MakeTestDataPair3();
+        //MakeTestDataPair4();
+        //MakeTestDataTwoPair1();
+        //MakeTestDataPair1_1();
+        //MakeTestDataSet1();
+        //MakeTestDataTwoPair2();
+        MakeTestDataFlush1();
+    }
 }
 
 public enum GameState
@@ -971,3 +1384,39 @@ public enum GameState
     PreFlop,
     PostFlop
 }
+
+enum Hands
+{
+    None,
+    HightCard,
+    Pair,
+    TwoPairs,
+    ThreeOfKind,
+    Straight,
+    Flush,
+    FullHouse,
+    FourOfKind,
+    StraightFlush,
+    RoyalFlush
+}
+
+/*
+ 
+@"images\spades_2.svg",
+@"images\spades_3.svg",
+@"images\spades_4.svg",
+@"images\spades_5.svg",
+@"images\spades_6.svg",
+@"images\spades_7.svg",
+@"images\spades_8.svg",
+@"images\spades_9.svg",
+@"images\spades_10.svg",
+@"images\spades_jack.svg",
+@"images\spades_queen.svg",
+@"images\spades_king.svg",
+@"images\spades_ace.svg"
+
+cross - clubs
+
+
+ */
