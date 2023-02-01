@@ -261,13 +261,19 @@ div[b-c3ah7i6tz9]{
     width: 3.5vw;
 }
 
-#bank[b-c3ah7i6tz9] {
+#pot[b-c3ah7i6tz9] {
     position: absolute;
-    top: 10vw;
-    left: 62vw;
+    //top: 10vw;
+    //left: 62vw;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
     width: 10vw;
     height: 8vw;
-    font-weight:bold;
+    font-weight: bold;
     color: #fff;
     background: url(images/pot.svg) 100% 100% no-repeat;
     padding-top: 5vw;
@@ -297,8 +303,8 @@ div[b-c3ah7i6tz9]{
 
 #bet3[b-c3ah7i6tz9] {
     position: absolute;
-    top: 17vw;
-    left: 54vw;
+    top: 16vw;
+    left: 55vw;
 }
 
 #bet4[b-c3ah7i6tz9] {
@@ -338,55 +344,55 @@ div[b-c3ah7i6tz9]{
 }
 
 @media screen and (min-width: 400px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
         font-size: 0.2rem;
     }
-    #bank[b-c3ah7i6tz9] {
+    #pot[b-c3ah7i6tz9] {
         font-size: 0.3rem;
     }
 }
 
 @media screen and (min-width: 600px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
         font-size: 0.4rem;
     }
-    #bank[b-c3ah7i6tz9] {
+    #pot[b-c3ah7i6tz9] {
         font-size: 0.6rem;
     }
 }
 
 @media screen and (min-width: 800px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
         font-size: 0.6rem;
     }
-    #bank[b-c3ah7i6tz9] {
+    #pot[b-c3ah7i6tz9] {
         font-size: 1.0rem;
     }
 }
 
 @media screen and (min-width: 1000px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
         font-size: 0.8rem;
     }
-    #bank[b-c3ah7i6tz9] {
+    #pot[b-c3ah7i6tz9] {
         font-size: 1.2rem;
     }
 }
 
 @media screen and (min-width: 1300px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
         font-size: 1.0rem;
     }
-    #bank[b-c3ah7i6tz9] {
+    #pot[b-c3ah7i6tz9] {
         font-size: 1.5rem;
     }
 }
 
 @media screen and (min-width: 1900px) {
-    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], #bank[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
+    .text[b-c3ah7i6tz9], .text-you[b-c3ah7i6tz9], .head[b-c3ah7i6tz9], .bets[b-c3ah7i6tz9], #new-game[b-c3ah7i6tz9], .button[b-c3ah7i6tz9], .text-top[b-c3ah7i6tz9], .text-top-you[b-c3ah7i6tz9], .bet-size[b-c3ah7i6tz9] {
         font-size: 1.8rem;
     }
-    #bank[b-c3ah7i6tz9] {
+    #pot[b-c3ah7i6tz9] {
         font-size: 2.0rem;
     }
 }
@@ -542,8 +548,8 @@ div[b-c3ah7i6tz9]{
 #hand3[b-c3ah7i6tz9] {
     transform: rotate(162deg);
     position: absolute;
-    top: 14vw;
-    left: 50vw;
+    top: 13vw;
+    left: 52vw;
 }
 
 #hand4[b-c3ah7i6tz9] {
