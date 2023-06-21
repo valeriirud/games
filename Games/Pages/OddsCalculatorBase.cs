@@ -78,7 +78,7 @@ public class OddsCalculatorBase : ComponentBase
                 else
                 {
                     if (!string.IsNullOrEmpty(HandCards[i])) continue;
-                    HandCards[i] = card;
+                    HandCards[i] = card.Insert(1, "\n");
                 }
                 break;
             }

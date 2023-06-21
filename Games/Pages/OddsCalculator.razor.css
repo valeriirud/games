@@ -11,6 +11,15 @@ table th, table td {
     padding: 1px;
 }
 
-table td {
-    border: solid red 1px;
+.board {
+    background-color: green;
+    border-collapse: separate;
+    border-spacing: 1em;
+}
+
+.board td {
+    background-color: white;
+    font-size:xx-large;
+    width: 50px;
+    height: 80px;
 }
