@@ -35,8 +35,17 @@ table th[b-r59iy9045t], table td[b-r59iy9045t] {
     padding: 1px;
 }
 
-table td[b-r59iy9045t] {
-    border: solid red 1px;
+.board[b-r59iy9045t] {
+    background-color: green;
+    border-collapse: separate;
+    border-spacing: 1em;
+}
+
+.board td[b-r59iy9045t] {
+    background-color: white;
+    font-size:xx-large;
+    width: 50px;
+    height: 80px;
 }
 /* /Pages/PlayPoker.razor.rz.scp.css */
 
