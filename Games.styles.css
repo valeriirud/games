@@ -34,6 +34,10 @@ table[b-r59iy9045t] {
 table th[b-r59iy9045t], table td[b-r59iy9045t] {
     padding: 1px;
 }
+
+table td[b-r59iy9045t] {
+    border: solid red 1px;
+}
 /* /Pages/PlayPoker.razor.rz.scp.css */
 
 div[b-pzwgezdfxj]{
