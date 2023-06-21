@@ -1,0 +1,19 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Games/obj
+/Games/bin
+/.vs
+/.vs/Games/v17/.suo
+/.vs/Games/DesignTimeBuild/.dtbcache.v2
+/.vs/Games/FileContentIndex/08ea26b3-c669-4dcc-9a21-2131bab5d6b1.vsidx
+/.vs/Games/FileContentIndex/67962866-78de-4e05-bdce-67f73d6027a2.vsidx
+/.vs/Games/FileContentIndex/7962fe00-9338-48c5-884b-9a95bf6a7156.vsidx
+/.vs/Games/FileContentIndex/bd22bf53-d06b-4de1-a4e9-c59073cfb37c.vsidx
+/.vs/Games/DesignTimeBuild/.dtbcache.v2
+/.vs/Games/FileContentIndex/08ea26b3-c669-4dcc-9a21-2131bab5d6b1.vsidx
+/.vs/Games/FileContentIndex/67962866-78de-4e05-bdce-67f73d6027a2.vsidx
+/.vs/Games/FileContentIndex/7962fe00-9338-48c5-884b-9a95bf6a7156.vsidx
+/.vs/Games/FileContentIndex/bd22bf53-d06b-4de1-a4e9-c59073cfb37c.vsidx
+/.vs/Games/v17/.suo
