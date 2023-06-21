@@ -1,0 +1,40 @@
+﻿@page "/calculator"
+@inherits OddsCalculatorBase
+
+<h2>Texas Hold'em Odds Calculator</h2>
+<span>[@TestHand]</span><br />
+<span>[@WinString]</span><br />
+
+@{
+    int n = 0;
+}
+<table class="table">
+    <tbody>
+        <tr>
+            <td>@HandCards[0]</td>
+            <td>@HandCards[1]</td>
+            <td>@HandCards[2]</td>
+            <td>@HandCards[3]</td>
+            <td>@HandCards[4]</td>
+            <td>@HandCards[5]</td>
+            <td>@HandCards[6]</td>
+        </tr>
+    </tbody>
+</table>
+<table class="table">
+    <tbody>
+        @foreach (string s in ListCardSuit)
+        {
+            <tr>
+                @foreach (string c in ListCardId)
+                {
+                    CardState cardState = ListCardState.ElementAt(n);
+                    <td><CardButton HandString="@TestHand" CardString="@c" SuitString="@s"
+                            @bind-State="@cardState.IsSelected" /></td>
+                    n++;
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+

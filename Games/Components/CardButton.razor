@@ -1,0 +1,38 @@
+﻿<button @onclick="ChangeState">
+    <SvgCard CardString="@CardString" SuitString="@SuitString" Display="@_display"
+             CardX="16" CardY="20" SuitX="-18" SuitY="2" Fill="@_fill" />
+</button>
+
+@code {
+    [Parameter]
+    public string? HandString { get; set; }
+    [Parameter]
+    public string? CardString { get; set; }
+    [Parameter]
+    public string? SuitString { get; set; }
+    [Parameter]
+    public bool State { get; set; }
+    [Parameter]
+    public EventCallback<bool> StateChanged { get; set; }
+
+    string? _fill { get; set; }    
+    string _display = "visible";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        State = true;
+        _display = "visible";
+        _fill = (SuitString == SvgPath.Club || SuitString == SvgPath.Spide)
+        ? SvgPath.Black
+        : SvgPath.Red;
+    }
+
+    private async Task ChangeState()
+    {
+        if (HandString == null) return;
+        if (HandString.Length == 14 && State == true) return;
+        await StateChanged.InvokeAsync(! State);
+        _display = State ? "collapse" : "visible";
+    }
+}

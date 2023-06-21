@@ -1,0 +1,36 @@
+﻿<svg viewBox="0 0 60 90" width="60" height="90"
+     style="border:solid #ccc 1px; background-color:aliceblue;--display:@Display;"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g transform="translate(@CardX @CardY) scale(0.2 0.2)">
+        <path d="@CardString" fill="@Fill" />
+    </g>
+    <g transform="translate(@SuitX @SuitY) scale(0.2 0.2)">
+        <path d="@SuitString" fill="@Fill" />
+    </g>
+</svg>
+
+<style>
+    svg {
+        visibility: var(--display);
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string? Display { get; set; }
+    [Parameter]
+    public string? CardString { get; set; }
+    [Parameter]
+    public int? CardX { get; set; }
+    [Parameter]
+    public int? CardY { get; set; }
+    [Parameter]
+    public string? SuitString { get; set; }
+    [Parameter]    
+    public int? SuitX { get; set; }
+    [Parameter]
+    public int? SuitY { get; set; }
+    [Parameter]
+    public string? Fill { get; set; }
+
+}

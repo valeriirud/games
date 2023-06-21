@@ -2,7 +2,7 @@
 
 namespace Games.Pages;
 
-public class PokerBase : ComponentBase
+public class PlayPokerBase : ComponentBase
 {
     public const int MY_ID = 4;
     public const int HANDS_COUNT = 2;
