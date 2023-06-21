@@ -10,3 +10,7 @@ table {
 table th, table td {
     padding: 1px;
 }
+
+table td {
+    border: solid red 1px;
+}
