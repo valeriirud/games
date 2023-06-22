@@ -68,17 +68,19 @@ public class OddsCalculatorBase : ComponentBase
 
         void SetHandCard(string card, bool state)
         {
-            for(int i = 0; i < HandCards.Length; i++)
-            {
-                if(state)
+            string handCard = card.Length == 2 
+                ? $"{card[1]}\n{card[0]}" : $"{card[2]}\n{card[0]}{card[1]}";
+            for (int i = 0; i < HandCards.Length; i++)
+            {                
+                if (state)
                 {
-                    if (HandCards[i] != card) continue;
+                    if (HandCards[i] != handCard) continue;
                     HandCards[i] = string.Empty;
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(HandCards[i])) continue;
-                    HandCards[i] = card.Insert(1, "\n");
+                    HandCards[i] = handCard;
                 }
                 break;
             }

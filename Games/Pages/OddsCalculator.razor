@@ -2,39 +2,45 @@
 @inherits OddsCalculatorBase
 
 <h2>Texas Hold'em Odds Calculator</h2>
-<span>[@TestHand]</span><br />
-<span>[@WinString]</span><br />
 
 @{
     int n = 0;
 }
-<table class="table board">
-    <tbody>
-        <tr>
-            <td><MultilineString Value=@HandCards[0] /></td>
-            <td>@HandCards[1]</td>
-            <td>@HandCards[2]</td>
-            <td>@HandCards[3]</td>
-            <td>@HandCards[4]</td>
-            <td>@HandCards[5]</td>
-            <td>@HandCards[6]</td>
-        </tr>
-    </tbody>
-</table>
-<table class="table">
-    <tbody>
-        @foreach (string s in ListCardSuit)
-        {
-            <tr>
-                @foreach (string c in ListCardId)
-                {
-                    CardState cardState = ListCardState.ElementAt(n);
-                    <td><CardButton HandString="@TestHand" CardString="@c" SuitString="@s"
-                            @bind-State="@cardState.IsSelected" /></td>
-                    n++;
-                }
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="btn-toolbar" role="toolbar">
+    <div class="btn-group mr-2 board font_large" role="group">
+        <div class="w-20 border col-md card">@HandCards[0]</div>
+        <div class="w-20 border col-md card">@HandCards[1]</div>
+        <div class="w-20 border col-md card">@HandCards[2]</div>
+        <div class="w-20 border col-md card">@HandCards[3]</div>
+        <div class="w-20 border col-md card">@HandCards[4]</div>
+        <div class="w-20 border col-md card">@HandCards[5]</div>
+        <div class="w-20 border col-md card">@HandCards[6]</div>
+    </div>
+    <div class="btn-group-vertical h-100" role="group">
+        <div class="input-group h-50 font_large">
+            <span>@WinString</span>
+        </div>
+        <div class="btn-group h-50" role="group">
+            <button type="button" class="btn btn-secondary">1</button>
+            <button type="button" class="btn btn-secondary">2</button>
+            <button type="button" class="btn btn-secondary">3</button>
+            <button type="button" class="btn btn-secondary">4</button>
+        </div>
+    </div>
+</div>
+<div class="btn-toolbar" role="toolbar">
+    @foreach (string s in ListCardSuit)
+    {
+        <div class="btn-group mr-2" role="group">
+            @foreach (string c in ListCardId)
+            {
+                CardState cardState = ListCardState.ElementAt(n);
+                <CardButton HandString="@TestHand" CardString="@c" SuitString="@s"
+                        @bind-State="@cardState.IsSelected" />
+                n++;
+            }
+        </div>
+    }
+</div>
+
 

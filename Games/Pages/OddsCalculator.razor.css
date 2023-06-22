@@ -7,19 +7,22 @@ table {
     width:auto;
 }
 
-table th, table td {
-    padding: 1px;
-}
-
 .board {
     background-color: green;
-    border-collapse: separate;
-    border-spacing: 1em;
+    padding: 10px;
 }
 
-.board td {
-    background-color: white;
-    font-size:xx-large;
-    width: 50px;
-    height: 80px;
+.card {
+    background-color: white;    
+    width: 40px;
+    height: 70px;
+    white-space: break-spaces;
+    line-height: 1.0;
+    text-align: center;
+    margin: 5px;
 }
+.font_large {
+    font-size: xx-large;
+}
+
+
