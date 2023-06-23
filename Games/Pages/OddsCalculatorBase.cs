@@ -15,9 +15,11 @@ public class OddsCalculatorBase : ComponentBase
     public string TestHand { get; private set; }
     public string WinString { get; private set; }
     public string[] HandCards { get; set; } = new string[7];
+    public int NumberOfPlayers { get; set; }
 
     public OddsCalculatorBase()
     {
+        NumberOfPlayers = TableMax;
         TestHand = string.Empty;
         WinString = string.Empty;
         for (Suit s = Suit.Club; s <= Suit.Spade; s++)

@@ -1,0 +1,26 @@
+﻿<svg viewBox="0 0 @W @H" width="@W" height="@H"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g transform="translate(@X @Y) scale(@ScaleW @ScaleH)">
+        <path d="@SvgString" fill="@Fill" />
+    </g>
+</svg>
+
+@code {
+    [Parameter]
+    public int? X { get; set; }
+    [Parameter]
+    public int? Y { get; set; }
+    [Parameter]
+    public int? W { get; set; }
+    [Parameter]
+    public int? H { get; set; }
+    [Parameter]
+    public string? Fill { get; set; }
+    [Parameter]
+    public string? SvgString { get; set; }
+    [Parameter]
+    public double? ScaleW { get; set; }
+    [Parameter]
+    public double? ScaleH { get; set; }
+
+}

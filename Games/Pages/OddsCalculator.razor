@@ -7,7 +7,7 @@
     int n = 0;
 }
 <div class="btn-toolbar" role="toolbar">
-    <div class="btn-group mr-2 board font_large" role="group">
+    <div class="btn-group mr-2 board font_large row align-items-center" role="group">
         <div class="w-20 border col-md card">@HandCards[0]</div>
         <div class="w-20 border col-md card">@HandCards[1]</div>
         <div class="w-20 border col-md card">@HandCards[2]</div>
@@ -16,15 +16,25 @@
         <div class="w-20 border col-md card">@HandCards[5]</div>
         <div class="w-20 border col-md card">@HandCards[6]</div>
     </div>
-    <div class="btn-group-vertical h-100" role="group">
-        <div class="input-group h-50 font_large">
-            <span>@WinString</span>
+    <div class="btn-group-vertical h-100 justify-content-md-start" role="group">
+        <div class="input-group min-h-50 col-xs-3 font_large">
+            <span>&nbsp;@WinString</span>
         </div>
-        <div class="btn-group h-50" role="group">
-            <button type="button" class="btn btn-secondary">1</button>
-            <button type="button" class="btn btn-secondary">2</button>
-            <button type="button" class="btn btn-secondary">3</button>
-            <button type="button" class="btn btn-secondary">4</button>
+        <div className="btn-group-justified">
+            <div class="btn-group h-50" role="group">
+                <button type="button" class="btn btn-light btn-secondary btn-block border" style="width: auto; padding: 2px; margin-left: 5px;">
+                    <SvgImage SvgString="@SvgPath.Minus" Fill="@SvgPath.Black" W="40" H="40" X="2" Y="2" ScaleW="2.3" ScaleH="2.3" />
+                </button>
+                <div class="row align-items-center fs-5 fw-bold" style="margin: 5px;">Players</div>
+                <div class="row align-items-center fs-3 fw-bold" style="margin-right: 5px;">@NumberOfPlayers</div>
+                <button type="button" class="btn btn-light btn-secondary border" style="width: auto; padding: 2px;">
+                    <SvgImage SvgString="@SvgPath.Plus" Fill="@SvgPath.Black" W="40" H="40" X="2" Y="2" ScaleW="2.3" ScaleH="2.3" />
+                </button>
+                <button type="button" class="btn btn-light btn-secondary border" style="margin-left: 10px; width: auto; padding: 2px;">
+                    <span class="fs-5 fw-bold" style="margin: 5px;">Reset</span>
+                    <SvgImage SvgString="@SvgPath.Reset" Fill="@SvgPath.Black" W="40" H="40" X="1" Y="1" ScaleW="0.3" ScaleH="0.3" />
+                </button>
+            </div>
         </div>
     </div>
 </div>
