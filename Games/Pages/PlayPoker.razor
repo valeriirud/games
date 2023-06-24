@@ -1,105 +1,15 @@
 ﻿@page "/playpoker"
 @inherits PlayPokerBase
 
-@{
-    string style = Title == string.Empty ? string.Empty : "display:none";    
-}
-
-<div class="layout">   
-    @{
-        string newGameDisabled = Started == true ? "is-disabled" : "";
-        string continueGameDisabled = (Started == true || ContinueGame == true) ? "is-disabled" : "";
-            <div class="new-game">
-            <div class="panel-container">
-                <a class="button button-geom @(newGameDisabled)" onclick="@(async () => await NewGame())">New&nbsp;Game</a><br/>
-                <a class="button button-geom @(continueGameDisabled)" onclick="@(async () => await Continue())">Continue</a>
-                <div style="clear:both"></div>
-            </div>
-            </div>
-    }
-    <div style="clear:both"></div>
-    <div class="border">
-        <div class="area">
-            <div class="area-text"><p>@Title</p></div>           
-            <!--<div class="croupier" style="@style">
-                <img src="@CroupierImage" class="card-item"/>
-            </div>-->
-            <div id="pot" style="@style">
-                <p>@Bank</p>
-            </div>            
-            <div id="board" style="@style">
-                @for(int i = 0; i < COMMON_COUNT; i ++)
-                {
-                    string highlight = WinnerCards.Contains(Board[i]) ? "highlight" : string.Empty;
-                    <div class="common-cards">
-                        <img align="middle" src="@(Board[i])" class="card-item @(highlight)"/>
-                    </div>
-                }
-                <div style="clear:both;"></div>
-            </div>
-        @for(int i = 0; i < PLAYERS_COUNT; i ++)
-        {
-            string fill = i != MY_ID ? "-fill" : string.Empty;
-            string dialer = i == DealerId ? ImageDialer : string.Empty;
-            string think = "no-think";
-            if (Bet[i] > 0)
-            {
-                <div id="bet@((i+1).ToString())" class="bets">@Bet[i]</div>
-            }
-            string className = i == MY_ID ? "-you" : "";
-            <div id="player@((i+1).ToString())" class="players@(className)">                
-                <div class="body">
-                @{
-                    string player = i == MY_ID ? "You" : $"{(i+1).ToString()}";
-                                <div class="text-top@(className)">@player</div>                
-                }                
-                <img src="images\person@(className).svg" />
-                    <img src="images\briefcase@(className).svg" align="left" class="briefcase" />
-                    <div class="text@(className)">@Bankroll[i]</div>
-                </div>
-                @if(! string.IsNullOrEmpty(Actions[i]))
-                {
-                    think = Actions[i];
-                    <div class="head @think">@Actions[i]</div>
-                }
-            </div>
-            <div id="hand@((i+1).ToString())" class="hands">                
-                @for(int j = 0; j < HANDS_COUNT; j ++)
-                {
-                    string highlight = WinnerCards.Contains(Images[i, j]) ? "highlight" : string.Empty;
-                    <img src="@(Images[i, j])" class="card-item @(highlight)"/>
-                }                
-                <img src="@dialer" class="dialer" />
-            </div>
-        }
-        </div>
-    </div>
-    @{
-        string show = WaitYou == true ? string.Empty : "display:none"; 
-    }
-    <div id="panel" style="@(show)">
-        <div class="panel-container">
-            <a class="button" onclick="@(() => SetMyBet(0.5))">1/2</a>
-            <a class="button" onclick="@(() => SetMyBet(1))">Min</a>
-            <a class="button" onclick="@(() => SetMyBet(2))">x2</a>
-            <a class="button" onclick="@(() => SetMyBet(-1))">All-in</a>            
-            <div style="clear:both"></div>
-        </div>
-        <div class="panel-container">
-            <input type="text" class="bet-size" @bind="MyBet"/>
-            <input type="range" min="1" max="@(Bankroll[MY_ID])" @bind="MyBet" @bind:event="oninput" class="slider" />
-            <div style="clear:both"></div>
-        </div>
-        <div class="panel-container">
-            @{
-                string foldDisabled = ( WaitYou == true ) ? "" : "is-disabled";
-                string checkDisabled = ( WaitYou == true && IsCheckAvailable(MY_ID) ) ? "" : "is-disabled";
-                string myBetDisabled = ( WaitYou == true && MyBetOk() ) ? "" : "is-disabled";
-            }
-            <a class="button @(foldDisabled)" onclick="@(() => Fold(MY_ID))">Fold</a>
-            <a class="button @(checkDisabled)" onclick="@(() => Check(MY_ID))">Check</a>
-            <a class="button @(myBetDisabled)" onclick="@(() => ApplyMyBet(MyBet, MY_ID))">Bet&nbsp;@(MyBet)</a>
-            <div style="clear:both"></div>
+<div class="main">
+    <div class="table">
+        <div class="btn-group mr-2 board font_large row align-items-center" role="group">
+            <div class="w-20 border col-md card"></div>
+            <div class="w-20 border col-md card"></div>
+            <div class="w-20 border col-md card"></div>
+            <div class="w-20 border col-md card"></div>
+            <div class="w-20 border col-md card"></div>
         </div>
     </div>
 </div>
+

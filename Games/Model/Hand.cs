@@ -253,7 +253,7 @@ public class Hand
     public static List<Hand> Distribution(List<Card> handCards, int numberOfPlayers, List<Card> cardDeck)
     {
         List<Card> testedСards = new(handCards);
-        List<int> randomList = Enumerable.Range(0, TotalCardsCount).ToList();
+        List<int> randomList = Enumerable.Range(0, TotalNumberOfCards).ToList();
         CommonTools.GenerateRandomList(randomList);
         int index  = 0;
         while(testedСards.Count < HandCount)
@@ -261,12 +261,12 @@ public class Hand
             testedСards.Add(cardDeck[randomList[index]]);
             index++;
         }
-        List<Card> board = testedСards.GetRange(MyCardsCount, HandCount - MyCardsCount);
+        List<Card> board = testedСards.GetRange(NumberOfMyCards, HandCount - NumberOfMyCards);
         List<Hand> hands = new() { new (testedСards) };
         for(int i = 0; i < numberOfPlayers - 1; i ++)
         {
             List<Card> cards = new();
-            for(int j = 0; j < MyCardsCount; j ++)
+            for(int j = 0; j < NumberOfMyCards; j ++)
             {
                 cards.Add(cardDeck[randomList[index]]);
                 index++;

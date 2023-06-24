@@ -7,14 +7,15 @@ namespace Games.Tools;
 
 public static class Definitions
 {
-    public static readonly int MyCardsCount = 2;
+    public static readonly int NumberOfMyCards = 2;
+    public static readonly int NumberOfCommunityCards = 5;
     public static readonly int HandCount = 7;
     public static readonly int FlushCount = 5;
     public static readonly int StraightCount = 5;
     public static readonly int MaxNumberOfPlayers = 9;
     public static readonly int MinNumberOfPlayers = 2;
     public static readonly int TableMax = 6;
-    public static readonly int TotalCardsCount = 52;
+    public static readonly int TotalNumberOfCards = 52;
     public static readonly int NumberOfTests = 1000;
 
     public static readonly bool WriteTextLog = false;
