@@ -49,6 +49,11 @@ table[b-r59iy9045t] {
     font-size: xx-large;
 }
 
+.btn:focus[b-r59iy9045t] {
+    outline: none;
+    box-shadow: none;
+}
+
 
 /* /Pages/PlayPoker.razor.rz.scp.css */
 
