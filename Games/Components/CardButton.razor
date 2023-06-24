@@ -10,8 +10,16 @@
     public string? CardString { get; set; }
     [Parameter]
     public string? SuitString { get; set; }
+    bool _state;
     [Parameter]
-    public bool State { get; set; }
+    public bool State { get => _state; 
+        set
+        {
+            if (_state == value) return;
+            _state = value;
+            _display = ! State ? "collapse" : "visible";
+        }
+    }
     [Parameter]
     public EventCallback<bool> StateChanged { get; set; }
 
@@ -21,7 +29,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        State = true;
+        _state = true;
         _display = "visible";
         _fill = (SuitString == SvgPath.Club || SuitString == SvgPath.Spide)
         ? SvgPath.Black

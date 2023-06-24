@@ -25,4 +25,9 @@ table {
     font-size: xx-large;
 }
 
+.btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
 

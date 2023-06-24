@@ -9,7 +9,7 @@
 <div class="btn-toolbar" role="toolbar">
     <div class="btn-group mr-2 board font_large row align-items-center" role="group">
         <div class="w-20 border col-md card">@HandCards[0]</div>
-        <div class="w-20 border col-md card">@HandCards[1]</div>
+        <div class="w-20 border col-md card" style="margin-right:20px;">@HandCards[1]</div>
         <div class="w-20 border col-md card">@HandCards[2]</div>
         <div class="w-20 border col-md card">@HandCards[3]</div>
         <div class="w-20 border col-md card">@HandCards[4]</div>
@@ -22,17 +22,28 @@
         </div>
         <div className="btn-group-justified">
             <div class="btn-group h-50" role="group">
-                <button type="button" class="btn btn-light btn-secondary btn-block border" style="width: auto; padding: 2px; margin-left: 5px;">
-                    <SvgImage SvgString="@SvgPath.Minus" Fill="@SvgPath.Black" W="40" H="40" X="2" Y="2" ScaleW="2.3" ScaleH="2.3" />
+                <button type="button" class="btn btn-light btn-secondary btn-block border"
+                        style="width: auto; padding: 2px; margin-left: 5px;" 
+                        onmouseup="this.blur();" onclick="@(() => ReduceNumberOfPlayers())">
+                    <SvgImage SvgString="@SvgPath.Minus" Fill="@SvgPath.Black" W="40" H="40" X="2" Y="2" 
+                    ScaleW="2.3" ScaleH="2.3" />
                 </button>
                 <div class="row align-items-center fs-5 fw-bold" style="margin: 5px;">Players</div>
-                <div class="row align-items-center fs-3 fw-bold" style="margin-right: 5px;">@NumberOfPlayers</div>
-                <button type="button" class="btn btn-light btn-secondary border" style="width: auto; padding: 2px;">
-                    <SvgImage SvgString="@SvgPath.Plus" Fill="@SvgPath.Black" W="40" H="40" X="2" Y="2" ScaleW="2.3" ScaleH="2.3" />
+                <div class="row align-items-center fs-3 fw-bold" style="margin-right: 5px; color:@SvgPath.Red">
+                    @NumberOfPlayers
+                </div>
+                <button type="button" class="btn btn-light btn-secondary border"
+                        style="width: auto; padding: 2px;" 
+                        onmouseup="this.blur();" onclick="@(() => IncreaseNumberOfPlayers())">
+                    <SvgImage SvgString="@SvgPath.Plus" Fill="@SvgPath.Black" W="40" H="40" X="2" Y="2" 
+                    ScaleW="2.3" ScaleH="2.3" />
                 </button>
-                <button type="button" class="btn btn-light btn-secondary border" style="margin-left: 10px; width: auto; padding: 2px;">
+                <button type="button" class="btn btn-light btn-secondary border" 
+                        style="margin-left: 10px; width: auto; padding: 2px;"
+                        onmouseup="this.blur();" onclick="@(() => Reset())">
                     <span class="fs-5 fw-bold" style="margin: 5px;">Reset</span>
-                    <SvgImage SvgString="@SvgPath.Reset" Fill="@SvgPath.Black" W="40" H="40" X="1" Y="1" ScaleW="0.3" ScaleH="0.3" />
+                    <SvgImage SvgString="@SvgPath.Reset" Fill="@SvgPath.Black" W="40" H="40" X="1" Y="1" 
+                    ScaleW="0.3" ScaleH="0.3" />
                 </button>
             </div>
         </div>

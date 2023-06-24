@@ -64,9 +64,11 @@ public class OddsCalculatorBase : ComponentBase
             WinString = string.Empty;
             return;
         }
-        WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo(
-            Hand.DisplayStringToString(TestHand), 6);
-        WinString = winInfo.ToString();
+        //WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo(
+        //    Hand.DisplayStringToString(TestHand), NumberOfPlayers);
+        //WinString = winInfo.ToString();
+        WinString = Hand.GetProbabilityOfWinningByMonteCarlo(
+            Hand.DisplayStringToString(TestHand), NumberOfPlayers).ToString();
 
         void SetHandCard(string card, bool state)
         {
@@ -86,6 +88,49 @@ public class OddsCalculatorBase : ComponentBase
                 }
                 break;
             }
+        }
+    }
+
+    public void ReduceNumberOfPlayers() => ChangeNumberOfPlayers(-1);
+
+    public void IncreaseNumberOfPlayers() => ChangeNumberOfPlayers(1);
+
+    void ChangeNumberOfPlayers(int n)
+    {
+        int numberOfPlayers = NumberOfPlayers + n;
+        if (numberOfPlayers < MinNumberOfPlayers) 
+        {
+            numberOfPlayers = MinNumberOfPlayers;
+        }
+        else if (numberOfPlayers > MaxNumberOfPlayers)
+        {
+            numberOfPlayers = MaxNumberOfPlayers;
+        }
+        NumberOfPlayers = numberOfPlayers;
+        if (TestHand.Length < 4)
+        {
+            WinString = string.Empty;
+            return;
+        }
+        WinString = Hand.GetProbabilityOfWinningByMonteCarlo(
+            Hand.DisplayStringToString(TestHand), NumberOfPlayers).ToString();
+    }
+    
+    public void Reset()
+    {
+        foreach (CardState cardState in ListCardState)
+        {
+            if (cardState.IsSelected) continue;
+            cardState.CardStateChanged -= CardState_Changed;
+            cardState.IsSelected = true;
+            cardState.CardStateChanged += CardState_Changed;
+        }
+        WinString = string.Empty;
+        TestHand = string.Empty;
+        NumberOfPlayers = TableMax;
+        for (int i = 0; i < HandCards.Length; i++)
+        {
+            HandCards[i] = string.Empty;
         }
     }
 }
