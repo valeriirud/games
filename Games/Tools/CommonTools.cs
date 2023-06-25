@@ -55,6 +55,13 @@ public static class CommonTools
         return random.Next(min, max);
     }
 
+    public static List<int> GetRandomList()
+    {
+        List<int> randomList = Enumerable.Range(0, Definitions.TotalNumberOfCards).ToList();
+        GenerateRandomList(randomList);
+        return randomList;
+    }
+
     public static void GenerateRandomList<T>(List<T> list) where T : notnull  => Shuffle(list);
 
     public static void Shuffle<T>(IList<T> list)

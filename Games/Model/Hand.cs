@@ -303,12 +303,12 @@ public class Hand
         int numberOfPlayers, int numberOfTests)
     {
         int winCount = 0;
-        List<Card> cardDeck = GetCardDesc();
+        List<Card> cardDeck = GetCardDeck();
         List<string> handStrings = new();
         string testCardIds = ToString(GetIds(testedСards));
         string testCardSuits = ToString(GetSuits(testedСards));
-        List<Card> testСards = new();
-        testСards.AddRange(testedСards);
+        List<Card> testСards = new(testedСards);
+        //testСards.AddRange(testedСards);
         for (int i = 0; i < numberOfTests; i++)
         {
             handStrings.Clear();
@@ -331,7 +331,7 @@ public class Hand
         return winInfo;
     }
 
-    static List<Card> GetCardDesc()
+    public static List<Card> GetCardDeck()
     {
         List<CardId> ids = ListOfIds;
         List<Suit> suits = ListOfSuits;

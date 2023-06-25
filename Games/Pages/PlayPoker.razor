@@ -1,26 +1,25 @@
 ﻿@page "/playpoker"
 @inherits PlayPokerBase
 
-
+<button disabled=@IsGameRunning 
+    onclick="@(async () => await NewGame())" onmouseup="this.blur();">New&nbsp;Game</button>
+<br />
 <table>
     <tr>
         <td></td>
-        <td class="text-center h-auto">
-            <div class="d-inline-block person" style="margin: 0;"></div>
+        <td colspan="2" class="text-center">
+            <div class="d-inline-block person">@Hands[0]</div>
         </td>
-        <td class="text-center h-auto">
-            <div class="d-inline-block person"></div>
-        </td>
-        <td class="text-center h-auto">
-            <div class="d-inline-block person"></div>
+        <td colspan="2" class="text-center">
+            <div class="d-inline-block person">@Hands[1]</div>
         </td>
         <td></td>
     </tr>
     <tr>
         <td class="text-center">
-            <div class="d-inline-block person"></div>
+            <div class="d-inline-block person">@Hands[2]</div>
         </td>
-        <td colspan="3" rowspan="2">
+        <td colspan="4" rowspan="2">
             <div class="panel-body">
                 <div class="table">
                     <div class="btn-group mr-2 board font_large row align-items-center" role="group">
@@ -34,29 +33,29 @@
             </div>
         </td>
         <td class="text-center">
-            <div class="d-inline-block person"></div>
+            <div class="d-inline-block person">@Hands[3]</div>
         </td>
     </tr>
 
     <tr>
         <td class="text-center">
-            <div class="d-inline-block person"></div>
+            <div class="d-inline-block person">@Hands[4]</div>
         </td>
         <td class="text-center">
-            <div class="d-inline-block person"></div>
+            <div class="d-inline-block person">@Hands[5]</div>
         </td>
     </tr>
 
     <tr>
         <td></td>
         <td class="text-center">
-            <div class="d-inline-block person"></div>
+            <div class="d-inline-block person">@Hands[6]</div>
+        </td>
+        <td colspan="2" class="text-center">
+            <div class="d-inline-block person">@Hands[7]</div>
         </td>
         <td class="text-center">
-            <div class="d-inline-block person"></div>
-        </td>
-        <td class="text-center">
-            <div class="d-inline-block person"></div>
+            <div class="d-inline-block person">@Hands[8]</div>
         </td>
         <td></td>
     </tr>
