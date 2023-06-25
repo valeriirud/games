@@ -1,18 +1,26 @@
 ﻿
+table {
+    border-collapse: collapse;
+}
 
-.main {
-    width: 70vw;
-    height: 70vh;
-    background-color: lightgray;
+th, tr, td {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.container {
+    border: 2px solid black;
+    padding: 0.5rem;
+    height: calc(100%);
 }
 
 .table {
     background-color: #21421E;
     height: 40vh;
     width: 40vw;
-    border-radius: 50%;
+    border-radius: 10%;
     margin: 0 auto;
-    border: 1vw solid black;
+    border: 1vw solid black;    
 }
 
 .board {
@@ -29,4 +37,10 @@
     line-height: 1.0;
     text-align: center;
     margin-right: .5vw;
+}
+
+.person {
+    width: 5vw;
+    height: 10vh;
+    background-color: rgba(0,0,255,.1);
 }
