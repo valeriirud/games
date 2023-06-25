@@ -57,20 +57,28 @@ table[b-r59iy9045t] {
 
 /* /Pages/PlayPoker.razor.rz.scp.css */
 
+table[b-pzwgezdfxj] {
+    border-collapse: collapse;
+}
 
-.main[b-pzwgezdfxj] {
-    width: 70vw;
-    height: 70vh;
-    background-color: lightgray;
+th[b-pzwgezdfxj], tr[b-pzwgezdfxj], td[b-pzwgezdfxj] {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.container[b-pzwgezdfxj] {
+    border: 2px solid black;
+    padding: 0.5rem;
+    height: calc(100%);
 }
 
 .table[b-pzwgezdfxj] {
     background-color: #21421E;
     height: 40vh;
     width: 40vw;
-    border-radius: 50%;
+    border-radius: 10%;
     margin: 0 auto;
-    border: 1vw solid black;
+    border: 1vw solid black;    
 }
 
 .board[b-pzwgezdfxj] {
@@ -87,6 +95,12 @@ table[b-r59iy9045t] {
     line-height: 1.0;
     text-align: center;
     margin-right: .5vw;
+}
+
+.person[b-pzwgezdfxj] {
+    width: 5vw;
+    height: 10vh;
+    background-color: rgba(0,0,255,.1);
 }
 /* /Shared/MainLayout.razor.rz.scp.css */
 .page[b-5fm69uce70] {
