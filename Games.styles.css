@@ -8,6 +8,13 @@ button[b-8fed6eoea8] {
     border-color: #ccc;
 /*    width ="60" height="90" */
 }
+/* /Components/PlayerObject.razor.rz.scp.css */
+
+.player[b-q3n6kk4lid] {
+    width: 5vw;
+    height: 10vh;
+    background-color: lightgray;
+}
 /* /Pages/Login.razor.rz.scp.css */
 .btn-color[b-8ntxd7tj13] {
     background-color: #0e1c36;
@@ -72,19 +79,17 @@ th[b-pzwgezdfxj], tr[b-pzwgezdfxj], td[b-pzwgezdfxj] {
     height: calc(100%);
 }
 
-.table[b-pzwgezdfxj] {
+.game-table[b-pzwgezdfxj] {
     background-color: #21421E;
     height: 40vh;
     width: 40vw;
     border-radius: 10%;
     margin: 0 auto;
-    border: 1vw solid black;    
+    border: 1vw solid black;
 }
 
 .board[b-pzwgezdfxj] {
-    position: relative;
-    top: 40%;
-    left: 25%;
+    border: solid yellow 2px;
 }
 
 .card[b-pzwgezdfxj] {
@@ -97,11 +102,13 @@ th[b-pzwgezdfxj], tr[b-pzwgezdfxj], td[b-pzwgezdfxj] {
     margin-right: .5vw;
 }
 
-.person[b-pzwgezdfxj] {
-    width: 5vw;
-    height: 10vh;
-    background-color: rgba(0,0,255,.1);
+.player-data[b-pzwgezdfxj] {
+    width: 6vw;
+    height: 8vh;
+    background-color: lightgreen;
 }
+
+
 
 /* /Shared/MainLayout.razor.rz.scp.css */
 .page[b-5fm69uce70] {
