@@ -14,19 +14,17 @@ th, tr, td {
     height: calc(100%);
 }
 
-.table {
+.game-table {
     background-color: #21421E;
     height: 40vh;
     width: 40vw;
     border-radius: 10%;
     margin: 0 auto;
-    border: 1vw solid black;    
+    border: 1vw solid black;
 }
 
 .board {
-    position: relative;
-    top: 40%;
-    left: 25%;
+    border: solid yellow 2px;
 }
 
 .card {
@@ -39,9 +37,11 @@ th, tr, td {
     margin-right: .5vw;
 }
 
-.person {
-    width: 5vw;
-    height: 10vh;
-    background-color: rgba(0,0,255,.1);
+.player-data {
+    width: 6vw;
+    height: 8vh;
+    background-color: lightgreen;
 }
+
+
 

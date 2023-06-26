@@ -4,30 +4,29 @@ using Games.Model;
 using Games.Tools;
 using static Games.Tools.Definitions;
 using System.Reflection.Metadata;
+using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Games.Pages;
 
 public class PlayPokerBase : ComponentBase
 {
-    List<Card> CardDeck = new();
-    List<int>? RandomList;
-    public List<string> Hands { get; } = new(new string[MaxNumberOfPlayers]);
+    int _dealerId;
+    List<Card> _cardDeck = new();
+    List<int>? _randomList;
+    public List<PlayerObject> PlayerObjects { get; } = new(new PlayerObject[MaxNumberOfPlayers]);
 
     public bool IsGameRunning { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
-        CardDeck.Clear();
-        CardDeck.AddRange(Hand.GetCardDeck());
+        _cardDeck.Clear();
+        _cardDeck.AddRange(Hand.GetCardDeck());
+        for(int i = 0; i < PlayerObjects.Count; i ++)
+        {
+            PlayerObjects[i] = new ();
+        }
         await Task.Delay(Definitions.Timeout);
-        //await new Task(
-        //    new Action(
-        //        delegate () {
-        //            CardDeck.Clear();
-        //            CardDeck.AddRange(Hand.GetCardDeck());
-        //        }
-        //    )
-        //);
     }
 
     public async Task NewGame()
@@ -37,7 +36,7 @@ public class PlayPokerBase : ComponentBase
 
     async Task StartNewGame()
     {
-        RandomList = CommonTools.GetRandomList();
+        _randomList = CommonTools.GetRandomList();
         await StartGame();
 
     }
@@ -48,16 +47,39 @@ public class PlayPokerBase : ComponentBase
         
     }
 
+    void ClearPlayerObjects()
+    {
+        for (int i = 0; i < PlayerObjects.Count; i++)
+        {
+            PlayerObjects[i].Cards = string.Empty;
+        }
+    }
+
     async Task DealerSelection()
     {
-        List<int> randomList = CommonTools.GetRandomList();
-        int n = 0;
-        for (int i = 0; i < Hands.Count; i++)
+        _dealerId = -1;
+        while (true)
         {
-            Card card = CardDeck[randomList[n]];
-            Hands[i] = card.ToDisplayString();
-            n++;
+            ClearPlayerObjects();
+            StateHasChanged();
+            await Task.Delay(Definitions.Timeout);
+            List<int> randomList = CommonTools.GetRandomList();
+            int n = 0;
+            for (int i = 0; i < PlayerObjects.Count; i++)
+            {
+                Card card = _cardDeck[randomList[n]];
+                PlayerObjects[i].Update(PlayerObject.Action.SetCards, card.ToDisplayString());
+                StateHasChanged();
+                if (card.Id == CardId.Ace)
+                {
+                    _dealerId = i;
+                    break;
+                }
+                await Task.Delay(Definitions.Timeout);
+                n++;
+            }
+            if (_dealerId != -1) break;
+            StateHasChanged();
         }
-        await Task.Delay(Definitions.Timeout);
     }
 }

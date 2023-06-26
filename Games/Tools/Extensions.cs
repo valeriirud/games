@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Web;
 
 namespace Games.Tools;
 
@@ -26,4 +27,6 @@ public static class Extensions
     public static string DisplayName<T>(this T value) => GetEnumDisplayName(value);
 
     public static T GetEnumFromInt<T>(int value) => (T)Enum.ToObject(typeof(T), value);
+
+    public static string ToHtmlString(this string value) => HttpUtility.HtmlEncode(value);
 }

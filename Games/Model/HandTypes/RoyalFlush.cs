@@ -15,7 +15,7 @@ public class RoyalFlush
         if (suits.Count > 1) return new ();
         List<Card> sorted = Straight.Sort(straight, false);
         if(!sorted.Any()) return new ();
-        if (sorted[^1].GetId() != CardId.Ten || sorted[0].GetId() != CardId.Ace) return new();
+        if (sorted[^1].Id != CardId.Ten || sorted[0].Id != CardId.Ace) return new();
         return sorted;
     }
 

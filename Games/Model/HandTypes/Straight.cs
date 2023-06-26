@@ -33,8 +33,8 @@ public class Straight
         for (int i = 1; i < cards.Count; i++)
         {
             int index = straight.Count - 1;
-            CardId straightItemId = straight[index].GetId();
-            CardId cardId = cards[i].GetId();
+            CardId straightItemId = straight[index].Id;
+            CardId cardId = cards[i].Id;
             int d = straight.Count > 0 ? straightItemId - cardId : 1;
             if (d > 1 && straight.Count < StraightCount)
             {
@@ -73,7 +73,7 @@ public class Straight
     static List<Card> GetStraightWithoutDuplicates(List<Card> straightCards)
     {
         List<Card> straight = new();
-        List<IGrouping<CardId, Card>> cardGroups = straightCards.GroupBy(i => i.GetId()).ToList();
+        List<IGrouping<CardId, Card>> cardGroups = straightCards.GroupBy(i => i.Id).ToList();
         cardGroups.ForEach(g => straight.Add(g.ToList().First()));
         return straight;
     }
@@ -90,7 +90,7 @@ public class Straight
         if (straightCards.Count == 0) return sorted;
         sorted.AddRange(straightCards);
         sorted.Sort(Card.Compare);
-        if (sorted[0].GetId() == CardId.Two && sorted[^1].GetId() == CardId.Ace)
+        if (sorted[0].Id == CardId.Two && sorted[^1].Id == CardId.Ace)
         {
             Card card = sorted[^1];
             sorted.RemoveAt(sorted.Count - 1);
@@ -105,7 +105,7 @@ public class Straight
         if (straightCards.Count == 0) return sorted;
         sorted.AddRange(straightCards);
         sorted.Sort(Card.CompareDesc);
-        if (sorted[^1].GetId() == CardId.Two && sorted[0].GetId() == CardId.Ace)
+        if (sorted[^1].Id == CardId.Two && sorted[0].Id == CardId.Ace)
         {
             Card card = sorted[0];
             sorted.RemoveAt(0);

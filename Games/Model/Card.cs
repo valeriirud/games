@@ -7,32 +7,22 @@ namespace Games.Model;
 
 public class Card
 {
-    readonly CardId _id;
-    readonly Suit _suit;
+    CardId _id;
+    Suit _suit;
 
     public CardId Id { get => _id; }
     public Suit Suit { get => _suit; }
 
-    public Card(CardId id, Suit suit)
+    public Card(CardId id, Suit suit) => Init(id, suit);
+    public Card(Card card) => Init(card.Id, card.Suit);
+    public Card(int id, int suit) => Init(GetEnumFromInt<CardId>(id), GetEnumFromInt<Suit>(suit));    
+
+    void Init(CardId id, Suit suit)
     {
         _id = id;
         _suit = suit;
     }
 
-    public Card(int id, int suit) 
-    {
-        _id = GetEnumFromInt<CardId>(id);
-        _suit = GetEnumFromInt<Suit>(suit);
-    }
-
-    public Card(Card card)
-    {
-        _id = card.Id;
-        _suit = card.Suit;
-    }
-
-    public CardId GetId() => _id;
-    public Suit GetSuit() => _suit;
     public static int Compare(Card card1, Card card2) => card1.Compare(card2);
     public static int CompareDesc(Card card1, Card card2) => card1.CompareDesc(card2);
 
@@ -48,11 +38,11 @@ public class Card
 
     public int CompareDesc(Card card, bool useSuit = false)
     {
-        CardId id = card.GetId();
+        CardId id = card.Id;
         if (id > _id) return 1;
         if (id < _id) return -1;
         if (!useSuit) return 0;
-        Suit suit = card.GetSuit();
+        Suit suit = card.Suit;
         if (suit > _suit) return 1;
         if (suit < _suit) return -1;
         return 0;

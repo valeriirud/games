@@ -38,14 +38,14 @@ public class Hand
     public static List<CardId> GetIds(List<Card> cards)
     {
         List<CardId> ids = new();
-        cards.ForEach(c => ids.Add(c.GetId()));
+        cards.ForEach(c => ids.Add(c.Id));
         return ids;
     }
 
     public static List<Suit> GetSuits(List<Card> cards)
     {
         List<Suit> suits = new();
-        cards.ForEach(c => suits.Add(c.GetSuit()));
+        cards.ForEach(c => suits.Add(c.Suit));
         return suits;
     }
 
@@ -159,10 +159,10 @@ public class Hand
     }
 
     public static List<Card> GetCardsById(List<Card> cards, CardId cardId) =>
-        cards.Where(c => c.GetId() == cardId).ToList();
+        cards.Where(c => c.Id == cardId).ToList();
 
     public static List<Card> GetCardsBySuit(List<Card> cards, Suit suit) =>
-        cards.Where(c => c.GetSuit() == suit).ToList();
+        cards.Where(c => c.Suit == suit).ToList();
 
     public static string DisplayStringToString(string displayString)
     { 
