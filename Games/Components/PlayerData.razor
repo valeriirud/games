@@ -1,0 +1,27 @@
+﻿<div class="d-inline-block player-data">
+    <span style="--display:@_display; color:white;">D</span>
+    <div class="d-inline-block" style=" color:white;">@Player?.Message</div>
+</div>
+
+<style>
+    span {
+        visibility: var(--display);
+    }
+</style>
+
+@code {
+    string? _display;
+    Model.PlayerObject? _player;
+    [Parameter]
+    public Model.PlayerObject? Player 
+    { 
+        get => _player;
+        set
+        {
+            _player = value;
+            if(_player != null)
+                _display = _player.IsDealer ? "visible" : "collapse";
+        } 
+    }
+    
+}

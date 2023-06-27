@@ -52,7 +52,7 @@ public class OddsCalculatorBase : ComponentBase
 
     void CardState_Changed(object? sender, CardStateEventArgs e)
     {
-        Card card = new Card(e.Id, e.Suit);
+        Card card = new (e.Id, e.Suit);
         string? cardString = card.ToDisplayString();
         if (string.IsNullOrEmpty(cardString)) return;
         SetHandCard(cardString, e.State);

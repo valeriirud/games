@@ -7,26 +7,30 @@
 <table>
     <tr>
         <td></td>
-        <td colspan="2" class="text-center"><PlayerObject Player="@PlayerObjects[0]"/></td>
-        <td colspan="2" class="text-center"><PlayerObject Player="@PlayerObjects[1]"/></td>
+        <td colspan="2" class="text-center"><PlayerPerson Player="@PlayerObjects[8]"/></td>
+        <td colspan="2" class="text-center"><PlayerPerson Player="@PlayerObjects[0]"/></td>
         <td></td>
     </tr>
     <tr>
-        <td class="text-center"><PlayerObject Player="@PlayerObjects[2]"/></td>
+        <td class="text-center"><PlayerPerson Player="@PlayerObjects[7]"/></td>
         <td colspan="4" rowspan="2">
             <div class="panel-body">
                 <div class="game-table">
                     <table class="table-bordered w-100 h-100">
                         <tr>
-                            <td class="text-start align-bottom"><div class="d-inline-block player-data"></div></td>
-                            <td><div class="d-inline-block player-data"></div></td>
+                            <td class="text-start align-bottom">
+                                <PlayerData Player="@PlayerObjects[7]" />
+                            </td>
+                            <td><PlayerData Player="@PlayerObjects[8]" /></td>
                             <td></td>
                             <td></td>
-                            <td><div class="d-inline-block player-data"></div></td>
-                            <td class="text-end align-bottom" ><div class="d-inline-block player-data"></div></td>
+                            <td><PlayerData Player="@PlayerObjects[0]" /></td>
+                            <td class="text-end align-bottom" >
+                                <PlayerData Player="@PlayerObjects[1]" />
+                            </td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td class="text-start align-bottom"><PlayerData Player="@PlayerObjects[6]" /></td>
                             <td colspan="4" class="text-center" >
                                 <div class="btn-group mr-2 board font_large row align-items-center" role="group">
                                     <div class="w-20 border col-md card"></div>
@@ -36,32 +40,32 @@
                                     <div class="w-20 border col-md card"></div>
                                 </div>
                             </td>
-                            <td></td>
+                            <td class="text-end align-bottom"><PlayerData Player="@PlayerObjects[2]" /></td>
                         </tr>
                         <tr>
-                            <td class="text-start align-top" ><div class="d-inline-block player-data"></div></td>
-                            <td class="text-start align-bottom"><div class="d-inline-block player-data"></div></td>
-                            <td class="text-center align-bottom" colspan="2"><div class="d-inline-block player-data"></div></td>
-                            <td class="text-end align-bottom"><div class="d-inline-block player-data"></div></td>
-                            <td class="text-end align-top"><div class="d-inline-block player-data"></div></td>
+                            <td class="text-end align-bottom"><PlayerData Player="@PlayerObjects[5]" /></td>
+                            <td></td>
+                            <td class="text-center align-bottom" colspan="2"><PlayerData Player="@PlayerObjects[4]" /></td>
+                            <td></td>
+                            <td class="text-start align-bottom"><PlayerData Player="@PlayerObjects[3]" /></td>
                         </tr>
                     </table>
                 </div>
             </div>
         </td>
-        <td class="text-center"><PlayerObject Player="@PlayerObjects[3]" /></td>
+        <td class="text-center"><PlayerPerson Player="@PlayerObjects[1]" /></td>
     </tr>
 
     <tr>
-        <td class="text-center"><PlayerObject Player="@PlayerObjects[4]" /></td>
-        <td class="text-center"><PlayerObject Player="@PlayerObjects[5]" /></td>
+        <td class="text-center"><PlayerPerson Player="@PlayerObjects[6]" /></td>
+        <td class="text-center"><PlayerPerson Player="@PlayerObjects[2]" /></td>
     </tr>
 
     <tr>
         <td></td>
-        <td class="text-center"><PlayerObject Player="@PlayerObjects[6]" /></td>
-        <td colspan="2" class="text-center"><PlayerObject Player="@PlayerObjects[7]" /></td>
-        <td class="text-center"><PlayerObject Player="@PlayerObjects[8]" /></td>
+        <td class="text-center"><PlayerPerson Player="@PlayerObjects[5]" /></td>
+        <td colspan="2" class="text-center"><PlayerPerson Player="@PlayerObjects[4]" /></td>
+        <td class="text-center"><PlayerPerson Player="@PlayerObjects[3]" /></td>
         <td></td>
     </tr>
 </table>

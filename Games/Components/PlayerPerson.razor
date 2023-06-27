@@ -1,0 +1,10 @@
+﻿<div class="d-inline-block player">    
+    <div class="d-inline-block">@Player?.Cards</div>
+    <div class="d-inline-block">@Player?.Message</div>
+    <div class="d-inline-block">@Player?.Stack</div>
+</div>
+
+@code {
+    [Parameter]
+    public Model.PlayerObject? Player { get; set; }
+}

@@ -3,17 +3,14 @@ using Microsoft.AspNetCore.Components;
 using Games.Model;
 using Games.Tools;
 using static Games.Tools.Definitions;
-using System.Reflection.Metadata;
-using System.Text.RegularExpressions;
-using System.Web;
 
 namespace Games.Pages;
 
 public class PlayPokerBase : ComponentBase
 {
     int _dealerId;
-    List<Card> _cardDeck = new();
-    List<int>? _randomList;
+    readonly List<Card> _cardDeck = new();
+    //List<int>? _randomList;
     public List<PlayerObject> PlayerObjects { get; } = new(new PlayerObject[MaxNumberOfPlayers]);
 
     public bool IsGameRunning { get; set; } = false;
@@ -22,9 +19,10 @@ public class PlayPokerBase : ComponentBase
     {
         _cardDeck.Clear();
         _cardDeck.AddRange(Hand.GetCardDeck());
-        for(int i = 0; i < PlayerObjects.Count; i ++)
+        for (int i = 0; i < PlayerObjects.Count; i++)
         {
-            PlayerObjects[i] = new ();
+            PlayerObjects[i] = new(i, $"Player{i + 1}");
+            PlayerObjects[i].Changed += PlayerObject_Changed;
         }
         await Task.Delay(Definitions.Timeout);
     }
@@ -36,7 +34,7 @@ public class PlayPokerBase : ComponentBase
 
     async Task StartNewGame()
     {
-        _randomList = CommonTools.GetRandomList();
+        //_randomList = CommonTools.GetRandomList();
         await StartGame();
 
     }
@@ -47,39 +45,34 @@ public class PlayPokerBase : ComponentBase
         
     }
 
-    void ClearPlayerObjects()
-    {
-        for (int i = 0; i < PlayerObjects.Count; i++)
-        {
-            PlayerObjects[i].Cards = string.Empty;
-        }
-    }
+    void ClearPlayerObjects() => PlayerObjects.ForEach(p => p.Clear());
 
     async Task DealerSelection()
     {
         _dealerId = -1;
+        PlayerObjects.ForEach(p => p.Update(PlayerObject.Action.SetDealer, false));
         while (true)
         {
             ClearPlayerObjects();
-            StateHasChanged();
             await Task.Delay(Definitions.Timeout);
             List<int> randomList = CommonTools.GetRandomList();
             int n = 0;
-            for (int i = 0; i < PlayerObjects.Count; i++)
+            foreach (PlayerObject player in PlayerObjects)
             {
                 Card card = _cardDeck[randomList[n]];
-                PlayerObjects[i].Update(PlayerObject.Action.SetCards, card.ToDisplayString());
-                StateHasChanged();
+                player.Update(PlayerObject.Action.SetCards, card.ToDisplayString());
                 if (card.Id == CardId.Ace)
                 {
-                    _dealerId = i;
+                    _dealerId = player.Id;
                     break;
                 }
                 await Task.Delay(Definitions.Timeout);
                 n++;
             }
             if (_dealerId != -1) break;
-            StateHasChanged();
         }
+        PlayerObjects[_dealerId].Update(PlayerObject.Action.SetDealer, true);
     }
+
+    void PlayerObject_Changed(object? sender, EventArgs e) => StateHasChanged();
 }

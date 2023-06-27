@@ -1,28 +1,108 @@
 ﻿
+using System.Xml.Linq;
+
 namespace Games.Model;
 
 public class PlayerObject
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Cards { get; set; } = string.Empty;
+    public event EventHandler Changed = delegate { };
+    public int Id { get; private set; }
+    public string Name { get; private set; }
+    string _message;
+    public string Message 
+    {
+        get => _message;
+        set
+        {
+            _message = value;
+            Changed.Invoke(this, new EventArgs());
+        }
+    }
+    string _cards;
+    public string Cards
+    {
+        get => _cards; 
+        set
+        {
+            _cards = value;
+            Changed.Invoke(this, new EventArgs());
+        }
+    }
+
+    bool _isDealer;
+    public bool IsDealer
+    {
+        get => _isDealer;
+        set
+        {
+            _isDealer = value;
+            Changed.Invoke(this, new EventArgs());
+        }
+    }
+    public int Stack { get; private set; }
+    public int Bet { get; private set; }
 
     public enum Action
     {
-        SetCards = 1
+        SetName = 1,
+        SetCards = 2,
+        SetDealer = 3,
+        SetStack = 4,
+        SetBet = 5
+    }
+
+    public PlayerObject(int id, string name)
+    {
+        Id = id;
+        Name = name;
+        _message = Name;
+        _cards = string.Empty;
+        _isDealer = false;
+        Stack = 0;
+        Bet = 0;
+    }
+
+    public void Clear()
+    {
+        _message = Name;
+        _cards = string.Empty;
+        _isDealer = false;
     }
 
     public void Update(Action action, object value)
     {
         switch(action)
         {
+            case Action.SetName:
+                SetName(value);
+                break;
             case Action.SetCards:
                 SetCards(value);
+                break;
+            case Action.SetDealer:
+                SetDealer(value);
+                break;
+            case Action.SetStack:
+                SetStack(value);
+                break;
+            case Action.SetBet:
+                SetBet(value);
                 break;
             default: break;
         }
     }
 
+    void SetName(object value) => Name = value as string ?? string.Empty;
     void SetCards(object value) => Cards = value as string ?? string.Empty;
+    void SetDealer(object value) => IsDealer = Convert.ToBoolean(value);
 
+    void SetStack(object value) => Stack = SetValue(Stack, value);
+    void SetBet(object value) => Bet = SetValue(Bet, value);
+
+    static int SetValue(int value, object ob)
+    {
+        int num = Convert.ToInt32(ob);
+        if (num == 0) return 0;
+        return value + num;
+    }
 }
