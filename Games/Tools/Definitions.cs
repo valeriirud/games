@@ -18,6 +18,7 @@ public static class Definitions
     public static readonly int TotalNumberOfCards = 52;
     public static readonly int NumberOfTests = 1000;
     public static readonly int Timeout = 1000;
+    public static readonly int MaxStack = 1000;
 
     public static readonly bool WriteTextLog = false;
 

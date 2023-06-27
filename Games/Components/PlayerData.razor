@@ -1,16 +1,17 @@
 ﻿<div class="d-inline-block player-data">
-    <span style="--display:@_display; color:white;">D</span>
-    <div class="d-inline-block" style=" color:white;">@Player?.Message</div>
+    <span class="fw-bold" style="color:white; --display:@_displayDealer;">D</span>
+    <div class="d-inline-block" style=" color:white; --display:@_displayBet;">@Player?.Bet</div>
 </div>
 
 <style>
-    span {
+    span, div {
         visibility: var(--display);
     }
 </style>
 
 @code {
-    string? _display;
+    string? _displayDealer;
+    string? _displayBet;
     Model.PlayerObject? _player;
     [Parameter]
     public Model.PlayerObject? Player 
@@ -20,7 +21,10 @@
         {
             _player = value;
             if(_player != null)
-                _display = _player.IsDealer ? "visible" : "collapse";
+            {
+                _displayDealer = _player.IsDealer ? "visible" : "collapse";
+                _displayBet = _player.Bet > 0 ? "visible" : "collapse";
+            }
         } 
     }
     

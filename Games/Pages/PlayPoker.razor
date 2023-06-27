@@ -16,7 +16,7 @@
         <td colspan="4" rowspan="2">
             <div class="panel-body">
                 <div class="game-table">
-                    <table class="table-bordered w-100 h-100">
+                    <table class="w-100 h-100">
                         <tr>
                             <td class="text-start align-bottom">
                                 <PlayerData Player="@PlayerObjects[7]" />
@@ -32,12 +32,12 @@
                         <tr>
                             <td class="text-start align-bottom"><PlayerData Player="@PlayerObjects[6]" /></td>
                             <td colspan="4" class="text-center" >
-                                <div class="btn-group mr-2 board font_large row align-items-center" role="group">
-                                    <div class="w-20 border col-md card"></div>
-                                    <div class="w-20 border col-md card"></div>
-                                    <div class="w-20 border col-md card"></div>
-                                    <div class="w-20 border col-md card"></div>
-                                    <div class="w-20 border col-md card"></div>
+                                <div class="btn-group mr-2 font_large row align-items-center board" role="group">
+                                    <BoardCard Card="@BoardCards[0]" />
+                                    <BoardCard Card="@BoardCards[1]" />
+                                    <BoardCard Card="@BoardCards[2]" />
+                                    <BoardCard Card="@BoardCards[3]" />
+                                    <BoardCard Card="@BoardCards[4]" />
                                 </div>
                             </td>
                             <td class="text-end align-bottom"><PlayerData Player="@PlayerObjects[2]" /></td>

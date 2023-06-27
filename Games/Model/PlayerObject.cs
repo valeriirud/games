@@ -1,6 +1,4 @@
 ﻿
-using System.Xml.Linq;
-
 namespace Games.Model;
 
 public class PlayerObject
@@ -39,8 +37,27 @@ public class PlayerObject
             Changed.Invoke(this, new EventArgs());
         }
     }
-    public int Stack { get; private set; }
-    public int Bet { get; private set; }
+    int _stack;
+    public int Stack
+    {
+        get => _stack;
+        set
+        {
+            _stack = value;
+            Changed.Invoke(this, new EventArgs());
+        }
+    }
+
+    int _bet;
+    public int Bet
+    {
+        get => _bet;
+        set
+        {
+            _bet = value;
+            Changed.Invoke(this, new EventArgs());
+        }
+    }
 
     public enum Action
     {
@@ -51,15 +68,15 @@ public class PlayerObject
         SetBet = 5
     }
 
-    public PlayerObject(int id, string name)
+    public PlayerObject(int id, string name, int stack = 0)
     {
         Id = id;
         Name = name;
         _message = Name;
         _cards = string.Empty;
         _isDealer = false;
-        Stack = 0;
-        Bet = 0;
+        _stack = stack;
+        _bet = 0;
     }
 
     public void Clear()
@@ -67,6 +84,8 @@ public class PlayerObject
         _message = Name;
         _cards = string.Empty;
         _isDealer = false;
+        _stack = 0;
+        _bet = 0;
     }
 
     public void Update(Action action, object value)
@@ -95,7 +114,6 @@ public class PlayerObject
     void SetName(object value) => Name = value as string ?? string.Empty;
     void SetCards(object value) => Cards = value as string ?? string.Empty;
     void SetDealer(object value) => IsDealer = Convert.ToBoolean(value);
-
     void SetStack(object value) => Stack = SetValue(Stack, value);
     void SetBet(object value) => Bet = SetValue(Bet, value);
 

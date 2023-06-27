@@ -1,10 +1,10 @@
 ﻿<div class="d-inline-block player">    
-    <div class="d-inline-block">@Player?.Cards</div>
-    <div class="d-inline-block">@Player?.Message</div>
-    <div class="d-inline-block">@Player?.Stack</div>
+    <div class="height-30">@Player?.Cards</div>
+    <div class="text-lg-start height-30">@Player?.Message</div>
+    <div class="text-lg-start height-30">@Player?.Stack</div>
 </div>
 
-@code {
+@code {    
     [Parameter]
     public Model.PlayerObject? Player { get; set; }
 }

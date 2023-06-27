@@ -1,0 +1,11 @@
+﻿
+.card1 {
+    background-color: white;
+    width: 3.5vw;
+    height: 12vh;
+    white-space: break-spaces;
+    line-height: 1.0;
+    text-align: center;
+    margin-right: .5vw;
+    border-radius: 10%;
+}

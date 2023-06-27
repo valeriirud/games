@@ -24,7 +24,7 @@ th, tr, td {
 }
 
 .board {
-    border: solid yellow 2px;
+    /*border: solid yellow 2px;*/
 }
 
 .card {
