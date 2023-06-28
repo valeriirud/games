@@ -7,7 +7,7 @@
   "linkerEnabled": true,
   "resources": {
     "assembly": {
-      "Games.dll": "sha256-pO+0ehEV1ffEC5BGOKNfTzsUNQJ4kv8cKWIwnxu7PXs=",
+      "Games.dll": "sha256-es1Vls6GhODo9eIUjNm81Jsq7B5czHdzQRJx0tyPSzw=",
       "Microsoft.AspNetCore.Components.dll": "sha256-qSAPrQ34Z7Y8uGhCnbEpQKungD+rDb3SIVJtRmHndQM=",
       "Microsoft.AspNetCore.Components.Web.dll": "sha256-4uR\/ZmF\/RZ73Mo8mWlSwHKdQdxP8\/fE3yxM4H9rMitc=",
       "Microsoft.AspNetCore.Components.WebAssembly.dll": "sha256-OfawION\/UfFO75U4pMPDVhHt71EbKuF3qxDeiPFGqKo=",
@@ -27,7 +27,7 @@
       "System.ComponentModel.Annotations.dll": "sha256-6KR7XU1gEYbCnYAZG4cd+4Z4CJa+v1opVFwBMdWXtIs=",
       "System.ComponentModel.dll": "sha256-bJ4sDOpx5TsolCWCyAGxHIuU+1CKwZNPd+nYmS44kXk=",
       "System.ComponentModel.Primitives.dll": "sha256-C\/RZsYsMKxyFebidGiVhwYgWuT8hcxGQKqNryCJpVuY=",
-      "System.Linq.dll": "sha256-WLPRzPlW3MiaaECsvPv6LTsU0T0eBAiEgrRD0kPdJMs=",
+      "System.Linq.dll": "sha256-iMU54gIeq8Jr2igPr3wugYSC9yx0wTXyzUhoUoSMxr8=",
       "System.Memory.dll": "sha256-2TWXJS9n3nYCIui4FZHmQ\/SGr+hwUd8T+l0uO7TTI28=",
       "System.Net.Http.dll": "sha256-OCp1VTQTfrdT1aR7ddB9NWnPvyc6Vc5LHQpWjElfdeQ=",
       "System.Net.Primitives.dll": "sha256-LXb+r1nAZeumw5CuRJr1Jb29xhy2L4hoKVc\/wh3lG8Q=",
