@@ -50,7 +50,7 @@ public static class CommonTools
             {
                 description = GetEnumDescription((T)e);
             }
-            if (value == description)
+            if (value.ToLower() == description.ToLower())
             {
                 return (T)e;
             }

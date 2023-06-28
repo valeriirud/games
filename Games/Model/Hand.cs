@@ -204,9 +204,10 @@ public class Hand
         return new Hand(cards, handType);
     }
 
-    public static List<Card> GetCardsFromDescriptionString(string str)
+    public static List<Card> GetCardsFromDescriptionString(string src)
     {
-        if (string.IsNullOrEmpty(str)) return new();
+        if (string.IsNullOrEmpty(src)) return new();
+        string str = src.Replace("10", "T");
         List<char> chars = new(str);
         List<Card> cards = new();
         for (int i = 0; i < chars.Count - 1; i += 2)
