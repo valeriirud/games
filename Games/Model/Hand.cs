@@ -8,9 +8,9 @@ namespace Games.Model;
 public class Hand
 {
     readonly List<Card> _cards = new();
-    List<Card> _bestCards = new();
+    readonly List<Card> _bestCards = new();
     readonly List<Card> _myCards = new();
-    HandType _handType;
+    readonly HandType _handType;
 
     public List<Card> BestCards { get => _bestCards; }
     public List<Card> MyCards { get => _myCards; }
@@ -70,11 +70,10 @@ public class Hand
         return str;
     }
 
-    public static string ToDisplayString(List<Card> cards)
+    public static string ToDisplayString(List<Card> cards, bool format = true)
     {
-        string str = string.Empty;
-        str += "[" + ToString(cards, true) + "] ";
-        return str;
+        if (!format) return ToString(cards, true);
+        return $"[{ ToString(cards, true)}] ";
     }
 
     public HandType GetHandType() => _handType;
@@ -233,7 +232,7 @@ public class Hand
         {
             CardId cardId = card.Id;
             string s = alternative 
-                ? cardId.DisplayName() 
+                ? cardId.AlternateValue() 
                 : cardId.Description();
             if (string.IsNullOrEmpty(s))
             {
@@ -241,7 +240,7 @@ public class Hand
             }
             str += s;
             Suit suit = card.Suit;
-            str += alternative ? suit.DisplayName() : suit.Description();
+            str += alternative ? suit.AlternateValue() : suit.Description();
         }
         return str;
     }
@@ -308,7 +307,6 @@ public class Hand
         string testCardIds = ToString(GetIds(testedСards));
         string testCardSuits = ToString(GetSuits(testedСards));
         List<Card> testСards = new(testedСards);
-        //testСards.AddRange(testedСards);
         for (int i = 0; i < numberOfTests; i++)
         {
             handStrings.Clear();

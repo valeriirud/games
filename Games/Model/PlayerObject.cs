@@ -1,4 +1,6 @@
 ﻿
+using static Games.Tools.Definitions;
+
 namespace Games.Model;
 
 public class PlayerObject
@@ -26,7 +28,6 @@ public class PlayerObject
             Changed.Invoke(this, new EventArgs());
         }
     }
-
     bool _isDealer;
     public bool IsDealer
     {
@@ -34,6 +35,16 @@ public class PlayerObject
         set
         {
             _isDealer = value;
+            Changed.Invoke(this, new EventArgs());
+        }
+    }
+    bool _isFold;
+    public bool IsFold
+    {
+        get => _isFold;
+        set
+        {
+            _isFold = value;
             Changed.Invoke(this, new EventArgs());
         }
     }
@@ -47,7 +58,6 @@ public class PlayerObject
             Changed.Invoke(this, new EventArgs());
         }
     }
-
     int _bet;
     public int Bet
     {
@@ -55,6 +65,17 @@ public class PlayerObject
         set
         {
             _bet = value;
+            Changed.Invoke(this, new EventArgs());
+        }
+    }
+
+    int _odds;
+    public int Odds
+    {
+        get => _odds;
+        private set
+        {
+            _odds = value;
             Changed.Invoke(this, new EventArgs());
         }
     }
@@ -79,12 +100,13 @@ public class PlayerObject
         _bet = 0;
     }
 
-    public void Clear()
+    public void Clear(bool stack = false)
     {
         _message = Name;
         _cards = string.Empty;
         _isDealer = false;
-        _stack = 0;
+        if(stack)
+            _stack = 0;
         _bet = 0;
     }
 
@@ -122,5 +144,12 @@ public class PlayerObject
         int num = Convert.ToInt32(ob);
         if (num == 0) return 0;
         return value + num;
+    }
+
+    public void PlaceBet(string commonCards, int numberOfPlayers)
+    {
+        WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", 
+            numberOfPlayers);
+        Odds = winInfo.Probability;
     }
 }

@@ -58,10 +58,10 @@ public class Card
 
     public string ToDisplayString()
     {
-        string strId = Id.DisplayName();
+        string strId = Id.AlternateValue();
         if (string.IsNullOrEmpty(strId))
             strId = Id.Description();
-        string strSuit = Suit.DisplayName();
+        string strSuit = Suit.AlternateValue();
         if (string.IsNullOrEmpty(strSuit))
             strSuit = Suit.Description();
         string str = $"{strId}{strSuit}";

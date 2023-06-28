@@ -29,4 +29,7 @@ public static class Extensions
     public static T GetEnumFromInt<T>(int value) => (T)Enum.ToObject(typeof(T), value);
 
     public static string ToHtmlString(this string value) => HttpUtility.HtmlEncode(value);
+
+    public static string AlternateValue<T>(this T value) => CommonTools.GetEnumAlternateValue(value);
+
 }

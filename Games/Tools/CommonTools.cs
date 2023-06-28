@@ -25,26 +25,37 @@ public static class CommonTools
         return description;
     }
 
-    public static T GetEnumFromDescription<T>(string value)
+    public static string GetEnumAlternateValue<T>(T value)
     {
-        if (Enum.IsDefined(typeof(T), value))
+        var enumType = typeof(T);
+        var memberData = enumType.GetMember(value?.ToString() ?? string.Empty);
+        string alternateValue = (memberData[0].GetCustomAttributes(typeof(AlternateValueAttribute), false)?
+            .FirstOrDefault() as AlternateValueAttribute)?.AlternateValue ?? string.Empty;
+        return alternateValue;
+    }
+
+    public static T GetEnumFromDescription<T>(string value, bool alternate = true)
+    {
+        if (Enum.IsDefined(typeof(T), value)) return (T)Enum.Parse(typeof(T), value, true);        
+        string[] enumNames = Enum.GetNames(typeof(T));
+        foreach (string enumName in enumNames)
         {
-            return (T)Enum.Parse(typeof(T), value, true);
-        }
-        else
-        {
-            string[] enumNames = Enum.GetNames(typeof(T));
-            foreach (string enumName in enumNames)
+            object e = Enum.Parse(typeof(T), enumName);
+            string description = string.Empty;
+            if (alternate)
             {
-                object e = Enum.Parse(typeof(T), enumName);
-                if (value == GetEnumDescription((T)e))
-                {
-                    return (T)e;
-                }
+                description = GetEnumAlternateValue((T)e);
             }
-        }
-        throw new ArgumentException("The value '" + value
-            + "' does not match a valid enum name or description.");
+            if(string.IsNullOrEmpty(description))
+            {
+                description = GetEnumDescription((T)e);
+            }
+            if (value == description)
+            {
+                return (T)e;
+            }
+        }        
+        throw new ArgumentException($"The value '{value}' does not match a valid enum name or description.");
     }
 
     public static T GetEnumFromInt<T>(int id) => (T)Enum.ToObject(typeof(T), id);
