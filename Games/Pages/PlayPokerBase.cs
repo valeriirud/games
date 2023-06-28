@@ -93,11 +93,13 @@ public class PlayPokerBase : ComponentBase
     async Task Preflop()
     {
         int smallBlindId = GetNextPlayerId(_dealerId);
+        if (smallBlindId < 0) return;
         PlayerObjects[smallBlindId].Update(PlayerObject.Action.SetBet, _smallBlind);
         Pot += _smallBlind;
         await Task.Delay(Definitions.Timeout);
 
         int bigBlindId = GetNextPlayerId(smallBlindId);
+        if (bigBlindId < 0) return;
         PlayerObjects[bigBlindId].Update(PlayerObject.Action.SetBet, _bigBlind);
         Pot += _bigBlind;
         await Task.Delay(Definitions.Timeout);
@@ -110,6 +112,7 @@ public class PlayPokerBase : ComponentBase
         while (!BetsAreSame())
         {
             int nextId = GetNextPlayerId(id);
+            if (nextId < 0) break;
             id = nextId;
             int bet = PlayerObjects[nextId].PlaceBet(Hand.ToDisplayString(GetListOfBoardCards(), false),
                 GetMaxBet(), Pot, NumberOfActivePlayers);
@@ -152,12 +155,37 @@ public class PlayPokerBase : ComponentBase
         return list;
     }
 
-    int GetNextPlayerId(int id)
+    int GetNextPlayerId(int prevId)
     {
+        int id = prevId;
+        for (int i = 0; i < PlayerObjects.Length; i++)
+        {
+            id++;
+            if(id > PlayerObjects[^1].Id)
+            {
+                id = 0;
+            }
+            if (! PlayerObjects[id].IsFold) break;
+        }
+        return id;
+#if false
+        int id = prevId;
         List<int> ids = GetIdsOfActivePlayers();
-        if (id == ids[^1]) return 0;
+        int maxId = ids[^1];
+        if (id == maxId) return 0;
         int index = ids.IndexOf(id);
-        return ids[index + 1];
+        if(index >= 0) return ids[index + 1];
+        for(int i = 0; i < ids.Count; i ++)
+        {
+            id++;
+            if(id > maxId)
+            {
+                id = 0;
+            }
+            if (ids.Contains(id)) break;            
+        }
+        return ids.IndexOf(id);
+#endif
     }
 
     List<int> GetIdsOfActivePlayers()

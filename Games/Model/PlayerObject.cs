@@ -45,8 +45,6 @@ public class PlayerObject
         set
         {
             _isFold = value;
-            if (_isFold)
-                Bet = 0;
             Changed.Invoke(this, new EventArgs());
         }
     }
@@ -151,19 +149,29 @@ public class PlayerObject
     public int PlaceBet(string commonCards, int maxBet, int pot, int numberOfPlayers)
     {
         int bet = maxBet - Bet;
-        int potOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(bet) / Convert.ToDouble(pot), 2)*100);
         WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", 
             numberOfPlayers);
-        Odds = winInfo.Probability;        
-        int factor = Convert.ToInt32(Math.Round(Convert.ToDouble(Odds) / Convert.ToDouble(potOdds)));
-        bet *= factor;
-        SetBet(bet);
+        Odds = winInfo.Probability;
+        
+        int stackOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(bet) / Convert.ToDouble(Stack), 2) * 100);
+        if(stackOdds < 5 && Odds > 20)
+        {
+            SetBet(bet);
+            SetStack(-1 * bet);
+            return bet;
+        }
 
-        if (Odds < potOdds || Bet < maxBet)
+        int potOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(bet) / Convert.ToDouble(pot), 2) * 100);
+        double factor = Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds);
+        double d = bet * factor;
+        bet = Convert.ToInt32(Math.Round(d));
+        if (Bet + bet < maxBet)
         {
             IsFold = true;
             return Bet;
         }
+        SetBet(bet);
+        SetStack(-1 * bet);
 
         return bet;
     }

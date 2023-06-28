@@ -34,26 +34,17 @@ public static class CommonTools
         return alternateValue;
     }
 
-    public static T GetEnumFromDescription<T>(string value, bool alternate = true)
+    public static T GetEnumFromDescription<T>(string value)
     {
         if (Enum.IsDefined(typeof(T), value)) return (T)Enum.Parse(typeof(T), value, true);        
         string[] enumNames = Enum.GetNames(typeof(T));
         foreach (string enumName in enumNames)
         {
             object e = Enum.Parse(typeof(T), enumName);
-            string description = string.Empty;
-            if (alternate)
-            {
-                description = GetEnumAlternateValue((T)e);
-            }
-            if(string.IsNullOrEmpty(description))
-            {
-                description = GetEnumDescription((T)e);
-            }
-            if (value.ToLower() == description.ToLower())
-            {
-                return (T)e;
-            }
+            string description = GetEnumDescription((T)e);
+            string alternate = GetEnumAlternateValue((T)e);
+            string lower = value.ToLower();
+            if (lower == description.ToLower() || lower == alternate.ToLower()) return (T)e;
         }        
         throw new ArgumentException($"The value '{value}' does not match a valid enum name or description.");
     }
