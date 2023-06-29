@@ -156,8 +156,7 @@ public class PlayerObject
     {
         State = true;
         int bet = maxBet - Bet;
-        WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", 
-            numberOfPlayers);
+        WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", numberOfPlayers);
         Odds = winInfo.Probability;
         
         int stackOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(Stack), 2) * 100);
