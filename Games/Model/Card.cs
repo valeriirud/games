@@ -1,11 +1,12 @@
 ﻿
 using Games.Tools;
+using System.Xml.Linq;
 using static Games.Tools.Definitions;
 using static Games.Tools.Extensions;
 
 namespace Games.Model;
 
-public class Card
+public class Card : IEquatable<Card>
 {
     CardId _id;
     Suit _suit;
@@ -23,8 +24,13 @@ public class Card
         _suit = suit;
     }
 
-    public static int Compare(Card card1, Card card2) => card1.Compare(card2);
-    public static int CompareDesc(Card card1, Card card2) => card1.CompareDesc(card2);
+    public static int Compare(Card card1, Card card2) => Compare(card1, card2, false);
+    public static int Compare(Card card1, Card card2, bool useSuit = false) => 
+        card1.Compare(card2, useSuit);
+
+    public static int CompareDesc(Card card1, Card card2) => CompareDesc(card1, card2, false);
+    public static int CompareDesc(Card card1, Card card2, bool useSuit = false) => 
+        card1.CompareDesc(card2, useSuit);
 
     public int Compare(Card card, bool useSuit = false)
     {
@@ -67,4 +73,10 @@ public class Card
         string str = $"{strId}{strSuit}";
         return str.Replace(" ", string.Empty);
     }
+
+    public static bool Equals(Card card1, Card card2) => Compare(card1, card2, true) == 0;
+    public bool Equals(Card? card) => card == null ? false : Equals(this, card);
+
+    public override bool Equals(object? obj) => Equals(obj as Card);
+    public override int GetHashCode() => (Id, Suit).GetHashCode();
 }

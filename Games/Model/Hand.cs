@@ -50,6 +50,9 @@ public class Hand
         return suits;
     }
 
+    public static string GetIds(string handString) => handString.Substring(0, HandCount);
+    public static string GetSuits(string handString) => handString.Substring(HandCount, HandCount);
+
     public static string ToString(List<Card> cards)
     {
         string strIds = CommonTools.ToString(GetIds(cards));
@@ -223,7 +226,13 @@ public class Hand
     public static string ToString(Hand hand)
     {
         string str = ToString(hand.Cards);
-        str += hand.HandType.ToInt().ToString("X");
+        string handType = hand.HandType.ToInt().ToString("X");
+        int len = str.Length;
+        if(len == HandCount * 2 + 1)
+        {
+            str = str.Remove(HandCount * 2);
+        }
+        str += handType;
         return str;
     }
 
@@ -304,19 +313,19 @@ public class Hand
         int numberOfPlayers, int numberOfTests)
     {
         int winCount = 0;
-        List<Card> cardDeck = GetCardDeck();
-        List<string> handStrings = new();
+        List<Card> cardDeck = GetCardDeck();        
         string testCardIds = ToString(GetIds(testedСards));
         string testCardSuits = ToString(GetSuits(testedСards));
         List<Card> testСards = new(testedСards);
         for (int i = 0; i < numberOfTests; i++)
         {
-            handStrings.Clear();
+            List<string> handStrings = new();
             List<Hand> winners = Distribution(testedСards, numberOfPlayers, cardDeck);
             winners.ForEach(w => handStrings.Add(ToString(w)));
             foreach(string handString in handStrings)
             {
-                if (!handString.Contains(testCardIds) || !handString.Contains(testCardSuits)) continue;
+                Hand hand = FromString(handString);
+                if (! (hand.Cards.Intersect(testСards).Count() == testСards.Count())) continue;                
                 winCount++;
             }           
         }
