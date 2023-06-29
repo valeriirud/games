@@ -38,13 +38,15 @@ public class PlayerObject
             Changed.Invoke(this, new EventArgs());
         }
     }
-    bool _isFold;
-    public bool IsFold
+
+    // true - place bet, false - fold, null - do not place bet 
+    bool? _state;
+    public bool? State 
     {
-        get => _isFold;
+        get => _state;
         set
         {
-            _isFold = value;
+            _state = value;
             Changed.Invoke(this, new EventArgs());
         }
     }
@@ -80,6 +82,8 @@ public class PlayerObject
         }
     }
 
+    int _changeBet;
+
     public enum Action
     {
         SetName = 1,
@@ -96,18 +100,20 @@ public class PlayerObject
         _message = Name;
         _cards = string.Empty;
         _isDealer = false;
+        _state = null;
         _stack = stack;
         _bet = 0;
     }
 
     public void Clear(bool stack = false)
     {
-        _message = Name;
-        _cards = string.Empty;
-        _isDealer = false;
-        if(stack)
-            _stack = 0;
-        _bet = 0;
+        Message = Name;
+        Cards = string.Empty;
+        IsDealer = false;
+        State = null;
+        Bet = 0;        
+        if (stack)
+            Stack = 0;
     }
 
     public void Update(Action action, object value)
@@ -146,33 +152,51 @@ public class PlayerObject
         return value + num;
     }
 
-    public int PlaceBet(string commonCards, int maxBet, int pot, int numberOfPlayers)
+    public int PlaceBet(string commonCards, int maxBet, int bigBlind, int pot, int numberOfPlayers)
     {
+        State = true;
         int bet = maxBet - Bet;
         WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", 
             numberOfPlayers);
         Odds = winInfo.Probability;
         
-        int stackOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(bet) / Convert.ToDouble(Stack), 2) * 100);
+        int stackOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(Stack), 2) * 100);
         if(stackOdds < 5 && Odds > 20)
         {
+            _changeBet = bet;
             SetBet(bet);
             SetStack(-1 * bet);
             return bet;
         }
 
-        int potOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(bet) / Convert.ToDouble(pot), 2) * 100);
-        double factor = Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds);
-        double d = bet * factor;
-        bet = Convert.ToInt32(Math.Round(d));
-        if (Bet + bet < maxBet)
+        int potOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(pot), 2) * 100);
+        double factor = Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds));       
+        if (factor == 0)
         {
-            IsFold = true;
+            State = false;
             return Bet;
         }
+
+        bet = Convert.ToInt32(factor) * bigBlind;
+        _changeBet = bet;
+
         SetBet(bet);
         SetStack(-1 * bet);
 
         return bet;
     }
+
+    public void PrintInfo()
+    {
+        Console.WriteLine("Begin ========");
+        Console.WriteLine($"Id:{Id}");
+        Console.WriteLine($"Bet:{Bet}");
+        Console.WriteLine($"ChangeBet:{_changeBet}");
+        Console.WriteLine($"Stack:{Stack}");
+        Console.WriteLine($"Odds:{Odds}");
+        Console.WriteLine($"State:{State}");
+        Console.WriteLine("End =========");
+    }
+
+    public void PrintState() => Console.WriteLine($"Id:{Id} State:{State}");
 }

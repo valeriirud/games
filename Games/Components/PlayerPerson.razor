@@ -1,10 +1,21 @@
-﻿<div class="d-inline-block player">    
+﻿<div class="d-inline-block player" style="background-color:@_color">    
     <div class="height-30">@Player?.Cards</div>
     <div class="text-lg-start height-30">@Player?.Message</div>
     <div class="text-lg-start height-30">@Player?.Odds</div>
 </div>
 
-@code {    
+@code {
+    string _color = "lightgray";
+    Model.PlayerObject? _player;
     [Parameter]
-    public Model.PlayerObject? Player { get; set; }
+    public Model.PlayerObject? Player 
+    { 
+        get => _player;
+        set
+        {
+            _player = value;
+            if(_player != null)
+                _color = ! (_player.State ?? true) ? "red" : "lightgray";
+        } 
+    }
 }
