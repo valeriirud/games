@@ -169,16 +169,15 @@ public class PlayerObject
         }
 
         int potOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(pot), 2) * 100);
-        double factor = Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds));       
-        if (factor == 0)
+        double factor = Odds > 20 ? Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds)) : 1;
+        bet = Convert.ToInt32(factor) * bigBlind;
+        if (factor == 0 || bet < maxBet)
         {
             State = false;
             return Bet;
         }
 
-        bet = Convert.ToInt32(factor) * bigBlind;
         _changeBet = bet;
-
         SetBet(bet);
         SetStack(-1 * bet);
 
