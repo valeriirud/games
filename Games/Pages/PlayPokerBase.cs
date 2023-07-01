@@ -43,12 +43,13 @@ public class PlayPokerBase : ComponentBase
 
     public async Task NewGame()
     {
-
+        if (IsGameRunning) return;
         await StartGame();
     }
 
     async Task StartGame()
     {
+        IsGameRunning = true;
         Pot = 0;
         ClearBoardCards();
         InitPlayers();
@@ -57,6 +58,8 @@ public class PlayPokerBase : ComponentBase
         _randomList = CommonTools.GetRandomList();
         _pos = 0;        
         await Preflop();
+
+        IsGameRunning = false;
     }
 
     void ClearPlayerObjects(bool stack = false) => PlayerObjects.ToList().ForEach(p => p.Clear(stack));

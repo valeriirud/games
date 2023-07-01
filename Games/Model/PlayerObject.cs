@@ -155,33 +155,34 @@ public class PlayerObject
     public int PlaceBet(string commonCards, int maxBet, int bigBlind, int pot, int numberOfPlayers)
     {
         State = true;
-        int bet = maxBet - Bet;
+
         WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", numberOfPlayers);
         Odds = winInfo.Probability;
-        
+
         int stackOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(Stack), 2) * 100);
-        if(stackOdds < 5 && Odds > 20)
-        {
-            _changeBet = bet;
-            SetBet(bet);
-            SetStack(-1 * bet);
-            return bet;
-        }
+        if(stackOdds < 5 && Odds > 20) return ChangeBet(maxBet - Bet);        
 
         int potOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(pot), 2) * 100);
-        double factor = Odds > 20 ? Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds)) : 1;
-        bet = Convert.ToInt32(factor) * bigBlind;
-        if (factor == 0 || bet < maxBet)
+        double factor = Odds > 20 ? Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds)) : 0;
+        int bet = Convert.ToInt32(factor) * bigBlind;
+        if (Bet == bigBlind / 2)
+        {
+            bet += bigBlind / 2;
+        }
+        if (factor == 0 || bet + Bet < maxBet)
         {
             State = false;
-            return Bet;
+            return 0;
         }
+        return ChangeBet(bet);
 
-        _changeBet = bet;
-        SetBet(bet);
-        SetStack(-1 * bet);
-
-        return bet;
+        int ChangeBet(int changeBet)
+        {
+            _changeBet = changeBet;
+            SetBet(_changeBet);
+            SetStack(-1 * _changeBet);
+            return _changeBet;
+        }
     }
 
     public void PrintInfo()
