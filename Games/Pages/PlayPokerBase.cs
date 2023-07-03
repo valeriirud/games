@@ -91,9 +91,9 @@ public class PlayPokerBase : ComponentBase
         PlayerObjects[_dealerId].Update(PlayerObject.Action.SetDealer, true);
     }
 
-    void InitPlayers() =>
+    void InitPlayers() => 
         PlayerObjects.ToList().ForEach(p => p.Update(PlayerObject.Action.SetStack, MaxStack));
-
+    
     async Task Preflop()
     {
         int smallBlindId = GetNextPlayerId(_dealerId);

@@ -111,7 +111,8 @@ public class PlayerObject
         Cards = string.Empty;
         IsDealer = false;
         State = null;
-        Bet = 0;        
+        Bet = 0;
+        Odds = 0;
         if (stack)
             Stack = 0;
     }
@@ -142,13 +143,13 @@ public class PlayerObject
     void SetName(object value) => Name = value as string ?? string.Empty;
     void SetCards(object value) => Cards = value as string ?? string.Empty;
     void SetDealer(object value) => IsDealer = Convert.ToBoolean(value);
-    void SetStack(object value) => Stack = SetValue(Stack, value);
-    void SetBet(object value) => Bet = SetValue(Bet, value);
+    void SetStack(object value, bool update = false) => Stack = SetValue(Stack, value, update);
+    void SetBet(object value, bool update = false) => Bet = SetValue(Bet, value, update);
 
-    static int SetValue(int value, object ob)
+    static int SetValue(int value, object ob, bool update)
     {
         int num = Convert.ToInt32(ob);
-        if (num == 0) return 0;
+        if (num == 0 && ! update) return 0;
         return value + num;
     }
 
@@ -160,7 +161,7 @@ public class PlayerObject
         Odds = winInfo.Probability;
 
         int stackOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(Stack), 2) * 100);
-        if(stackOdds < 5 && Odds > 20) return ChangeBet(maxBet - Bet);        
+        if(stackOdds < 5 && Odds > 20) return ChangeBet(maxBet - Bet, true);        
 
         int potOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(pot), 2) * 100);
         double factor = Odds > 20 ? Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds)) : 0;
@@ -169,18 +170,18 @@ public class PlayerObject
         {
             bet += bigBlind / 2;
         }
-        if (factor == 0 || bet + Bet < maxBet)
+        if ((factor == 0 && Bet < maxBet) || bet + Bet < maxBet)
         {
             State = false;
             return 0;
         }
-        return ChangeBet(bet);
+        return ChangeBet(bet, true);
 
-        int ChangeBet(int changeBet)
+        int ChangeBet(int changeBet, bool update)
         {
             _changeBet = changeBet;
-            SetBet(_changeBet);
-            SetStack(-1 * _changeBet);
+            SetBet(_changeBet, update);
+            SetStack(-1 * _changeBet, update);
             return _changeBet;
         }
     }
