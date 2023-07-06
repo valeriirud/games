@@ -1,10 +1,12 @@
-﻿<div class="d-inline-block player" style="background-color:@_color">    
-    <div class="height-30">@Player?.Cards</div>
-    <div class="text-lg-start height-30">@Player?.Message</div>
-    <div class="text-lg-start height-30">Odds:@Player?.Odds%</div>
+﻿<div class="d-inline-block player" style="background-color:@_color">
+    <div class="height-30 border fw-bold fs-5">@Player?.Cards</div>
+    <div class="text-lg-start border height-10">@Player?.Message</div>
+    <div class="text-lg-start border height-10">Odds:@Player?.Odds%</div>
+    <div class="text-lg-start border height-10">@Player?.Stack</div>
 </div>
 
 @code {
+    string _border = string.Empty;
     string _color = "lightgray";
     Model.PlayerObject? _player;
     [Parameter]
@@ -15,7 +17,10 @@
         {
             _player = value;
             if(_player != null)
-                _color = ! (_player.State ?? true) ? "red" : "lightgray";
+            {
+                _color = !(_player.State ?? true) ? "red" : _player.IsThinks ? "blue" : "lightgray";
+                //Console.WriteLine($"({_player.Id})[{_player.State}][{_player.IsThinks}][{_color}]");
+            }
         } 
     }
 }

@@ -4,8 +4,9 @@
     width: 3.5vw;
     height: 12vh;
     white-space: break-spaces;
-    line-height: 1.0;
+    line-height: .8;
     text-align: center;
     margin-right: .5vw;
     border-radius: 10%;
+    padding: 0;
 }

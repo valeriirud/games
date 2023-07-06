@@ -1,6 +1,8 @@
-﻿<div class="w-20 border col-md card1">@Card?.ToDisplayString()</div>
+﻿<div class="w-20 border col-md fw-bold fs-1 card1">
+    @Card?.ToDisplayString().Insert(Card?.ToDisplayString().Length > 2 ? 2 : 1, " ")
+</div>
 
 @code {
-    [Parameter]
-    public Card? Card { get; set; }
+        [Parameter]
+        public Card? Card { get; set; }
 }

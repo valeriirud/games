@@ -7,7 +7,20 @@ public class PlayerObject
 {
     public event EventHandler Changed = delegate { };
     public int Id { get; private set; }
+    readonly string _name;
     public string Name { get; private set; }
+
+    bool _isThinks;
+    public bool IsThinks
+    {
+        get => _isThinks;
+        set
+        {
+            _isThinks = value;
+            Changed.Invoke(this, new EventArgs());
+        }
+    }
+
     string _message;
     public string Message 
     {
@@ -90,19 +103,25 @@ public class PlayerObject
         SetCards = 2,
         SetDealer = 3,
         SetStack = 4,
-        SetBet = 5
+        SetBet = 5,
+        ResetState = 6,
+        SetOdds = 7,
+        SetMessage = 8,
+        SetThinks = 9
     }
 
     public PlayerObject(int id, string name, int stack = 0)
     {
         Id = id;
-        Name = name;
+        _name = name;
+        Name = _name;
         _message = Name;
         _cards = string.Empty;
         _isDealer = false;
         _state = null;
         _stack = stack;
         _bet = 0;
+        _isThinks = false;
     }
 
     public void Clear(bool stack = false)
@@ -113,6 +132,7 @@ public class PlayerObject
         State = null;
         Bet = 0;
         Odds = 0;
+        IsThinks = false;
         if (stack)
             Stack = 0;
     }
@@ -136,11 +156,36 @@ public class PlayerObject
             case Action.SetBet:
                 SetBet(value);
                 break;
+            case Action.ResetState:
+                ResetState(value);
+                break;
+            case Action.SetOdds:
+                SetOdds(value);
+                break;
+            case Action.SetMessage:
+                SetMessage(value);
+                break;
+            case Action.SetThinks:
+                SetThinks(value);
+                break;
             default: break;
         }
     }
 
-    void SetName(object value) => Name = value as string ?? string.Empty;
+    void SetMessage(object value)
+    {
+        _message = value as string ?? string.Empty;
+        if(string.IsNullOrEmpty(_message))
+        {
+            _message = Name;
+        }
+    }
+    void SetName(object value) 
+    {
+        string name = value as string ?? string.Empty;
+        Name = string.IsNullOrEmpty(name) ? _name : name;
+        SetMessage(Name);
+    }
     void SetCards(object value) => Cards = value as string ?? string.Empty;
     void SetDealer(object value) => IsDealer = Convert.ToBoolean(value);
     void SetStack(object value, bool update = false) => Stack = SetValue(Stack, value, update);
@@ -153,19 +198,49 @@ public class PlayerObject
         return value + num;
     }
 
+    void SetOdds(object ob) => Odds = Convert.ToInt32(ob);
+
+    void ResetState(object value)
+    {
+        bool state = Convert.ToBoolean(value);
+        if (state == true)
+        {
+            if (State == state)
+                State = null;
+        }
+        else
+        {
+            State = null;
+        }
+    }
+
+    void SetThinks(object value)
+    {
+        bool state = Convert.ToBoolean(value);
+        IsThinks = state;
+    }
+
     public int PlaceBet(string commonCards, int maxBet, int bigBlind, int pot, int numberOfPlayers)
     {
         State = true;
-
         WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", numberOfPlayers);
         Odds = winInfo.Probability;
+        int multiplier = Odds / 10;
+        int bet = bigBlind * multiplier;
 
         int stackOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(Stack), 2) * 100);
-        if(stackOdds < 5 && Odds > 20) return ChangeBet(maxBet - Bet, true);        
-
         int potOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(pot), 2) * 100);
-        double factor = Odds > 20 ? Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds)) : 0;
-        int bet = Convert.ToInt32(factor) * bigBlind;
+
+        if (stackOdds < 5 && multiplier > 1)
+        {
+            if (bet < maxBet - Bet)
+                bet = maxBet - Bet;
+            return ChangeBet(bet, true);
+        }
+        double factor = Odds > 20 
+            ? Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds)) 
+            : 0;
+        bet = Convert.ToInt32(factor) * bigBlind;
         if (Bet == bigBlind / 2)
         {
             bet += bigBlind / 2;
@@ -173,6 +248,7 @@ public class PlayerObject
         if ((factor == 0 && Bet < maxBet) || bet + Bet < maxBet)
         {
             State = false;
+            SetMessage("FOLD");
             return 0;
         }
         return ChangeBet(bet, true);
@@ -182,6 +258,10 @@ public class PlayerObject
             _changeBet = changeBet;
             SetBet(_changeBet, update);
             SetStack(-1 * _changeBet, update);
+            string message = Bet > maxBet 
+                ? "RAISE" 
+                : Bet > 0 ? "CALL" : "CHECK";
+            SetMessage(message);
             return _changeBet;
         }
     }
@@ -195,6 +275,7 @@ public class PlayerObject
         Console.WriteLine($"Stack:{Stack}");
         Console.WriteLine($"Odds:{Odds}");
         Console.WriteLine($"State:{State}");
+        Console.WriteLine($"IsThinks:{IsThinks}");
         Console.WriteLine("End =========");
     }
 

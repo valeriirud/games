@@ -58,8 +58,47 @@ public class PlayPokerBase : ComponentBase
         _randomList = CommonTools.GetRandomList();
         _pos = 0;        
         await Preflop();
+        await Task.Delay(Definitions.Timeout);
+        List<int> activeIds = GetIdsOfActivePlayers();
+        if(activeIds.Count == 1)
+        {
+            Finish();
+            return;
+        }
+        await Flop();
+        await Task.Delay(Definitions.Timeout);
+        activeIds = GetIdsOfActivePlayers();
+        if (activeIds.Count == 1)
+        {
+            Finish();
+            return;
+        }
+        await Turn();
+        await Task.Delay(Definitions.Timeout);
+        activeIds = GetIdsOfActivePlayers();
+        if (activeIds.Count == 1)
+        {
+            Finish();
+            return;
+        }
+        await River();
+        await Task.Delay(Definitions.Timeout);
+        activeIds = GetIdsOfActivePlayers();
+        if (activeIds.Count == 1)
+        {
+            Finish();
+            return;
+        }
+        await Shutdown();
+        Finish();
 
-        IsGameRunning = false;
+        void Finish()
+        {
+            activeIds.ForEach(id => 
+            PlayerObjects[id].Update(PlayerObject.Action.SetStack, Pot / activeIds.Count));        
+            Pot = 0;
+            IsGameRunning = false;
+        }
     }
 
     void ClearPlayerObjects(bool stack = false) => PlayerObjects.ToList().ForEach(p => p.Clear(stack));
@@ -99,23 +138,21 @@ public class PlayPokerBase : ComponentBase
         int smallBlindId = GetNextPlayerId(_dealerId);
         if (smallBlindId < 0) return;
         PlayerObjects[smallBlindId].Update(PlayerObject.Action.SetBet, _smallBlind);
-        Pot += _smallBlind;
-        PlayerObjects[smallBlindId].PrintInfo();
-        Console.WriteLine($"Pot: {Pot}");
+        PlayerObjects[smallBlindId].Update(PlayerObject.Action.SetStack, -1 * _smallBlind);
+        Pot += _smallBlind;           
         await Task.Delay(Definitions.Timeout);
 
         int bigBlindId = GetNextPlayerId(smallBlindId);
         if (bigBlindId < 0) return;
         PlayerObjects[bigBlindId].Update(PlayerObject.Action.SetBet, _bigBlind);
+        PlayerObjects[bigBlindId].Update(PlayerObject.Action.SetStack, -1*_bigBlind);
         Pot += _bigBlind;
-        PlayerObjects[bigBlindId].PrintInfo();
-        Console.WriteLine($"Pot: {Pot}");
         await Task.Delay(Definitions.Timeout);
 
         PlayerObjects.ToList()
             .ForEach(p => p.Update(PlayerObject.Action.SetCards, GetCards()));
         await Task.Delay(Definitions.Timeout);
-
+#if false
         int id = bigBlindId;
         while (!BetsAreSame())
         {
@@ -126,13 +163,12 @@ public class PlayPokerBase : ComponentBase
                 GetMaxBet(), _bigBlind, Pot, NumberOfActivePlayers);
             Pot += bet;
 
-            PlayerObjects[id].PrintInfo();
-            Console.WriteLine($"Pot: {Pot}");
-
             await Task.Delay(Definitions.Timeout);
+            PlayerObjects[id].Update(PlayerObject.Action.SetMessage, string.Empty);
         }
-        Console.WriteLine($"All Done!!!");
-        PlayerObjects.ToList().ForEach(p => p.PrintState());
+        PlayerObjects.ToList().ForEach(p => Clear(p));
+#endif
+        await GameStage(0, bigBlindId);
 
         string GetCards()
         {
@@ -143,9 +179,82 @@ public class PlayPokerBase : ComponentBase
         }
     }
 
-    void SetBoardCard(int index, Card card)
+    static void Clear(PlayerObject player)
     {
-        BoardCards[index] = card;
+        player.Update(PlayerObject.Action.SetBet, 0);
+        player.Update(PlayerObject.Action.ResetState, true);
+        player.Update(PlayerObject.Action.SetOdds, 0);
+    }
+
+    async Task GameStage(int n, int startId)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            SetBoardCard(GetCard());
+            await Task.Delay(Definitions.Timeout);
+        }
+
+        int id = startId;
+
+        while (true)
+        {
+            int nextId = GetNextPlayerId(id);
+            if (nextId < 0) break;
+            id = nextId;
+            PlayerObjects[id].Update(PlayerObject.Action.SetThinks, true);
+            int bet = PlayerObjects[id].PlaceBet(Hand.ToDisplayString(GetListOfBoardCards(), false),
+                GetMaxBet(), _bigBlind, Pot, NumberOfActivePlayers);
+            PlayerObjects[id].Update(PlayerObject.Action.SetThinks, false);
+            Pot += bet;     
+            await Task.Delay(Definitions.Timeout);
+            PlayerObjects[id].Update(PlayerObject.Action.SetMessage, string.Empty);
+            if (BetsAreSame()) break;
+        }
+        PlayerObjects.ToList().ForEach(p => Clear(p));
+    }
+
+    async Task Flop()
+    {
+        await GameStage(3, _dealerId);
+        await Task.Delay(Definitions.Timeout);
+    }
+
+    async Task Turn()
+    {
+        await GameStage(1, _dealerId);
+        await Task.Delay(Definitions.Timeout);
+    }
+
+    async Task River()
+    {
+        await GameStage(1, _dealerId);
+        await Task.Delay(Definitions.Timeout);
+    }
+
+    async Task Shutdown()
+    {
+        await Task.Delay(Definitions.Timeout);
+    }
+
+    Card GetCard()
+    {
+        Card card = _cardDeck[_randomList[_pos]];        
+        _pos ++;
+        return card;
+    }
+    void SetBoardCard(Card card, int index = -1)
+    {
+        if(index >= 0)
+            BoardCards[index] = card;
+        else
+        {
+            for(int i = 0; i < BoardCards.Length; i ++)
+            {
+                if (BoardCards[i] != null) continue;
+                BoardCards[i] = card;
+                break;
+            }
+        }
         BoardCards_Changed();
     }
 
@@ -197,7 +306,13 @@ public class PlayPokerBase : ComponentBase
 
     int GetMaxBet() => PlayerObjects.MaxBy(p => p.Bet)?.Bet ?? 0;
 
-    void PlayerObject_Changed(object? sender, EventArgs e) => StateHasChanged();    
+    void PlayerObject_Changed(object? sender, EventArgs e)
+    {
+        PlayerObject? playerObject = sender as PlayerObject;
+        if (playerObject == null) return;
+        //playerObject.PrintInfo();
+        StateHasChanged();
+    }
     void BoardCards_Changed() => StateHasChanged();
     void Pot_Changed() => StateHasChanged();
 }
