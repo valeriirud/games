@@ -2,7 +2,6 @@
 .player {
     width: 6vw;
     height: 19vh;
-    background-color: lightgray;
 }
 
 div {
@@ -12,3 +11,4 @@ div {
 .height-30{
     height: 30%;
 }
+

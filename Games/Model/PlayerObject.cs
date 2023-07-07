@@ -1,4 +1,5 @@
 ﻿
+using Games.Tools;
 using static Games.Tools.Definitions;
 
 namespace Games.Model;
@@ -177,7 +178,7 @@ public class PlayerObject
         _message = value as string ?? string.Empty;
         if(string.IsNullOrEmpty(_message))
         {
-            _message = Name;
+            _message = (State ?? true) ? Name : "FOLD";
         }
     }
     void SetName(object value) 
@@ -218,6 +219,8 @@ public class PlayerObject
     {
         bool state = Convert.ToBoolean(value);
         IsThinks = state;
+        if( IsThinks )
+            Message = "thinks...";
     }
 
     public int PlaceBet(string commonCards, int maxBet, int bigBlind, int pot, int numberOfPlayers)

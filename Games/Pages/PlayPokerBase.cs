@@ -202,11 +202,13 @@ public class PlayPokerBase : ComponentBase
             if (nextId < 0) break;
             id = nextId;
             PlayerObjects[id].Update(PlayerObject.Action.SetThinks, true);
+            await Task.Delay(Definitions.Timeout / 4);
             int bet = PlayerObjects[id].PlaceBet(Hand.ToDisplayString(GetListOfBoardCards(), false),
                 GetMaxBet(), _bigBlind, Pot, NumberOfActivePlayers);
+            await Task.Delay(Definitions.Timeout);
             PlayerObjects[id].Update(PlayerObject.Action.SetThinks, false);
             Pot += bet;     
-            await Task.Delay(Definitions.Timeout);
+            //await Task.Delay(Definitions.Timeout);
             PlayerObjects[id].Update(PlayerObject.Action.SetMessage, string.Empty);
             if (BetsAreSame()) break;
         }
@@ -311,6 +313,8 @@ public class PlayPokerBase : ComponentBase
         PlayerObject? playerObject = sender as PlayerObject;
         if (playerObject == null) return;
         //playerObject.PrintInfo();
+        //if(playerObject.IsThinks)
+        //    Console.WriteLine($"[{playerObject.Id}] Is Thinks:{playerObject.IsThinks}");
         StateHasChanged();
     }
     void BoardCards_Changed() => StateHasChanged();
