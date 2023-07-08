@@ -10,6 +10,16 @@ public class PlayerObject
     public int Id { get; private set; }
     readonly string _name;
     public string Name { get; private set; }
+    PlayerAction _action;
+    public PlayerAction Action 
+    { 
+        get => _action;
+        set 
+        { 
+            _action = value;
+            Changed.Invoke(this, new EventArgs());
+        } 
+    }
 
     bool _isThinks;
     public bool IsThinks
@@ -98,7 +108,7 @@ public class PlayerObject
 
     int _changeBet;
 
-    public enum Action
+    public enum Operation
     {
         SetName = 1,
         SetCards = 2,
@@ -123,6 +133,7 @@ public class PlayerObject
         _stack = stack;
         _bet = 0;
         _isThinks = false;
+        Action = PlayerAction.None;
     }
 
     public void Clear(bool stack = false)
@@ -134,39 +145,40 @@ public class PlayerObject
         Bet = 0;
         Odds = 0;
         IsThinks = false;
+        Action = PlayerAction.None;
         if (stack)
             Stack = 0;
     }
 
-    public void Update(Action action, object value)
+    public void Update(Operation action, object value)
     {
         switch(action)
         {
-            case Action.SetName:
+            case Operation.SetName:
                 SetName(value);
                 break;
-            case Action.SetCards:
+            case Operation.SetCards:
                 SetCards(value);
                 break;
-            case Action.SetDealer:
+            case Operation.SetDealer:
                 SetDealer(value);
                 break;
-            case Action.SetStack:
+            case Operation.SetStack:
                 SetStack(value);
                 break;
-            case Action.SetBet:
+            case Operation.SetBet:
                 SetBet(value);
                 break;
-            case Action.ResetState:
+            case Operation.ResetState:
                 ResetState(value);
                 break;
-            case Action.SetOdds:
+            case Operation.SetOdds:
                 SetOdds(value);
                 break;
-            case Action.SetMessage:
+            case Operation.SetMessage:
                 SetMessage(value);
                 break;
-            case Action.SetThinks:
+            case Operation.SetThinks:
                 SetThinks(value);
                 break;
             default: break;
@@ -175,10 +187,10 @@ public class PlayerObject
 
     void SetMessage(object value)
     {
-        _message = value as string ?? string.Empty;
+        Message = value as string ?? string.Empty;
         if(string.IsNullOrEmpty(_message))
         {
-            _message = (State ?? true) ? Name : "FOLD";
+            Message = (State ?? true) ? Name : PlayerAction.Fold.Description();
         }
     }
     void SetName(object value) 
@@ -219,14 +231,20 @@ public class PlayerObject
     {
         bool state = Convert.ToBoolean(value);
         IsThinks = state;
-        if( IsThinks )
-            Message = "thinks...";
+        if (IsThinks)
+        {
+            Action = PlayerAction.Thinks;
+            Message = Action.Description();
+        }
     }
 
-    public int PlaceBet(string commonCards, int maxBet, int bigBlind, int pot, int numberOfPlayers)
+    public async Task<int> PlaceBet(string commonCards, int maxBet, int bigBlind, int pot, int numberOfPlayers)
     {
         State = true;
+        SetThinks(true);
+        await Task.Delay(Definitions.Timeout / 4);
         WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", numberOfPlayers);
+        SetThinks(false);
         Odds = winInfo.Probability;
         int multiplier = Odds / 10;
         int bet = bigBlind * multiplier;
@@ -238,7 +256,7 @@ public class PlayerObject
         {
             if (bet < maxBet - Bet)
                 bet = maxBet - Bet;
-            return ChangeBet(bet, true);
+            return await ChangeBet(bet, true);
         }
         double factor = Odds > 20 
             ? Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds)) 
@@ -251,20 +269,22 @@ public class PlayerObject
         if ((factor == 0 && Bet < maxBet) || bet + Bet < maxBet)
         {
             State = false;
-            SetMessage("FOLD");
+            Action = PlayerAction.Fold;
+            SetMessage(Action.Description());
             return 0;
         }
-        return ChangeBet(bet, true);
+        return await ChangeBet(bet, true);
 
-        int ChangeBet(int changeBet, bool update)
+        async Task<int> ChangeBet(int changeBet, bool update)
         {
             _changeBet = changeBet;
             SetBet(_changeBet, update);
             SetStack(-1 * _changeBet, update);
-            string message = Bet > maxBet 
-                ? "RAISE" 
-                : Bet > 0 ? "CALL" : "CHECK";
-            SetMessage(message);
+            Action = Bet > maxBet
+                ? PlayerAction.Raise
+                : Bet > 0 ? PlayerAction.Call : PlayerAction.Check;
+            SetMessage(Action.Description());
+            await Task.Delay(Definitions.Timeout);
             return _changeBet;
         }
     }
@@ -279,6 +299,7 @@ public class PlayerObject
         Console.WriteLine($"Odds:{Odds}");
         Console.WriteLine($"State:{State}");
         Console.WriteLine($"IsThinks:{IsThinks}");
+        Console.WriteLine($"Action:{Action.Description()}");
         Console.WriteLine("End =========");
     }
 

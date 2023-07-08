@@ -106,4 +106,20 @@ public static class Definitions
         [Description("Undefined")]
         Undefined = 11,
     }
+
+    public enum PlayerAction
+    {
+        [Description("")]
+        None = 0,
+        [Description("FOLD")]
+        Fold = 1,
+        [Description("CALL")]
+        Call = 2,
+        [Description("RAISE")]
+        Raise = 3,
+        [Description("CHECH")]
+        Check = 4,
+        [Description("thinks...")]
+        Thinks = 5
+    }
 }
