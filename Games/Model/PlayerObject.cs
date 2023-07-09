@@ -147,7 +147,9 @@ public class PlayerObject
         IsThinks = false;
         Action = PlayerAction.None;
         if (stack)
+        {
             Stack = 0;
+        }
     }
 
     public void Update(Operation action, object value)
@@ -219,7 +221,9 @@ public class PlayerObject
         if (state == true)
         {
             if (State == state)
+            {
                 State = null;
+            }
         }
         else
         {
@@ -241,38 +245,54 @@ public class PlayerObject
     public async Task<int> PlaceBet(string commonCards, int maxBet, int bigBlind, int pot, int numberOfPlayers)
     {
         State = true;
+        string handCards = $"{Cards}{commonCards}";
         SetThinks(true);
         await Task.Delay(Definitions.Timeout / 4);
-        WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", numberOfPlayers);
+        WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{handCards}", numberOfPlayers);
         SetThinks(false);
         Odds = winInfo.Probability;
-        int multiplier = Odds / 10;
+        int multiplier = Odds / 20;
         int bet = bigBlind * multiplier;
 
-        int stackOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(Stack), 2) * 100);
-        int potOdds = Convert.ToInt32(Math.Round(Convert.ToDouble(maxBet) / Convert.ToDouble(pot), 2) * 100);
+        int stackOdds = GetPercent(maxBet, Stack) + 1;
+        int potOdds = GetPercent(maxBet, pot) + 1;
+
+        Console.WriteLine($"[{Id}]({handCards}) Odds:{Odds} StackOdds:{stackOdds} PotOdds:{potOdds}");
+
+        if (Bet < maxBet - bigBlind && Odds < 20) return Fold();
 
         if (stackOdds < 5 && multiplier > 1)
         {
-            if (bet < maxBet - Bet)
+            if (bet < maxBet - Bet || bet < bigBlind * 2)
+            {
                 bet = maxBet - Bet;
+            }
+            if (bet < bigBlind)
+            {
+                bet = maxBet - Bet;
+            }
+
+            AdjustSmallBlind();
+
+            Console.WriteLine($"1 [{Id}]({handCards})<{Odds}:{stackOdds}:{potOdds}>|{maxBet}|{Bet}|{bet}");
+
             return await ChangeBet(bet, true);
         }
         double factor = Odds > 20 
             ? Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds)) 
             : 0;
-        bet = Convert.ToInt32(factor) * bigBlind;
-        if (Bet == bigBlind / 2)
+        Console.WriteLine($"[{Id}]({handCards})<{Odds*2}|{potOdds}> Factor:{factor})");
+        bet = Convert.ToInt32(factor) * bigBlind;        
+
+        if ((factor == 0 && Bet < maxBet) || bet + Bet < maxBet) return Fold();
+        if (bet + Bet - maxBet < bigBlind * 2)
         {
-            bet += bigBlind / 2;
+            bet = maxBet - Bet;
         }
-        if ((factor == 0 && Bet < maxBet) || bet + Bet < maxBet)
-        {
-            State = false;
-            Action = PlayerAction.Fold;
-            SetMessage(Action.Description());
-            return 0;
-        }
+
+        AdjustSmallBlind();
+
+        Console.WriteLine($"2 [{Id}]({handCards})<{Odds}:{stackOdds}:{potOdds}>|{maxBet}|{Bet}|{bet}");
         return await ChangeBet(bet, true);
 
         async Task<int> ChangeBet(int changeBet, bool update)
@@ -287,6 +307,24 @@ public class PlayerObject
             await Task.Delay(Definitions.Timeout);
             return _changeBet;
         }
+
+        int GetPercent(int n, int m) =>
+            Convert.ToInt32(Math.Round(Convert.ToDouble(n) / Convert.ToDouble(m), 2) * 100);
+
+        int Fold()
+        {
+            State = false;
+            Action = PlayerAction.Fold;
+            SetMessage(Action.Description());
+            return 0;
+        }
+
+        void AdjustSmallBlind()
+        {
+            if (Bet > bigBlind / 2) return;
+            bet += bigBlind / 2;            
+        }
+
     }
 
     public void PrintInfo()
