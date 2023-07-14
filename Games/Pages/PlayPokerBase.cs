@@ -89,7 +89,7 @@ public class PlayPokerBase : ComponentBase
             Finish();
             return;
         }
-        await Shutdown();
+        activeIds = await Shutdown();
         Finish();
 
         void Finish()
@@ -130,9 +130,11 @@ public class PlayPokerBase : ComponentBase
         PlayerObjects[_dealerId].Update(PlayerObject.Operation.SetDealer, true);
     }
 
-    void InitPlayers() => 
+    void InitPlayers()
+    {
+        PlayerObjects.ToList().ForEach(p => p.Update(PlayerObject.Operation.SetStack, 0));
         PlayerObjects.ToList().ForEach(p => p.Update(PlayerObject.Operation.SetStack, MaxStack));
-    
+    }
     async Task Preflop()
     {
         int smallBlindId = GetNextPlayerId(_dealerId);
@@ -213,9 +215,25 @@ public class PlayPokerBase : ComponentBase
         await Task.Delay(Definitions.Timeout);
     }
 
-    async Task Shutdown()
+    async Task<List<int>> Shutdown()
     {
+        List<int> activeIds = GetIdsOfActivePlayers();
+#if false
+        string boardCards = Hand.ToDisplayString(GetListOfBoardCards(), false);
+        List<string> cards = new();
+        foreach (int id in activeIds)
+        {
+            cards.Add($"{PlayerObjects[id].Cards}{boardCards}");
+        }
+        List<int> ids = Hand.GetWinnersIds(cards);
+        List<int> winners = new();
+        foreach(int id in ids)
+        {
+            winners.Add(activeIds[id]);
+        }
+#endif
         await Task.Delay(Definitions.Timeout);
+        return activeIds;
     }
 
     Card GetCard()
@@ -224,6 +242,7 @@ public class PlayPokerBase : ComponentBase
         _pos ++;
         return card;
     }
+
     void SetBoardCard(Card card, int index = -1)
     {
         if(index >= 0)

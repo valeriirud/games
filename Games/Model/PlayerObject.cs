@@ -251,48 +251,23 @@ public class PlayerObject
         WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{handCards}", numberOfPlayers);
         SetThinks(false);
         Odds = winInfo.Probability;
-        int multiplier = Odds / 20;
-        int bet = bigBlind * multiplier;
-
         int stackOdds = GetPercent(maxBet, Stack) + 1;
         int potOdds = GetPercent(maxBet, pot) + 1;
 
-        //Console.WriteLine($"[{Id}]({handCards}) Odds:{Odds} StackOdds:{stackOdds} PotOdds:{potOdds}");
-
-        if (Bet < maxBet - bigBlind && Odds < 20) return Fold();
-
-        if (stackOdds < 5 && multiplier > 1)
+        int multiplier = Odds / 10;
+        if(multiplier > 0)
         {
-            if (bet < maxBet - Bet || bet < bigBlind * 2)
-            {
-                bet = maxBet - Bet;
-            }
-            if (bet < bigBlind)
-            {
-                bet = maxBet - Bet;
-            }
-
-            AdjustSmallBlind();
-
-            //Console.WriteLine($"1 [{Id}]({handCards})<{Odds}:{stackOdds}:{potOdds}>|{maxBet}|{Bet}|{bet}");
-
-            return await ChangeBet(bet, true);
+            multiplier -= 1;
         }
-        double factor = Odds > 20 
-            ? Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds)) 
-            : 0;
-        //Console.WriteLine($"[{Id}]({handCards})<{Odds*2}|{potOdds}> Factor:{factor})");
-        bet = Convert.ToInt32(factor) * bigBlind;        
-
-        if ((factor == 0 && Bet < maxBet) || bet + Bet < maxBet) return Fold();
-        if (bet + Bet - maxBet < bigBlind * 2)
+        int bet = bigBlind * multiplier;       
+        AdjustSmallBlind();        
+        if (Bet + bet < maxBet) return Fold();
+        if (Bet + bet < maxBet + bigBlind*2)
         {
             bet = maxBet - Bet;
         }
+        Console.WriteLine($"[{Id}]({handCards})<{Odds}:{stackOdds}:{potOdds}>|MaxBet:{maxBet}|Bedt:{Bet}|bet:{bet}");
 
-        AdjustSmallBlind();
-
-        //Console.WriteLine($"2 [{Id}]({handCards})<{Odds}:{stackOdds}:{potOdds}>|{maxBet}|{Bet}|{bet}");
         return await ChangeBet(bet, true);
 
         async Task<int> ChangeBet(int changeBet, bool update)
@@ -321,7 +296,7 @@ public class PlayerObject
 
         void AdjustSmallBlind()
         {
-            if (Bet > bigBlind / 2) return;
+            if (Bet != bigBlind / 2) return;
             bet += bigBlind / 2;            
         }
 

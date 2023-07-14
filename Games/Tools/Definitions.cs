@@ -117,7 +117,7 @@ public static class Definitions
         Call = 2,
         [Description("RAISE")]
         Raise = 3,
-        [Description("CHECH")]
+        [Description("CHECK")]
         Check = 4,
         [Description("thinks...")]
         Thinks = 5

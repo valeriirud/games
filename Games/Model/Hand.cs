@@ -1,7 +1,9 @@
 ﻿
 using Games.Model.HandTypes;
 using Games.Tools;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection.Metadata;
 using static Games.Tools.Definitions;
 
 namespace Games.Model;
@@ -284,8 +286,10 @@ public class Hand
             cards.AddRange(board);
             hands.Add(new(cards));
         }
+
         List<Hand> bestHands = GetBestHands(hands);
         if(bestHands.Count == 1) return bestHands;
+#if false
         List<int> bestPositions = new() { 0 };  
         for(int i = 1; i < bestHands.Count; i ++)
         {
@@ -298,9 +302,42 @@ public class Hand
             }
             bestPositions.Add(i);
         }
+#endif       
+        List<int> bestPositions = GetBestPositions(bestHands);
+
         List<Hand> winners = new();
         bestPositions.ForEach(p => winners.Add(bestHands[p]));
         return winners; 
+    }
+
+    static List<int> GetBestPositions(List<Hand> bestHands)
+    {        
+        List<int> bestPositions = new() { 0 };
+        for (int i = 1; i < bestHands.Count; i++)
+        {
+            int cmp = Compare(bestHands[bestPositions[0]], bestHands[i]);
+            if (cmp > 0) continue;
+            if (cmp < 0)
+            {
+                bestPositions = new() { i };
+                continue;
+            }
+            bestPositions.Add(i);
+        }
+        return bestPositions;
+    }
+
+    public static List<int> GetWinnersIds(List<string> cards)
+    {
+        List<Hand> hands = new();
+        foreach(string item in cards)
+        {
+            List<Card> list = GetCardsFromDescriptionString(item);
+            hands.Add(new(list));
+        }
+        List<Hand> bestHands = GetBestHands(hands);
+        List<int> bestPositions = GetBestPositions(bestHands);
+        return bestPositions;
     }
 
     public static WinInfo GetProbabilityOfWinningByMonteCarlo(string strCards, int numberOfPlayers)
@@ -386,7 +423,7 @@ public class Hand
     {
         if (hand1.HandType > hand2.HandType) return 1;
         if (hand1.HandType < hand2.HandType) return -1;
-        return Hand.Compare(hand1, hand2, hand1.HandType);
+        return Compare(hand1, hand2, hand1.HandType);
     }
 
     static int Compare(Hand hand1, Hand hand2, HandType handType)
