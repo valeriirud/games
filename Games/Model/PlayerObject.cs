@@ -257,7 +257,7 @@ public class PlayerObject
         int stackOdds = GetPercent(maxBet, Stack) + 1;
         int potOdds = GetPercent(maxBet, pot) + 1;
 
-        Console.WriteLine($"[{Id}]({handCards}) Odds:{Odds} StackOdds:{stackOdds} PotOdds:{potOdds}");
+        //Console.WriteLine($"[{Id}]({handCards}) Odds:{Odds} StackOdds:{stackOdds} PotOdds:{potOdds}");
 
         if (Bet < maxBet - bigBlind && Odds < 20) return Fold();
 
@@ -274,14 +274,14 @@ public class PlayerObject
 
             AdjustSmallBlind();
 
-            Console.WriteLine($"1 [{Id}]({handCards})<{Odds}:{stackOdds}:{potOdds}>|{maxBet}|{Bet}|{bet}");
+            //Console.WriteLine($"1 [{Id}]({handCards})<{Odds}:{stackOdds}:{potOdds}>|{maxBet}|{Bet}|{bet}");
 
             return await ChangeBet(bet, true);
         }
         double factor = Odds > 20 
             ? Math.Round(Convert.ToDouble(Odds*2) / Convert.ToDouble(potOdds)) 
             : 0;
-        Console.WriteLine($"[{Id}]({handCards})<{Odds*2}|{potOdds}> Factor:{factor})");
+        //Console.WriteLine($"[{Id}]({handCards})<{Odds*2}|{potOdds}> Factor:{factor})");
         bet = Convert.ToInt32(factor) * bigBlind;        
 
         if ((factor == 0 && Bet < maxBet) || bet + Bet < maxBet) return Fold();
@@ -292,7 +292,7 @@ public class PlayerObject
 
         AdjustSmallBlind();
 
-        Console.WriteLine($"2 [{Id}]({handCards})<{Odds}:{stackOdds}:{potOdds}>|{maxBet}|{Bet}|{bet}");
+        //Console.WriteLine($"2 [{Id}]({handCards})<{Odds}:{stackOdds}:{potOdds}>|{maxBet}|{Bet}|{bet}");
         return await ChangeBet(bet, true);
 
         async Task<int> ChangeBet(int changeBet, bool update)
