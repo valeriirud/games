@@ -21,6 +21,17 @@ public class PlayerObject
         } 
     }
 
+    bool _isWinner;
+    public bool IsWinner
+    {
+        get => _isWinner;
+        set
+        {
+            _isWinner = value;
+            Changed.Invoke(this, new EventArgs());
+        }
+    }
+
     bool _isThinks;
     public bool IsThinks
     {
@@ -118,7 +129,8 @@ public class PlayerObject
         ResetState = 6,
         SetOdds = 7,
         SetMessage = 8,
-        SetThinks = 9
+        SetThinks = 9,
+        SetWinner = 10
     }
 
     public PlayerObject(int id, string name, int stack = 0)
@@ -183,6 +195,9 @@ public class PlayerObject
             case Operation.SetThinks:
                 SetThinks(value);
                 break;
+            case Operation.SetWinner:
+                SetWinner(value);
+                break;
             default: break;
         }
     }
@@ -241,6 +256,8 @@ public class PlayerObject
             Message = Action.Description();
         }
     }
+
+    void SetWinner(object value) => IsWinner = Convert.ToBoolean(value);
 
     public async Task<int> PlaceBet(string commonCards, int maxBet, int bigBlind, int pot, int numberOfPlayers)
     {

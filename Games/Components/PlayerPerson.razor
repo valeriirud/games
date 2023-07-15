@@ -18,7 +18,11 @@
             _player = value;
             if(_player != null)
             {
-                _bgColor = !(_player.State ?? true) ? "red" : _player.IsThinks ? "yellow" : "lightgray";
+                _bgColor = !(_player.State ?? true) 
+                ? "red" 
+                : _player.IsThinks 
+                    ? "yellow" 
+                    : _player.IsWinner ? "lightgreen" : "lightgray";
                 _style = $"background-color:{_bgColor}";
             }
         } 

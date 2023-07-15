@@ -53,6 +53,7 @@ public class PlayPokerBase : ComponentBase
         Pot = 0;
         ClearBoardCards();
         InitPlayers();
+        ClearWinners();
         await DealerSelection();
         await Task.Delay(Definitions.Timeout * 2);
         _randomList = CommonTools.GetRandomList();
@@ -95,7 +96,8 @@ public class PlayPokerBase : ComponentBase
         void Finish()
         {
             activeIds.ForEach(id => 
-            PlayerObjects[id].Update(PlayerObject.Operation.SetStack, Pot / activeIds.Count));        
+            PlayerObjects[id].Update(PlayerObject.Operation.SetStack, Pot / activeIds.Count));
+            activeIds.ForEach(id => PlayerObjects[id].Update(PlayerObject.Operation.SetWinner, true));
             Pot = 0;
             IsGameRunning = false;
         }
@@ -135,6 +137,10 @@ public class PlayPokerBase : ComponentBase
         PlayerObjects.ToList().ForEach(p => p.Update(PlayerObject.Operation.SetStack, 0));
         PlayerObjects.ToList().ForEach(p => p.Update(PlayerObject.Operation.SetStack, MaxStack));
     }
+
+    void ClearWinners() => 
+        PlayerObjects.ToList().ForEach(p => p.Update(PlayerObject.Operation.SetWinner, false));    
+
     async Task Preflop()
     {
         int smallBlindId = GetNextPlayerId(_dealerId);
@@ -170,7 +176,7 @@ public class PlayPokerBase : ComponentBase
     {
         player.Update(PlayerObject.Operation.SetBet, 0);
         player.Update(PlayerObject.Operation.ResetState, true);
-        player.Update(PlayerObject.Operation.SetOdds, 0);
+        player.Update(PlayerObject.Operation.SetOdds, 0);        
     }
 
     async Task GameStage(int n, int startId)
@@ -218,22 +224,15 @@ public class PlayPokerBase : ComponentBase
     async Task<List<int>> Shutdown()
     {
         List<int> activeIds = GetIdsOfActivePlayers();
-#if false
         string boardCards = Hand.ToDisplayString(GetListOfBoardCards(), false);
-        List<string> cards = new();
-        foreach (int id in activeIds)
-        {
-            cards.Add($"{PlayerObjects[id].Cards}{boardCards}");
-        }
-        List<int> ids = Hand.GetWinnersIds(cards);
+        Dictionary<string, int> cards = new();
+        activeIds.ForEach(id => cards[$"{PlayerObjects[id].Cards}{boardCards}"] = id);
+        List<string> keys = cards.Keys.ToList();
+        List<int> ids = Hand.GetWinnersIds(keys);
         List<int> winners = new();
-        foreach(int id in ids)
-        {
-            winners.Add(activeIds[id]);
-        }
-#endif
+        ids.ForEach(id => winners.Add(cards[keys[id]]));
         await Task.Delay(Definitions.Timeout);
-        return activeIds;
+        return winners;
     }
 
     Card GetCard()

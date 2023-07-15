@@ -336,7 +336,15 @@ public class Hand
             hands.Add(new(list));
         }
         List<Hand> bestHands = GetBestHands(hands);
+        foreach(Hand hand in bestHands)
+        {
+            Console.WriteLine($"Best hand:{ToString(hand.Cards, true)}");
+        }
         List<int> bestPositions = GetBestPositions(bestHands);
+        foreach(int pos in bestPositions)
+        {
+            Console.WriteLine($"Best position:{pos}");
+        }
         return bestPositions;
     }
 
