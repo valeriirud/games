@@ -73,4 +73,12 @@
         <td></td>
     </tr>
 </table>
+<div class="game-panel" style="@(IsMyAction ? "display:block" : "display:none")">
+    <input type="text" value=""/>
+    <div>
+    <button onclick="@(async () => await Fold())" onmouseup="this.blur();">Fold</button>
+    <button disabled=@IsCheckAvailable onclick="@(async () => await Check())" onmouseup="this.blur();">Check</button>
+    <button onclick="@(async () => await Bet())" onmouseup="this.blur();">Bet</button>
+    </div>
+</div>
 

@@ -112,7 +112,7 @@ public class PlayerObject
         get => _odds;
         private set
         {
-            _odds = value;
+            _odds = value;            
             Changed.Invoke(this, new EventArgs());
         }
     }
@@ -259,6 +259,13 @@ public class PlayerObject
 
     void SetWinner(object value) => IsWinner = Convert.ToBoolean(value);
 
+    public int GetOdds(string commonCards, int numberOfPlayers)
+    {        
+        WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", 
+            numberOfPlayers);
+        return winInfo.Probability;
+    }
+
     public async Task<int> PlaceBet(string commonCards, int maxBet, int bigBlind, int pot, int numberOfPlayers)
     {
         State = true;
@@ -268,8 +275,8 @@ public class PlayerObject
         WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{handCards}", numberOfPlayers);
         SetThinks(false);
         Odds = winInfo.Probability;
-        int stackOdds = GetPercent(maxBet, Stack) + 1;
-        int potOdds = GetPercent(maxBet, pot) + 1;
+        //int stackOdds = GetPercent(maxBet, Stack) + 1;
+        //int potOdds = GetPercent(maxBet, pot) + 1;
 
         int multiplier = Odds / 10;
         if(multiplier > 0)
@@ -283,11 +290,20 @@ public class PlayerObject
         {
             bet = maxBet - Bet;
         }
-        Console.WriteLine($"[{Id}]({handCards})<{Odds}:{stackOdds}:{potOdds}>|MaxBet:{maxBet}|Bedt:{Bet}|bet:{bet}");
+        //Console.WriteLine($"[{Id}]({handCards})<{Odds}>|MaxBet:{maxBet}|Bedt:{Bet}|bet:{bet}");
 
-        return await ChangeBet(bet, true);
+        return await ChangeBet(bet, maxBet, true);        
 
-        async Task<int> ChangeBet(int changeBet, bool update)
+        //int GetPercent(int n, int m) =>
+        //    Convert.ToInt32(Math.Round(Convert.ToDouble(n) / Convert.ToDouble(m), 2) * 100);
+
+        void AdjustSmallBlind()
+        {
+            if (Bet != bigBlind / 2) return;
+            bet += bigBlind / 2;            
+        }
+
+        async Task<int> ChangeBet(int changeBet, int maxBet, bool update)
         {
             _changeBet = changeBet;
             SetBet(_changeBet, update);
@@ -299,24 +315,24 @@ public class PlayerObject
             await Task.Delay(Definitions.Timeout);
             return _changeBet;
         }
+    }
 
-        int GetPercent(int n, int m) =>
-            Convert.ToInt32(Math.Round(Convert.ToDouble(n) / Convert.ToDouble(m), 2) * 100);
+    public async Task<int> ChangeBet(int changeBet, PlayerAction action, bool update)
+    {
+        _changeBet = changeBet;
+        SetBet(_changeBet, update);
+        SetStack(-1 * _changeBet, update);
+        SetMessage(action.Description());
+        await Task.Delay(Definitions.Timeout);
+        return _changeBet;
+    }
 
-        int Fold()
-        {
-            State = false;
-            Action = PlayerAction.Fold;
-            SetMessage(Action.Description());
-            return 0;
-        }
-
-        void AdjustSmallBlind()
-        {
-            if (Bet != bigBlind / 2) return;
-            bet += bigBlind / 2;            
-        }
-
+    public int Fold()
+    {
+        State = false;
+        Action = PlayerAction.Fold;
+        SetMessage(Action.Description());
+        return 0;
     }
 
     public void PrintInfo()

@@ -37,6 +37,14 @@ th, tr, td {
     margin-right: .5vw;
 }
 
+.game-panel {
+    height: 20vh;
+    width: 30vw;
+    background-color: lightseagreen;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
 
 
 
