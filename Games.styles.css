@@ -131,6 +131,14 @@ th[b-pzwgezdfxj], tr[b-pzwgezdfxj], td[b-pzwgezdfxj] {
     margin-right: .5vw;
 }
 
+.game-panel[b-pzwgezdfxj] {
+    height: 20vh;
+    width: 30vw;
+    background-color: lightseagreen;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
 
 
 
