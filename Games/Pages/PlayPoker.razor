@@ -74,7 +74,7 @@
     </tr>
 </table>
 <div class="game-panel" style="@(IsMyAction ? "display:block" : "display:none")">
-    <input type="text" value=""/>
+    <input type="text" class="form-control col-3" @bind-value="MyBet" placeholder="bet" />
     <div>
     <button onclick="@(async () => await Fold())" onmouseup="this.blur();">Fold</button>
     <button disabled=@IsCheckAvailable onclick="@(async () => await Check())" onmouseup="this.blur();">Check</button>

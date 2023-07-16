@@ -41,8 +41,13 @@ public class PlayPokerBase : ComponentBase
         }
     }
 
-    public bool IsCheckAvailable { get; set; } = false;
-    public int NumberOfActivePlayers => PlayerObjects.Where(p => p.State ?? true).Count();
+    int _myBet;
+    public int MyBet
+    {
+        get => _myBet;
+        set { _myBet = value; }            
+    }
+
     int _pot;
     public int Pot
     {
@@ -52,7 +57,10 @@ public class PlayPokerBase : ComponentBase
             _pot = value;
             Pot_Changed();
         }
-    }    
+    }
+
+    public bool IsCheckAvailable { get; set; } = false;
+    public int NumberOfActivePlayers => PlayerObjects.Where(p => p.State ?? true).Count();        
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,6 +98,7 @@ public class PlayPokerBase : ComponentBase
 
     public async Task Check()
     {
+        PlayerObjects[_myId].Update(PlayerObject.Operation.SetState, true);
         await PlayerObjects[_myId].ChangeBet(0, PlayerAction.Check, true);
         PlayerObjects[_myId].Update(PlayerObject.Operation.SetThinks, false);        
         await Task.Delay(Definitions.Timeout);
@@ -97,7 +106,8 @@ public class PlayPokerBase : ComponentBase
 
     public async Task Bet()
     {
-        await PlayerObjects[_myId].ChangeBet(10, PlayerAction.Call, true);
+        PlayerObjects[_myId].Update(PlayerObject.Operation.SetState, true);
+        _ = await PlayerObjects[_myId].ChangeBet(MyBet, PlayerAction.Call, true);
         PlayerObjects[_myId].Update(PlayerObject.Operation.SetThinks, false);
         await Task.Delay(Definitions.Timeout);
     }

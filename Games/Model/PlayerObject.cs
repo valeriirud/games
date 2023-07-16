@@ -130,7 +130,8 @@ public class PlayerObject
         SetOdds = 7,
         SetMessage = 8,
         SetThinks = 9,
-        SetWinner = 10
+        SetWinner = 10,
+        SetState = 11
     }
 
     public PlayerObject(int id, string name, int stack = 0)
@@ -198,6 +199,9 @@ public class PlayerObject
             case Operation.SetWinner:
                 SetWinner(value);
                 break;
+            case Operation.SetState:
+                SetState(value);
+                break;
             default: break;
         }
     }
@@ -219,7 +223,7 @@ public class PlayerObject
     void SetCards(object value) => Cards = value as string ?? string.Empty;
     void SetDealer(object value) => IsDealer = Convert.ToBoolean(value);
     void SetStack(object value, bool update = false) => Stack = SetValue(Stack, value, update);
-    void SetBet(object value, bool update = false) => Bet = SetValue(Bet, value, update);
+    void SetBet(object value, bool update = false) => Bet = SetValue(Bet, value, update);    
 
     static int SetValue(int value, object ob, bool update)
     {
@@ -230,6 +234,7 @@ public class PlayerObject
 
     void SetOdds(object ob) => Odds = Convert.ToInt32(ob);
 
+    void SetState(object value) => State = Convert.ToBoolean(value);
     void ResetState(object value)
     {
         bool state = Convert.ToBoolean(value);
