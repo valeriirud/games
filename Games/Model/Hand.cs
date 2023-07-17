@@ -267,7 +267,10 @@ public class Hand
         int index  = 0;
         while(testedСards.Count < HandCount)
         {
-            testedСards.Add(cardDeck[randomList[index]]);
+            if (!testedСards.Any(c => c.Compare(cardDeck[randomList[index]], true) == 0))
+            {
+                testedСards.Add(cardDeck[randomList[index]]);
+            }
             index++;
         }
         List<Card> board = testedСards.GetRange(NumberOfMyCards, HandCount - NumberOfMyCards);
@@ -277,7 +280,10 @@ public class Hand
             List<Card> cards = new();
             for(int j = 0; j < NumberOfMyCards; j ++)
             {
-                cards.Add(cardDeck[randomList[index]]);
+                if (!testedСards.Any(c => c.Compare(cardDeck[randomList[index]], true) == 0))
+                {
+                    cards.Add(cardDeck[randomList[index]]);
+                }
                 index++;
             }
             cards.AddRange(board);
