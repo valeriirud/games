@@ -32,7 +32,12 @@ public class FullHouse
         int cmp = Card.Compare(threeOfKind1[0], threeOfKind2[0]);
         if(cmp != 0) return cmp;
         List<List<Card>> pairs1 = Pair.GetPairs(cards1);
-        List<List<Card>> pairs2 = Pair.GetPairs(cards1);
+        pairs1.RemoveAll(p => p[0].Id == threeOfKind1[0].Id);
+        List<List<Card>> pairs2 = Pair.GetPairs(cards2);
+        pairs2.RemoveAll(p => p[0].Id == threeOfKind2[0].Id);
+        List<Card> pair1 = Pair.GetTopPair(pairs1);
+        List<Card> pair2 = Pair.GetTopPair(pairs2);
+#if false
         List<Card> pair1 = new(pairs1[0]);        
         foreach (List<Card> pair in pairs1.Skip(1))
         {
@@ -47,6 +52,7 @@ public class FullHouse
             if (cmp > 0) continue;
             pair2 = new(pair);
         }
+#endif
         return Card.Compare(pair1[0], pair2[0]);
     }
 }

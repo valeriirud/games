@@ -8,6 +8,11 @@ public class Pair
     public static List<Card> GetBestCards(List<Card> cards)
     {
         List<List<Card>> pairs = Hand.GetCountOfKind(cards, 2);
+        return GetTopPair(pairs);
+    }
+
+    public static List<Card> GetTopPair(List<List<Card>> pairs)
+    {
         if (pairs.Count == 0) return new();
         int index = 0;
         for (int i = 1; i < pairs.Count; i++)

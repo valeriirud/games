@@ -1,11 +1,13 @@
 ﻿<div class="d-inline-block player" style="@_style">
-    <div class="height-30 border fw-bold fs-5">@Player?.Cards</div>
+    <div class="height-30 border fw-bold fs-5">@_cards</div>
     <div class="text-lg-start border height-10">@Player?.Message</div>
-    <div class="text-lg-start border height-10"><small>Odds:</small>@Player?.Odds%</div>
+    <div class="text-lg-start border height-10"><small>Odds:</small>@_odds%</div>
     <div class="text-lg-start border height-10">@Player?.Stack</div>
 </div>
 
 @code {
+    string _cards = string.Empty;
+    string _odds = "0";
     string _style = "background-color:lightgray";
     string _bgColor = "lightgray";
     Model.PlayerObject? _player;
@@ -24,6 +26,13 @@
                     ? "yellow" 
                     : _player.IsWinner ? "lightgreen" : "lightgray";
                 _style = $"background-color:{_bgColor}";
+                _cards = string.Empty;
+                _odds = "0";
+                if(_player.ShowData)
+                {
+                    _cards = _player?.Cards ?? string.Empty;
+                    _odds = _player?.Odds.ToString() ?? string.Empty;
+                }
             }
         } 
     }

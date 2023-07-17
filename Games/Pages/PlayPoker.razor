@@ -3,6 +3,11 @@
 
 <button disabled=@IsGameRunning 
     onclick="@(async () => await NewGame())" onmouseup="this.blur();">New&nbsp;Game</button>
+<label for="CheckboxAutoPlay">Auto Play</label>
+<input disabled=@IsGameRunning id="CheckboxAutoPlay" type="checkbox" 
+    checked=@AutoPlay @oninput="Checkbox_Changed" />
+<label for="CheckboxAutoPlay">Timeout</label>
+<input id="TextTimeout" type="text" @bind-value="CurrentTimeout" placeholder="1000" />
 <br />
 <table>
     <tr>
@@ -73,7 +78,7 @@
         <td></td>
     </tr>
 </table>
-<div class="game-panel" style="@(IsMyAction ? "display:block" : "display:none")">
+<div class="game-panel" style="@((IsMyAction && ! AutoPlay) ? "display:block" : "display:none")">
     <input type="text" class="form-control col-3" @bind-value="MyBet" placeholder="bet" />
     <div>
     <button onclick="@(async () => await Fold())" onmouseup="this.blur();">Fold</button>

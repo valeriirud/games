@@ -17,7 +17,7 @@ public class ThreeOfKind
         List<Card> bestCards = new();
         for (int i = 1; i < 4; i++)
         {
-            bestCards.Add(allCards[allCards.Count - i]);
+            bestCards.Add(allCards[^i]);
         }
         return bestCards;
     }

@@ -1,9 +1,6 @@
 ﻿
 using Games.Model.HandTypes;
 using Games.Tools;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection.Metadata;
 using static Games.Tools.Definitions;
 
 namespace Games.Model;
@@ -327,25 +324,18 @@ public class Hand
         return bestPositions;
     }
 
-    public static List<int> GetWinnersIds(List<string> cards)
+    public static List<int> GetWinnersIds(List<string> listCards)
     {
         List<Hand> hands = new();
-        foreach(string item in cards)
-        {
-            List<Card> list = GetCardsFromDescriptionString(item);
-            hands.Add(new(list));
-        }
+        listCards.ForEach(i => Console.WriteLine($"Hand:{i}"));
+        listCards.ForEach(i => hands.Add(new(GetCardsFromDescriptionString(i))));
         List<Hand> bestHands = GetBestHands(hands);
-        foreach(Hand hand in bestHands)
-        {
-            Console.WriteLine($"Best hand:{ToString(hand.Cards, true)}");
-        }
+        bestHands.ForEach(h => Console.WriteLine($"Best hand:{ToString(h.Cards, true)}"));
         List<int> bestPositions = GetBestPositions(bestHands);
-        foreach(int pos in bestPositions)
-        {
-            Console.WriteLine($"Best position:{pos}");
-        }
-        return bestPositions;
+        List<int> positions = new();
+        bestPositions.ForEach(p => positions.Add(listCards.IndexOf(ToString(bestHands[p].Cards, true))));
+        positions.ForEach(p => Console.WriteLine($"Best position:{p}"));        
+        return positions;
     }
 
     public static WinInfo GetProbabilityOfWinningByMonteCarlo(string strCards, int numberOfPlayers)
@@ -376,7 +366,7 @@ public class Hand
         }
         double n = Convert.ToSingle(numberOfTests);
         double w = Convert.ToSingle(winCount);
-        double probability = n > w ? w / n : 0;
+        double probability = n > w ? w / n : 1;
         int p = Convert.ToInt32(Math.Round(probability * 100, 2));
         HandType handType = GetHandType(testСards);
         List<Card> bestCards = GetBestCards(testСards, handType);
@@ -390,13 +380,7 @@ public class Hand
         List<CardId> ids = ListOfIds;
         List<Suit> suits = ListOfSuits;
         List<Card> cards = new();
-        foreach (CardId id in ids)
-        {
-            foreach(Suit suit in suits)
-            {
-                cards.Add(new(id, suit));
-            }
-        }
+        ids.ForEach(id => suits.ForEach(suit => cards.Add(new(id, suit))));
         return cards;
     }
 
@@ -431,7 +415,12 @@ public class Hand
     {
         if (hand1.HandType > hand2.HandType) return 1;
         if (hand1.HandType < hand2.HandType) return -1;
-        return Compare(hand1, hand2, hand1.HandType);
+        int cmp = Compare(hand1, hand2, hand1.HandType);
+        if (cmp != 0 
+            || (hand1.Cards.Count == NumberOfMyCards && hand2.Cards.Count == NumberOfMyCards)) return cmp;
+        Hand myHand1 = new(hand1.MyCards);
+        Hand myHand2 = new(hand2.MyCards);
+        return Compare(myHand1, myHand2);
     }
 
     static int Compare(Hand hand1, Hand hand2, HandType handType)

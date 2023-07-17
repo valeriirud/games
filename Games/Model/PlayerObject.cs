@@ -10,6 +10,18 @@ public class PlayerObject
     public int Id { get; private set; }
     readonly string _name;
     public string Name { get; private set; }
+
+    bool _showData;
+    public bool ShowData 
+    { 
+        get => _showData;
+        set 
+        {
+            _showData = value;
+            Changed?.Invoke(this, EventArgs.Empty);
+        } 
+    }
+
     PlayerAction _action;
     public PlayerAction Action 
     { 
@@ -131,7 +143,8 @@ public class PlayerObject
         SetMessage = 8,
         SetThinks = 9,
         SetWinner = 10,
-        SetState = 11
+        SetState = 11,
+        SetShowData = 12
     }
 
     public PlayerObject(int id, string name, int stack = 0)
@@ -146,6 +159,7 @@ public class PlayerObject
         _stack = stack;
         _bet = 0;
         _isThinks = false;
+        _showData = true;
         Action = PlayerAction.None;
     }
 
@@ -158,11 +172,10 @@ public class PlayerObject
         Bet = 0;
         Odds = 0;
         IsThinks = false;
+        ShowData = true;
         Action = PlayerAction.None;
-        if (stack)
-        {
-            Stack = 0;
-        }
+        if (!stack) return;
+        Stack = 0;        
     }
 
     public void Update(Operation action, object value)
@@ -201,6 +214,9 @@ public class PlayerObject
                 break;
             case Operation.SetState:
                 SetState(value);
+                break;
+            case Operation.SetShowData:
+                SetShowData(value);
                 break;
             default: break;
         }
@@ -263,6 +279,8 @@ public class PlayerObject
     }
 
     void SetWinner(object value) => IsWinner = Convert.ToBoolean(value);
+
+    void SetShowData(object value) => ShowData = Convert.ToBoolean(value);
 
     public int GetOdds(string commonCards, int numberOfPlayers)
     {        
