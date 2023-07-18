@@ -291,23 +291,8 @@ public class Hand
         }
 
         List<Hand> bestHands = GetBestHands(hands);
-        if(bestHands.Count == 1) return bestHands;
-#if false
-        List<int> bestPositions = new() { 0 };  
-        for(int i = 1; i < bestHands.Count; i ++)
-        {
-            int cmp = Compare(bestHands[bestPositions[0]], bestHands[i]);
-            if (cmp > 0) continue;
-            if (cmp < 0)
-            {
-                bestPositions = new() { i };
-                continue;
-            }
-            bestPositions.Add(i);
-        }
-#endif       
+        if(bestHands.Count == 1) return bestHands;  
         List<int> bestPositions = GetBestPositions(bestHands);
-
         List<Hand> winners = new();
         bestPositions.ForEach(p => winners.Add(bestHands[p]));
         return winners; 
@@ -424,8 +409,12 @@ public class Hand
         int cmp = Compare(hand1, hand2, hand1.HandType);
         if (cmp != 0 
             || (hand1.Cards.Count == NumberOfMyCards && hand2.Cards.Count == NumberOfMyCards)) return cmp;
-        Hand myHand1 = new(hand1.MyCards);
-        Hand myHand2 = new(hand2.MyCards);
+        List<Card> sorted1 = new (hand1.MyCards);
+        sorted1.Sort(Card.Compare);
+        List<Card> sorted2 = new (hand2.MyCards);
+        sorted2.Sort(Card.Compare);
+        Hand myHand1 = new(sorted1);
+        Hand myHand2 = new(sorted2);
         return Compare(myHand1, myHand2);
     }
 

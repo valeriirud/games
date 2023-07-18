@@ -79,11 +79,15 @@
     </tr>
 </table>
 <div class="game-panel" style="@((IsMyAction && ! AutoPlay) ? "display:block" : "display:none")">
-    <input type="text" class="form-control col-3" @bind-value="MyBet" placeholder="bet" />
+    <input type="text" class="form-control col-3" @bind-value="MyBet" placeholder="bet" @oninput="MyBet_Changed" />
     <div>
-    <button onclick="@(async () => await Fold())" onmouseup="this.blur();">Fold</button>
-    <button disabled=@IsCheckAvailable onclick="@(async () => await Check())" onmouseup="this.blur();">Check</button>
-    <button onclick="@(async () => await Bet())" onmouseup="this.blur();">Bet</button>
+        <input type="button" value="Fold" class="btn btn-dark panel-button"
+               onclick="@(async () => await Fold())" onmouseup="this.blur();" />
+        <input type="button" value="Check" class="btn btn-dark panel-button"
+               disabled=@CheckNotAllowed onclick="@(async () => await Check())" onmouseup="this.blur();" />
+        <input type="button" value="@BetTitle" class="btn btn-dark panel-button"
+               disabled=@MyBetNotCorrect onclick="@(async () => await Bet())" onmouseup="this.blur();" />
+
     </div>
 </div>
 

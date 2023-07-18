@@ -38,12 +38,17 @@ th, tr, td {
 }
 
 .game-panel {
+    padding: 5px;
     height: 20vh;
     width: 30vw;
-    background-color: lightseagreen;
+    background-color: lightgray;
     position: absolute;
     bottom: 0;
     right: 0;
+}
+
+.panel-button{
+    width: 8vw;
 }
 
 

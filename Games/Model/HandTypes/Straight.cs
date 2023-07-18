@@ -1,7 +1,4 @@
 ﻿
-using Games.Tools;
-using System.Collections.Generic;
-using System.Linq;
 using static Games.Tools.Definitions;
 
 namespace Games.Model.HandTypes;
@@ -84,11 +81,11 @@ public class Straight
         return SortDesc(straightCards);
     }
 
-    static List<Card> SortAsc(List<Card> straightCards)
+    static List<Card> SortAsc(List<Card> cards)
     {
         List<Card> sorted = new();
-        if (straightCards.Count == 0) return sorted;
-        sorted.AddRange(straightCards);
+        if (cards.Count == 0) return sorted;
+        sorted.AddRange(cards);
         sorted.Sort(Card.Compare);
         if (sorted[0].Id == CardId.Two && sorted[^1].Id == CardId.Ace)
         {
@@ -99,11 +96,11 @@ public class Straight
         return sorted;
     }
 
-    static List<Card> SortDesc(List<Card> straightCards)
+    static List<Card> SortDesc(List<Card> cards)
     {
         List<Card> sorted = new();
-        if (straightCards.Count == 0) return sorted;
-        sorted.AddRange(straightCards);
+        if (cards.Count == 0) return sorted;
+        sorted.AddRange(cards);
         sorted.Sort(Card.CompareDesc);
         if (sorted[^1].Id == CardId.Two && sorted[0].Id == CardId.Ace)
         {
