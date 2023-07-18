@@ -132,12 +132,17 @@ th[b-pzwgezdfxj], tr[b-pzwgezdfxj], td[b-pzwgezdfxj] {
 }
 
 .game-panel[b-pzwgezdfxj] {
+    padding: 5px;
     height: 20vh;
     width: 30vw;
-    background-color: lightseagreen;
+    background-color: lightgray;
     position: absolute;
     bottom: 0;
     right: 0;
+}
+
+.panel-button[b-pzwgezdfxj]{
+    width: 8vw;
 }
 
 
