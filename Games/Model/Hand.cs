@@ -185,17 +185,67 @@ public class Hand
         }
         return str;
     }
-        
+
+    public static string AlternateStringToString(string alternateString)
+    {
+        string str = alternateString;
+        foreach (CardId cardId in ListOfIds)
+        {
+            string description = cardId.Description();
+            string alternate = cardId.AlternateValue();
+            string value = cardId.ToInt().ToString("X");
+            if (!string.IsNullOrEmpty(description))
+            {
+                str = str.Replace(description, value);
+            }
+            if (!string.IsNullOrEmpty(alternate))
+            {
+                str = str.Replace(alternate, value);
+            }
+        }
+        foreach (Suit suit in ListOfSuits)
+        {
+            //string description = suit.Description();
+            string alternate = suit.AlternateValue();            
+            string value = suit.ToInt().ToString();
+            //if (!string.IsNullOrEmpty(description))
+            //{
+            //    str = str.Replace(description, value);
+            //}
+            if (!string.IsNullOrEmpty(alternate))
+            {
+                str = str.Replace(alternate, value);
+            }
+        }
+        string ret = string.Empty;
+        for(int i = 0; i < str.Length - 1; i += 2)
+        {
+            ret += str[i];
+        }
+        for (int i = 1; i < str.Length; i += 2)
+        {
+            ret += str[i];
+        }
+
+        Console.WriteLine($"[AlternateStringToString]({alternateString})({str})({ret})");
+
+        return ret;
+    }
+
     public static Hand FromDisplayString(string str) => FromString(DisplayStringToString(str));
+    public static Hand FromAlternateString(string str) => FromString(AlternateStringToString(str));
 
     public static Hand FromString(string str)
     {
         List<char> chars = new(str);
         int handSize = str.Length / 2;
         List<Card> cards = new();
+        Console.WriteLine($"FromString [{str}]");
         for (int i = 0; i < handSize; i++)
         {
             if (chars[i].ToString() == "0") break;
+            Console.WriteLine($"\t[{i}]{chars[i]}");
+            Console.WriteLine($"\t[{i + handSize}]{chars[i + handSize]}");
             CardId cardId = CommonTools.GetEnumFromInt<CardId>(Convert.ToInt32(chars[i].ToString(), 16));
             Suit suit = CommonTools.GetEnumFromInt<Suit>(Convert.ToInt32(chars[i + handSize].ToString()));
             cards.Add(new(cardId, suit));

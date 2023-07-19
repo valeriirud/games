@@ -298,8 +298,8 @@ public class PlayerObject
         WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{handCards}", numberOfPlayers);
         SetThinks(false);
         Odds = winInfo.Probability;
-        //int stackOdds = GetPercent(maxBet, Stack) + 1;
-        //int potOdds = GetPercent(maxBet, pot) + 1;
+        int stackOdds = GetPercent(maxBet, Stack) + 1;
+        int potOdds = GetPercent(maxBet, pot) + 1;
 
         int multiplier = Odds / 10;
         if(multiplier > 0)
@@ -307,18 +307,28 @@ public class PlayerObject
             multiplier -= 1;
         }
         int bet = bigBlind * multiplier;       
-        AdjustSmallBlind();        
-        if (Bet + bet < maxBet) return Fold();
-        if (Bet + bet < maxBet + bigBlind*2)
+        AdjustSmallBlind();
+        if (commonCards.Length == 0 && Odds < 20 && Bet < maxBet)
         {
+            Hand hand = Hand.FromAlternateString(Cards);
+            if (! hand.Cards.Any(c => c.Id > CardId.Jack)
+                && ! hand.Cards.All(c => c.Id == hand.Cards[0].Id)) return Fold();
+            if (maxBet - Bet > bigBlind * 3) return Fold();
             bet = maxBet - Bet;
         }
-        //Console.WriteLine($"[{Id}]({handCards})<{Odds}>|MaxBet:{maxBet}|Bedt:{Bet}|bet:{bet}");
+        if (Bet + bet < maxBet)
+        {
+            return Fold();
+        }
+        if (Bet + bet < maxBet + bigBlind*2 || Bet >= Stack)
+        {
+            bet = maxBet - Bet;
+        }               
 
         return await ChangeBet(bet, maxBet, true);        
 
-        //int GetPercent(int n, int m) =>
-        //    Convert.ToInt32(Math.Round(Convert.ToDouble(n) / Convert.ToDouble(m), 2) * 100);
+        int GetPercent(int n, int m) =>
+            Convert.ToInt32(Math.Round(Convert.ToDouble(n) / Convert.ToDouble(m), 2) * 100);
 
         void AdjustSmallBlind()
         {
