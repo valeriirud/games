@@ -17,7 +17,18 @@ public class PlayPokerBase : ComponentBase
     List<int> _randomList = new();
     public PlayerObject[] PlayerObjects { get; } = new PlayerObject[MaxNumberOfPlayers];
     public Card?[] BoardCards { get; } = new Card[NumberOfCommunityCards];
-    public bool IsGameRunning { get; set; } = false;
+
+    bool _isGameRunning = false;
+    public bool IsGameRunning 
+    { 
+        get => _isGameRunning; 
+        set
+        {
+            _isGameRunning = value;
+            IsGameRunning_Changed();
+        }
+    }
+    
     public bool AutoPlay { get; set; } = true;    
 
     bool _isMyAction;
@@ -428,4 +439,13 @@ public class PlayPokerBase : ComponentBase
     public void Checkbox_Changed(ChangeEventArgs e) => AutoPlay = Convert.ToBoolean(e.Value);
     public void MyBet_Changed(ChangeEventArgs e) => MyBet = Convert.ToInt32(e.Value);
     void MyBet_Changed() => StateHasChanged();
+
+    void IsGameRunning_Changed() => StateHasChanged();
+
+    public void Timeout_Selected(string value) => CurrentTimeout = Convert.ToInt32(value);
+    
+    public void TableMax_Selected(string value)
+    {
+        Console.WriteLine(value);
+    }
 }

@@ -1,13 +1,38 @@
 ﻿@page "/playpoker"
 @inherits PlayPokerBase
 
-<button disabled=@IsGameRunning 
+<button class="btn btn-dark" disabled=@IsGameRunning 
     onclick="@(async () => await NewGame())" onmouseup="this.blur();">New&nbsp;Game</button>
 <label for="CheckboxAutoPlay">Auto Play</label>
-<input disabled=@IsGameRunning id="CheckboxAutoPlay" type="checkbox" 
+<input style="margin-right:1vw;" disabled=@IsGameRunning id="CheckboxAutoPlay" type="checkbox" 
     checked=@AutoPlay @oninput="Checkbox_Changed" />
-<label for="CheckboxAutoPlay">Timeout</label>
-<input id="TextTimeout" type="text" @bind-value="CurrentTimeout" placeholder="1000" />
+
+@{
+    List<string> listTimeout = new() { "1000", "500", "300" };
+}
+<Dropdown TItem="string" OnSelected="@Timeout_Selected">
+    <InitialTip>Timeout</InitialTip>
+    <ChildContent>
+        @foreach(string item in listTimeout)
+        {
+            <DropdownListItem Item="@item">@item</DropdownListItem>
+        }
+    </ChildContent>
+</Dropdown>
+
+@{
+    List<string> listTableMax = new () { "9-max", "6-max", "3-max", "2-max" };
+}
+<Dropdown TItem="string" OnSelected="@TableMax_Selected">
+    <InitialTip>Table-Max</InitialTip>
+    <ChildContent>
+        @foreach (string item in listTableMax)
+        {
+            <DropdownListItem Item="@item">@item</DropdownListItem>
+        }
+    </ChildContent>
+</Dropdown>
+
 <br />
 <table>
     <tr>
