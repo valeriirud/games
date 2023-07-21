@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
 @typeparam TItem
 <div class="d-inline-block dropdown">
-    <button style="width:10vw;text-align:left;" class="btn btn-dark dropdown-toggle mr-4" data-toggle="dropdown" type="button" 
+    <button disabled="@Disabled" style="width:10vw;text-align:left;" class="btn btn-dark dropdown-toggle mr-4" data-toggle="dropdown" type="button" 
     @onclick="e => this.show=!this.show " aria-haspopup="true" aria-expanded="false">@Tip</button>
     <CascadingValue name="Dropdown" Value="@this">
         <div class="dropdown-menu @(show? "show":"")">@ChildContent</div>
@@ -9,6 +9,8 @@
 </div>
 
 @code {
+    [Parameter]
+    public bool Disabled { get; set; }
     [Parameter]
     public RenderFragment InitialTip { get; set; }
     [Parameter]

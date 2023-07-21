@@ -3,13 +3,13 @@ using System.ComponentModel;
 
 namespace Games.Model;
 
-public class CardState : INotifyPropertyChanged
+public class CardState //: INotifyPropertyChanged
 {
     public event EventHandler<CardStateEventArgs> CardStateChanged = delegate { };
 
-#pragma warning disable 67
-    public event PropertyChangedEventHandler? PropertyChanged;
-#pragma warning restore 67
+//#pragma warning disable 67
+//    public event PropertyChangedEventHandler? PropertyChanged;
+//#pragma warning restore 67
 
     readonly int _id;
     readonly int _suit;
@@ -28,11 +28,11 @@ public class CardState : INotifyPropertyChanged
         set
         {
             _isSelected = value;
-            OnPropertyChanged(_id, _suit, _isSelected);
+            IsSelected_Changed(_id, _suit, _isSelected);
         }
     }
 
-    protected void OnPropertyChanged(int id, int suit, bool state)
+    protected void IsSelected_Changed(int id, int suit, bool state)
     {
         EventHandler<CardStateEventArgs>? handler = CardStateChanged;
         if (handler == null) return;

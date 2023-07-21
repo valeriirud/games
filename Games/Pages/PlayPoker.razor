@@ -8,12 +8,12 @@
     checked=@AutoPlay @oninput="Checkbox_Changed" />
 
 @{
-    List<string> listTimeout = new() { "1000", "500", "300" };
+    List<string> listTableMax = new() { "9-max", "6-max", "3-max", "2-max" };
 }
-<Dropdown TItem="string" OnSelected="@Timeout_Selected">
-    <InitialTip>Timeout</InitialTip>
+<Dropdown Disabled=@IsGameRunning TItem="string" OnSelected="@TableMax_Selected">
+    <InitialTip>Table-Max</InitialTip>
     <ChildContent>
-        @foreach(string item in listTimeout)
+        @foreach (string item in listTableMax)
         {
             <DropdownListItem Item="@item">@item</DropdownListItem>
         }
@@ -21,12 +21,12 @@
 </Dropdown>
 
 @{
-    List<string> listTableMax = new () { "9-max", "6-max", "3-max", "2-max" };
+    List<string> listTimeout = new() { "1000", "500", "300" };
 }
-<Dropdown TItem="string" OnSelected="@TableMax_Selected">
-    <InitialTip>Table-Max</InitialTip>
+<Dropdown TItem="string" OnSelected="@Timeout_Selected">
+    <InitialTip>Timeout</InitialTip>
     <ChildContent>
-        @foreach (string item in listTableMax)
+        @foreach(string item in listTimeout)
         {
             <DropdownListItem Item="@item">@item</DropdownListItem>
         }
@@ -53,9 +53,10 @@
                             </td>
                             <td><PlayerData Player="@PlayerObjects[8]" /></td>
                             <td colspan="2" class="fw-bold" style="color:white;">
-                                @if (Pot > 0)
+                                @foreach (Pot pot in Pots)
                                 {
-                                    <span>Pot:@Pot</span>
+                                    if (pot.Value == 0) continue;
+                                    <div>Pot:@pot.Value</div>
                                 }
                             </td>
                             <td><PlayerData Player="@PlayerObjects[0]" /></td>

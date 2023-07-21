@@ -15,6 +15,7 @@ public class PlayPokerBase : ComponentBase
     readonly static int _smallBlind = _bigBlind / 2;
     readonly List<Card> _cardDeck = new();
     List<int> _randomList = new();
+    public List<Pot> Pots { get; private set; } = new();
     public PlayerObject[] PlayerObjects { get; } = new PlayerObject[MaxNumberOfPlayers];
     public Card?[] BoardCards { get; } = new Card[NumberOfCommunityCards];
 
@@ -76,17 +77,6 @@ public class PlayPokerBase : ComponentBase
             _myBet = value;
             MyBet_Changed();
         }            
-    }
-
-    int _pot;
-    public int Pot
-    {
-        get => _pot;
-        set
-        {
-            _pot = value;
-            Pot_Changed();
-        }
     }
 
     public string BetTitle => $"Bet {MyBet}";
@@ -158,7 +148,9 @@ public class PlayPokerBase : ComponentBase
     async Task StartGame()
     {
         IsGameRunning = true;
-        Pot = 0;
+        Pots.Clear();
+        AddPot();
+        
         ClearBoardCards();
         InitPlayers();
         ClearWinners();
@@ -199,13 +191,16 @@ public class PlayPokerBase : ComponentBase
         List<int> ids = await Shutdown();
         Finish(ids);
 
-        void Finish(List<int> ids)
+        void Finish(List<int> allIds)
         {
             ShowData(true);
-            ids.ForEach(id => 
-            PlayerObjects[id].Update(PlayerObject.Operation.SetStack, Pot / ids.Count));
-            ids.ForEach(id => PlayerObjects[id].Update(PlayerObject.Operation.SetWinner, true));
-            Pot = 0;
+            foreach (Pot pot in Pots)
+            {
+                List<int> ids = pot.GetIds(allIds);
+                ids.ForEach(id => PlayerObjects[id].Update(PlayerObject.Operation.SetStack, pot.Value / ids.Count));
+                ids.ForEach(id => PlayerObjects[id].Update(PlayerObject.Operation.SetWinner, true));
+                pot.Clear();
+            }
             IsGameRunning = false;
         }
     }
@@ -257,14 +252,14 @@ public class PlayPokerBase : ComponentBase
         if (smallBlindId < 0) return;
         PlayerObjects[smallBlindId].Update(PlayerObject.Operation.SetBet, _smallBlind);
         PlayerObjects[smallBlindId].Update(PlayerObject.Operation.SetStack, -1 * _smallBlind);
-        Pot += _smallBlind;           
+        Pots[^1].Update(smallBlindId, _smallBlind);           
         await Task.Delay(CurrentTimeout);
 
         int bigBlindId = GetNextPlayerId(smallBlindId);
         if (bigBlindId < 0) return;
         PlayerObjects[bigBlindId].Update(PlayerObject.Operation.SetBet, _bigBlind);
         PlayerObjects[bigBlindId].Update(PlayerObject.Operation.SetStack, -1*_bigBlind);
-        Pot += _bigBlind;
+        Pots[^1].Update(bigBlindId, _bigBlind);
         await Task.Delay(CurrentTimeout);
 
         PlayerObjects.ToList()
@@ -305,7 +300,7 @@ public class PlayPokerBase : ComponentBase
             if (nextId < 0) break;
             CurrentId = nextId;
             bet = await GetBet(CurrentId, AutoPlay);
-            Pot += bet;
+            Pots[^1].Update(CurrentId, bet);
             await Task.Delay(CurrentTimeout);
             PlayerObjects[CurrentId].Update(PlayerObject.Operation.SetMessage, string.Empty);
             if (BetsAreSame()) break;
@@ -317,7 +312,7 @@ public class PlayPokerBase : ComponentBase
             if (id == _myId && ! autoPlay) return await MyAction();
             string cards = Hand.ToDisplayString(GetListOfBoardCards(), false);
             return await PlayerObjects[CurrentId]
-                .PlaceBet(cards, MaxBet, _bigBlind, Pot, NumberOfActivePlayers);
+                .PlaceBet(cards, MaxBet, _bigBlind, Pots[^1].Value, NumberOfActivePlayers);
         }
     }
 
@@ -433,8 +428,15 @@ public class PlayPokerBase : ComponentBase
         if (playerObject == null) return;
         StateHasChanged();
     }
+
+    void AddPot()
+    {
+        Pots.Add(new());
+        Pots[^1].Changed += Pot_Changed;
+    }
+
     void BoardCards_Changed() => StateHasChanged();
-    void Pot_Changed() => StateHasChanged();
+    public void Pot_Changed(object? sender, EventArgs e) => StateHasChanged();
     void IsMyAction_Changed() => StateHasChanged();
     public void Checkbox_Changed(ChangeEventArgs e) => AutoPlay = Convert.ToBoolean(e.Value);
     public void MyBet_Changed(ChangeEventArgs e) => MyBet = Convert.ToInt32(e.Value);
