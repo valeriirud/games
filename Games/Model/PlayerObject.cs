@@ -1,5 +1,7 @@
 ﻿
 using Games.Tools;
+using Microsoft.VisualBasic;
+using System;
 using static Games.Tools.Definitions;
 
 namespace Games.Model;
@@ -130,6 +132,9 @@ public class PlayerObject
     }
 
     int _changeBet;
+
+    public bool IsActive => State ?? true;
+    public bool IsAllIn => State ?? true && Bet > 0 && Stack == 0;
 
     public enum Operation
     {
@@ -366,6 +371,14 @@ public class PlayerObject
         Action = PlayerAction.Fold;
         SetMessage(Action.Description());
         return 0;
+    }
+
+    public async Task<int> AllIn()
+    {
+        Action = PlayerAction.AllIn;
+        int bet = Stack;
+        await ChangeBet(bet, PlayerAction.AllIn, true);
+        return bet;
     }
 
     public void PrintInfo()

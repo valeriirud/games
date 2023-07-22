@@ -120,6 +120,8 @@ public static class Definitions
         [Description("CHECK")]
         Check = 4,
         [Description("thinks...")]
-        Thinks = 5
+        Thinks = 5,
+        [Description("ALL-IN")]
+        AllIn = 6
     }
 }

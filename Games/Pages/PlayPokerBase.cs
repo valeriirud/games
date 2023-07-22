@@ -79,10 +79,11 @@ public class PlayPokerBase : ComponentBase
         }            
     }
 
-    public string BetTitle => $"Bet {MyBet}";
-    public bool MyBetNotCorrect => MyBet + PlayerObjects[_myId].Bet < MaxBet;
+    public string BetTitle => MyBet < PlayerObjects[_myId].Stack ? $"Bet {MyBet}" : "All-In";
+    public bool MyBetNotCorrect => MyBet + PlayerObjects[_myId].Bet < MaxBet 
+        || MyBet > PlayerObjects[_myId].Stack;
     public bool CheckNotAllowed => ActivePlayers.Any(p => p.Bet > 0);
-    List<PlayerObject> ActivePlayers => PlayerObjects.Where(p => p.State ?? true).ToList();            
+    List<PlayerObject> ActivePlayers => PlayerObjects.Where(p => p.IsActive == true).ToList();            
     List<int> ActivePlayersIds => ActivePlayers.Select(p => p.Id).OrderBy(i => i).ToList();
     int MaxBet => PlayerObjects.MaxBy(p => p.Bet)?.Bet ?? 0;
     int NumberOfActivePlayers => ActivePlayers.Count;
@@ -131,7 +132,16 @@ public class PlayPokerBase : ComponentBase
     public async Task Bet()
     {
         PlayerObjects[_myId].Update(PlayerObject.Operation.SetState, true);
-        _ = await PlayerObjects[_myId].ChangeBet(MyBet, PlayerAction.Call, true);
+        PlayerAction action = PlayerAction.Call;
+        if(MyBet > MaxBet)
+        {
+            action = PlayerAction.Raise;
+        }
+        if(PlayerObjects[_myId].Stack == 0 && PlayerObjects[_myId].Bet > 0)
+        {
+            action = PlayerAction.AllIn;
+        }
+        _ = await PlayerObjects[_myId].ChangeBet(MyBet, action, true);
         PlayerObjects[_myId].Update(PlayerObject.Operation.SetThinks, false);
         await Task.Delay(CurrentTimeout);
     }
@@ -299,6 +309,7 @@ public class PlayPokerBase : ComponentBase
             int nextId = GetNextPlayerId(CurrentId);
             if (nextId < 0) break;
             CurrentId = nextId;
+            if (PlayerObjects[CurrentId].Stack == 0) continue;
             bet = await GetBet(CurrentId, AutoPlay);
             Pots[^1].Update(CurrentId, bet);
             await Task.Delay(CurrentTimeout);
@@ -409,7 +420,7 @@ public class PlayPokerBase : ComponentBase
             {
                 id = 0;
             }
-            if (PlayerObjects[id].State ?? true) break;
+            if (PlayerObjects[id].IsActive) break;
         }
         return id;
     }
@@ -419,7 +430,10 @@ public class PlayPokerBase : ComponentBase
         if(PlayerObjects.Any(o => o.State == null)) return false;
         List<PlayerObject> players = PlayerObjects.Where(o => o.State == true).ToList();
         if (players.Count < 2) return true;
-        return players.All(p => p.Bet == players[0].Bet);
+        List<PlayerObject> list = players.Where(p => p.Bet < MaxBet).ToList();
+        if (!list.Any()) return true;
+        if (list.All(l => l.Stack == 0)) return true;
+        return false;
     }    
 
     void PlayerObject_Changed(object? sender, EventArgs e)
@@ -439,7 +453,12 @@ public class PlayPokerBase : ComponentBase
     public void Pot_Changed(object? sender, EventArgs e) => StateHasChanged();
     void IsMyAction_Changed() => StateHasChanged();
     public void Checkbox_Changed(ChangeEventArgs e) => AutoPlay = Convert.ToBoolean(e.Value);
-    public void MyBet_Changed(ChangeEventArgs e) => MyBet = Convert.ToInt32(e.Value);
+    public void MyBet_Changed(ChangeEventArgs e) 
+    {        
+        int number;
+        bool success = int.TryParse(e?.Value?.ToString(), out number);
+        MyBet = success ? number : 0;
+    }
     void MyBet_Changed() => StateHasChanged();
 
     void IsGameRunning_Changed() => StateHasChanged();
@@ -449,5 +468,14 @@ public class PlayPokerBase : ComponentBase
     public void TableMax_Selected(string value)
     {
         Console.WriteLine(value);
+    }
+
+    public async void TestAllIn()
+    {
+        List<PlayerObject> players = new (ActivePlayers);
+        foreach(PlayerObject player in players)
+        {
+            int bet = await player.AllIn();
+        }
     }
 }

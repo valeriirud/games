@@ -205,13 +205,8 @@ public class Hand
         }
         foreach (Suit suit in ListOfSuits)
         {
-            //string description = suit.Description();
             string alternate = suit.AlternateValue();            
             string value = suit.ToInt().ToString();
-            //if (!string.IsNullOrEmpty(description))
-            //{
-            //    str = str.Replace(description, value);
-            //}
             if (!string.IsNullOrEmpty(alternate))
             {
                 str = str.Replace(alternate, value);
@@ -227,7 +222,7 @@ public class Hand
             ret += str[i];
         }
 
-        Console.WriteLine($"[AlternateStringToString]({alternateString})({str})({ret})");
+        //Console.WriteLine($"[AlternateStringToString]({alternateString})({str})({ret})");
 
         return ret;
     }
@@ -240,12 +235,9 @@ public class Hand
         List<char> chars = new(str);
         int handSize = str.Length / 2;
         List<Card> cards = new();
-        Console.WriteLine($"FromString [{str}]");
         for (int i = 0; i < handSize; i++)
         {
             if (chars[i].ToString() == "0") break;
-            Console.WriteLine($"\t[{i}]{chars[i]}");
-            Console.WriteLine($"\t[{i + handSize}]{chars[i + handSize]}");
             CardId cardId = CommonTools.GetEnumFromInt<CardId>(Convert.ToInt32(chars[i].ToString(), 16));
             Suit suit = CommonTools.GetEnumFromInt<Suit>(Convert.ToInt32(chars[i + handSize].ToString()));
             cards.Add(new(cardId, suit));
@@ -368,14 +360,14 @@ public class Hand
     public static List<int> GetWinnersIds(List<string> listCards)
     {
         List<Hand> hands = new();
-        listCards.ForEach(i => Console.WriteLine($"Hand:{i}"));
+        //listCards.ForEach(i => Console.WriteLine($"Hand:{i}"));
         listCards.ForEach(i => hands.Add(new(GetCardsFromDescriptionString(i))));
         List<Hand> bestHands = GetBestHands(hands);
-        bestHands.ForEach(h => Console.WriteLine($"Best hand:{ToString(h.Cards, true)}"));
+        //bestHands.ForEach(h => Console.WriteLine($"Best hand:{ToString(h.Cards, true)}"));
         List<int> bestPositions = GetBestPositions(bestHands);
         List<int> positions = new();
         bestPositions.ForEach(p => positions.Add(listCards.IndexOf(ToString(bestHands[p].Cards, true))));
-        positions.ForEach(p => Console.WriteLine($"Best position:{p}"));        
+        //.ForEach(p => Console.WriteLine($"Best position:{p}"));        
         return positions;
     }
 
