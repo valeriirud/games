@@ -12,18 +12,19 @@
     [Parameter]
     public bool Disabled { get; set; }
     [Parameter]
-    public RenderFragment InitialTip { get; set; }
+    public RenderFragment? InitialTip { get; set; }
     [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    public RenderFragment? ChildContent { get; set; }
     [Parameter]
     public EventCallback<TItem> OnSelected { get; set; }
 
     private bool show = false;
-    private RenderFragment Tip;
+    private RenderFragment? Tip;
 
     protected override void OnInitialized() { this.Tip = InitialTip; }
-    public async Task HandleSelect(TItem item, RenderFragment<TItem> contentFragment)
+    public async Task HandleSelect(TItem? item, RenderFragment<TItem>? contentFragment)
     {
+        if (item == null || contentFragment == null) return;
         this.Tip = contentFragment.Invoke(item);
         this.show = false;
         StateHasChanged();

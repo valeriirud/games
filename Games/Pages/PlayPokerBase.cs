@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Components;
 using Games.Model;
 using Games.Tools;
 using static Games.Tools.Definitions;
+using System.Collections.Generic;
+using System.Transactions;
 
 namespace Games.Pages;
 
@@ -151,6 +153,8 @@ public class PlayPokerBase : ComponentBase
         //List<string> cards = new List<string>() { "2♣Q♠2♦J♦2♠10♣A♠", "Q♥2♥2♦J♦2♠10♣A♠" };
         //List<int> ids = await TestWinners(cards);
 
+        //await TestAllIn();
+
         if (IsGameRunning) return;
         await StartGame();
     }
@@ -209,8 +213,9 @@ public class PlayPokerBase : ComponentBase
                 List<int> ids = pot.GetIds(allIds);
                 ids.ForEach(id => PlayerObjects[id].Update(PlayerObject.Operation.SetStack, pot.Value / ids.Count));
                 ids.ForEach(id => PlayerObjects[id].Update(PlayerObject.Operation.SetWinner, true));
-                pot.Clear();
+                //pot.Clear();
             }
+            ClearPots();
             IsGameRunning = false;
         }
     }
@@ -310,12 +315,14 @@ public class PlayPokerBase : ComponentBase
             if (nextId < 0) break;
             CurrentId = nextId;
             if (PlayerObjects[CurrentId].Stack == 0) continue;
-            bet = await GetBet(CurrentId, AutoPlay);
-            Pots[^1].Update(CurrentId, bet);
+            bet = await GetBet(CurrentId, AutoPlay);            
+            UpdatePot(CurrentId, bet);
             await Task.Delay(CurrentTimeout);
             PlayerObjects[CurrentId].Update(PlayerObject.Operation.SetMessage, string.Empty);
             if (BetsAreSame()) break;
         }
+
+        //UpdatePots();
         PlayerObjects.ToList().ForEach(p => Clear(p));
 
         async Task<int> GetBet(int id, bool autoPlay)
@@ -406,9 +413,7 @@ public class PlayPokerBase : ComponentBase
             list.Add(card);
         }
         return list;
-    }
-
-    //List<Card> ListOfBoardCards => BoardCards.Where(c => c != null).Select(c => new Card(c)).ToList();
+    }    
 
     int GetNextPlayerId(int prevId)
     {
@@ -428,9 +433,9 @@ public class PlayPokerBase : ComponentBase
     bool BetsAreSame() 
     {
         if(PlayerObjects.Any(o => o.State == null)) return false;
-        List<PlayerObject> players = PlayerObjects.Where(o => o.State == true).ToList();
-        if (players.Count < 2) return true;
-        List<PlayerObject> list = players.Where(p => p.Bet < MaxBet).ToList();
+        //List<PlayerObject> players = PlayerObjects.Where(o => o.State == true).ToList();
+        if (ActivePlayers.Count < 2) return true;
+        List<PlayerObject> list = ActivePlayers.Where(p => p.Bet < MaxBet).ToList();
         if (!list.Any()) return true;
         if (list.All(l => l.Stack == 0)) return true;
         return false;
@@ -438,8 +443,7 @@ public class PlayPokerBase : ComponentBase
 
     void PlayerObject_Changed(object? sender, EventArgs e)
     {
-        PlayerObject? playerObject = sender as PlayerObject;
-        if (playerObject == null) return;
+        if (sender is not PlayerObject) return;
         StateHasChanged();
     }
 
@@ -449,14 +453,25 @@ public class PlayPokerBase : ComponentBase
         Pots[^1].Changed += Pot_Changed;
     }
 
+    void ClearPots()
+    {
+        Pots.ForEach(p => Clear(p));
+        Pots.Clear();
+
+        void Clear(Pot pot)
+        {
+            pot.Changed -= Pot_Changed;
+            pot.Clear();
+        }
+    }
+
     void BoardCards_Changed() => StateHasChanged();
     public void Pot_Changed(object? sender, EventArgs e) => StateHasChanged();
     void IsMyAction_Changed() => StateHasChanged();
     public void Checkbox_Changed(ChangeEventArgs e) => AutoPlay = Convert.ToBoolean(e.Value);
     public void MyBet_Changed(ChangeEventArgs e) 
-    {        
-        int number;
-        bool success = int.TryParse(e?.Value?.ToString(), out number);
+    {
+        bool success = int.TryParse(e?.Value?.ToString(), out int number);
         MyBet = success ? number : 0;
     }
     void MyBet_Changed() => StateHasChanged();
@@ -470,12 +485,43 @@ public class PlayPokerBase : ComponentBase
         Console.WriteLine(value);
     }
 
-    public async void TestAllIn()
+    void UpdatePot(int id, int value)
     {
+        if(value == 0) return;
+        Pots[^1].Update(id, value);
+    }
+
+    void UpdatePots()
+    {
+        Pot pot = new();
+        Pots.ForEach(p => pot.Update(p.PotValues));
+        ClearPots();
+        while (pot.PotValues.Any(p => p.Value > 0))
+        {
+            int minValue = pot.PotValues.Where(p => p.Value > 0).Min(x => x.Value);
+            AddPot();
+            foreach (KeyValuePair<int, int> kvp in pot.PotValues)
+            {
+                Pots[^1].Update(kvp.Key, minValue);
+                pot.Update(kvp.Key, -1 * minValue);
+            }
+        }
+    }
+
+    public async Task TestAllIn()
+    {
+        AddPot();
+        InitPlayers();
         List<PlayerObject> players = new (ActivePlayers);
         foreach(PlayerObject player in players)
         {
+            player.Update(PlayerObject.Operation.SetStack, 0);
+            player.Update(PlayerObject.Operation.SetStack, (player.Id + 1) * 1000);
             int bet = await player.AllIn();
+            UpdatePot(player.Id, bet);
         }
+        UpdatePots();
+        StateHasChanged();
+        await Task.Delay(CurrentTimeout);
     }
 }

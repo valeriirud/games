@@ -1,7 +1,5 @@
 ﻿
 using Games.Tools;
-using Microsoft.VisualBasic;
-using System;
 using static Games.Tools.Definitions;
 
 namespace Games.Model;
@@ -133,8 +131,7 @@ public class PlayerObject
 
     int _changeBet;
 
-    public bool IsActive => State ?? true;
-    public bool IsAllIn => State ?? true && Bet > 0 && Stack == 0;
+    public bool IsActive => State ?? true;    
 
     public enum Operation
     {

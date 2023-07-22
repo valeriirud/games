@@ -8,18 +8,30 @@ public class Pot
 
     public event EventHandler? Changed;
 
-    List<PotValue> _potValues = new ();
+    readonly Dictionary<int, int> _potValues = new ();
+
+    public Dictionary<int, int> PotValues { get => _potValues; }
 
     public void Update(int id, int value) 
     {
-        _potValues.Add(new(id, value));
+        if(! _potValues.ContainsKey(id))
+            _potValues[id] = 0;
+        _potValues[id] += value;
         Changed?.Invoke(this, EventArgs.Empty);
     }
-    
+
+    public void Update(Dictionary<int, int> dict)
+    {
+        foreach(KeyValuePair<int, int> kvp in dict)
+        {
+            Update(kvp.Key, kvp.Value);
+        }
+    }
+
     public void Clear() => _potValues.Clear();
 
-    public List<int> GetIds(List<int> ids) => _potValues
-        .Where(v => ids.Any(i => i == v.Id)).Select(v => v.Id).ToList();
+    public List<int> GetIds(List<int> ids) => _potValues.Keys
+        .Where(v => ids.Any(i => i == v)).Select(v => v).ToList();
     
 
 }
