@@ -30,10 +30,12 @@ button[b-8fed6eoea8] {
 }
 
 /* /Components/PlayerPerson.razor.rz.scp.css */
-
+*[b-fz54jpyrm6] {
+    margin: 0px;
+    padding: 0px;
+}
 .player[b-fz54jpyrm6] {
     width: 6vw;
-    height: 19vh;
 }
 
 div[b-fz54jpyrm6] {
