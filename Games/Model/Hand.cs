@@ -360,14 +360,14 @@ public class Hand
     public static List<int> GetWinnersIds(List<string> listCards)
     {
         List<Hand> hands = new();
-        //listCards.ForEach(i => Console.WriteLine($"Hand:{i}"));
+        listCards.ForEach(i => Console.WriteLine($"Hand:{i}"));
         listCards.ForEach(i => hands.Add(new(GetCardsFromDescriptionString(i))));
         List<Hand> bestHands = GetBestHands(hands);
-        //bestHands.ForEach(h => Console.WriteLine($"Best hand:{ToString(h.Cards, true)}"));
+        bestHands.ForEach(h => Console.WriteLine($"Best hand:{ToString(h.Cards, true)}"));
         List<int> bestPositions = GetBestPositions(bestHands);
         List<int> positions = new();
         bestPositions.ForEach(p => positions.Add(listCards.IndexOf(ToString(bestHands[p].Cards, true))));
-        //.ForEach(p => Console.WriteLine($"Best position:{p}"));        
+        bestPositions.ForEach(p => Console.WriteLine($"Best position:{p}"));        
         return positions;
     }
 
@@ -452,9 +452,9 @@ public class Hand
         if (cmp != 0 
             || (hand1.Cards.Count == NumberOfMyCards && hand2.Cards.Count == NumberOfMyCards)) return cmp;
         List<Card> sorted1 = new (hand1.MyCards);
-        sorted1.Sort(Card.Compare);
+        sorted1.Sort(Card.CompareDesc);
         List<Card> sorted2 = new (hand2.MyCards);
-        sorted2.Sort(Card.Compare);
+        sorted2.Sort(Card.CompareDesc);
         Hand myHand1 = new(sorted1);
         Hand myHand2 = new(sorted2);
         return Compare(myHand1, myHand2);

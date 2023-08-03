@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Games.Model;
 using Games.Tools;
 using static Games.Tools.Definitions;
-using System.Collections.Generic;
-using System.Transactions;
+
 
 namespace Games.Pages;
 
@@ -12,7 +11,7 @@ public class PlayPokerBase : ComponentBase
 {
     int _pos;
     int _dealerId;
-    readonly static int _myId = 4;
+    static int _myId = 4;
     readonly static int _bigBlind = 10;
     readonly static int _smallBlind = _bigBlind / 2;
     readonly List<Card> _cardDeck = new();
@@ -59,6 +58,17 @@ public class PlayPokerBase : ComponentBase
         }
     }
 
+    int _currentTableMax = Definitions.TableMax;
+    public int CurrentTableMax
+    {
+        get => _currentTableMax;
+        set
+        {
+            _currentTableMax = value;
+            ResetTableMax(_currentTableMax);
+        }
+    }
+
     int _currentId;
     public int CurrentId
     {
@@ -82,12 +92,19 @@ public class PlayPokerBase : ComponentBase
     }
 
     public string BetTitle => MyBet < PlayerObjects[_myId].Stack ? $"Bet {MyBet}" : "All-In";
+
     public bool MyBetNotCorrect => MyBet + PlayerObjects[_myId].Bet < MaxBet 
         || MyBet > PlayerObjects[_myId].Stack;
+
     public bool CheckNotAllowed => ActivePlayers.Any(p => p.Bet > 0);
-    List<PlayerObject> ActivePlayers => PlayerObjects.Where(p => p.IsActive == true).ToList();            
+
+    List<PlayerObject> ActivePlayers => 
+        PlayerObjects.Where(p => p.IsActive == true && p.IsVisible == true).ToList();   
+    
     List<int> ActivePlayersIds => ActivePlayers.Select(p => p.Id).OrderBy(i => i).ToList();
+
     int MaxBet => PlayerObjects.MaxBy(p => p.Bet)?.Bet ?? 0;
+
     int NumberOfActivePlayers => ActivePlayers.Count;
 
     protected override async Task OnInitializedAsync()
@@ -151,9 +168,12 @@ public class PlayPokerBase : ComponentBase
     public async Task NewGame()
     {
         //List<string> cards = new List<string>() { "2♣Q♠2♦J♦2♠10♣A♠", "Q♥2♥2♦J♦2♠10♣A♠" };
+        //List<string> cards = new List<string>() { "8♠A♦3♦6♠7♠6♣4♥", "10♦9♦3♦6♠7♠6♣4♥" };
         //List<int> ids = await TestWinners(cards);
 
         //await TestAllIn();
+
+        //await TestNetwork();
 
         if (IsGameRunning) return;
         await StartGame();
@@ -277,8 +297,7 @@ public class PlayPokerBase : ComponentBase
         Pots[^1].Update(bigBlindId, _bigBlind);
         await Task.Delay(CurrentTimeout);
 
-        PlayerObjects.ToList()
-            .ForEach(p => p.Update(PlayerObject.Operation.SetCards, GetCards()));
+        ActivePlayers.ForEach(p => p.Update(PlayerObject.Operation.SetCards, GetCards()));
         await Task.Delay(CurrentTimeout);
 
         await GameStage(0, bigBlindId);
@@ -413,7 +432,7 @@ public class PlayPokerBase : ComponentBase
             list.Add(card);
         }
         return list;
-    }    
+    }
 
     int GetNextPlayerId(int prevId)
     {
@@ -425,21 +444,22 @@ public class PlayPokerBase : ComponentBase
             {
                 id = 0;
             }
-            if (PlayerObjects[id].IsActive) break;
+            //if (PlayerObjects[id].IsActive) break;
+            if (ActivePlayers.Any(p => p.Id == id)) break;
         }
         return id;
     }
 
     bool BetsAreSame() 
     {
-        if(PlayerObjects.Any(o => o.State == null)) return false;
+        if(PlayerObjects.Where(p => p.IsVisible).Any(o => o.State == null)) return false;
         //List<PlayerObject> players = PlayerObjects.Where(o => o.State == true).ToList();
         if (ActivePlayers.Count < 2) return true;
         List<PlayerObject> list = ActivePlayers.Where(p => p.Bet < MaxBet).ToList();
         if (!list.Any()) return true;
         if (list.All(l => l.Stack == 0)) return true;
         return false;
-    }    
+    }
 
     void PlayerObject_Changed(object? sender, EventArgs e)
     {
@@ -465,24 +485,31 @@ public class PlayPokerBase : ComponentBase
         }
     }
 
-    void BoardCards_Changed() => StateHasChanged();
-    public void Pot_Changed(object? sender, EventArgs e) => StateHasChanged();
     void IsMyAction_Changed() => StateHasChanged();
+
+    void BoardCards_Changed() => StateHasChanged();
+
+    public void Pot_Changed(object? sender, EventArgs e) => StateHasChanged();
+    
     public void Checkbox_Changed(ChangeEventArgs e) => AutoPlay = Convert.ToBoolean(e.Value);
+
     public void MyBet_Changed(ChangeEventArgs e) 
     {
         bool success = int.TryParse(e?.Value?.ToString(), out int number);
         MyBet = success ? number : 0;
     }
+
     void MyBet_Changed() => StateHasChanged();
 
     void IsGameRunning_Changed() => StateHasChanged();
 
     public void Timeout_Selected(string value) => CurrentTimeout = Convert.ToInt32(value);
-    
+
     public void TableMax_Selected(string value)
     {
-        Console.WriteLine(value);
+        string[] values = value.Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+        if (!values.Any()) return;
+        CurrentTableMax = Convert.ToInt32(values[0]);
     }
 
     void UpdatePot(int id, int value)
@@ -508,6 +535,43 @@ public class PlayPokerBase : ComponentBase
         }
     }
 
+    void ResetTableMax(int currentTableMax)
+    {
+        int tableMax = currentTableMax;
+        if (tableMax < 2 || tableMax > 9)
+        {
+            tableMax = TableMax;
+        }
+        SetPlayersVisibility(tableMax);
+
+        void SetPlayersVisibility(int playersCount)
+        {
+            _myId = 4;
+            SetAllVisible();
+            List<int> invisible = new();
+            switch (playersCount)
+            {
+                case 2:
+                    invisible = new() { 0, 1, 2, 3, 5, 6, 7 };                    
+                    break;
+                case 3:
+                    invisible = new() { 1, 2, 3, 5, 6, 7 };
+                    break;
+                case 6:
+                    invisible = new() { 2, 4, 6 };
+                    _myId = 5;
+                    break;
+                default:                    
+                    break;
+            }
+            PlayerObjects.ToList().Where(p => invisible.Any(i => i == p.Id)).ToList()
+                        .ForEach(o => o.Update(PlayerObject.Operation.SetVisible, false));
+        }
+
+        void SetAllVisible() => 
+            PlayerObjects.ToList().ForEach(p => p.Update(PlayerObject.Operation.SetVisible, true));
+    }
+
     public async Task TestAllIn()
     {
         AddPot();
@@ -523,5 +587,10 @@ public class PlayPokerBase : ComponentBase
         UpdatePots();
         StateHasChanged();
         await Task.Delay(CurrentTimeout);
+    }
+
+    public async Task TestNetwork()
+    {
+        string content = await GameNetwork.GetValue("player", 0);
     }
 }

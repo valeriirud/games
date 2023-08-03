@@ -1,7 +1,9 @@
-﻿
+﻿* {
+    margin: 0px;
+    padding: 0px;
+}
 .player {
     width: 6vw;
-    height: 19vh;
 }
 
 div {

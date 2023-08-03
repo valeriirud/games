@@ -11,6 +11,8 @@ public class PlayerObject
     readonly string _name;
     public string Name { get; private set; }
 
+    public string EmptyCards { get; } = "**";
+
     bool _showData;
     public bool ShowData 
     { 
@@ -86,6 +88,17 @@ public class PlayerObject
         }
     }
 
+    bool _isVisible;
+    public bool IsVisible
+    {
+        get => _isVisible;
+        set
+        {
+            _isVisible = value;
+            Changed.Invoke(this, new EventArgs());
+        }
+    }
+
     // true - place bet, false - fold, null - do not place bet 
     bool? _state;
     public bool? State 
@@ -146,7 +159,8 @@ public class PlayerObject
         SetThinks = 9,
         SetWinner = 10,
         SetState = 11,
-        SetShowData = 12
+        SetShowData = 12,
+        SetVisible = 13
     }
 
     public PlayerObject(int id, string name, int stack = 0)
@@ -155,20 +169,21 @@ public class PlayerObject
         _name = name;
         Name = _name;
         _message = Name;
-        _cards = string.Empty;
+        _cards = EmptyCards;
         _isDealer = false;
         _state = null;
         _stack = stack;
         _bet = 0;
         _isThinks = false;
         _showData = true;
+        _isVisible = true;
         Action = PlayerAction.None;
     }
 
     public void Clear(bool stack = false)
     {
         Message = Name;
-        Cards = string.Empty;
+        Cards = EmptyCards;
         IsDealer = false;
         State = null;
         Bet = 0;
@@ -219,6 +234,9 @@ public class PlayerObject
                 break;
             case Operation.SetShowData:
                 SetShowData(value);
+                break;
+            case Operation.SetVisible:
+                SetVisible(value);
                 break;
             default: break;
         }
@@ -281,8 +299,8 @@ public class PlayerObject
     }
 
     void SetWinner(object value) => IsWinner = Convert.ToBoolean(value);
-
     void SetShowData(object value) => ShowData = Convert.ToBoolean(value);
+    void SetVisible(object value) => IsVisible = Convert.ToBoolean(value);
 
     public int GetOdds(string commonCards, int numberOfPlayers)
     {        
