@@ -119,6 +119,81 @@ public class PlayPokerBase : ComponentBase
         await Task.Delay(CurrentTimeout);
     }
 
+    public async Task NewGame()
+    {
+        //List<string> cards = new List<string>() { "2♣Q♠2♦J♦2♠10♣A♠", "Q♥2♥2♦J♦2♠10♣A♠" };
+        //List<string> cards = new List<string>() { "8♠A♦3♦6♠7♠6♣4♥", "10♦9♦3♦6♠7♠6♣4♥" };
+        //List<int> ids = await TestWinners(cards);
+
+        //await TestAllIn();
+
+        //await TestNetwork();
+
+        if (IsGameRunning) return;
+        await StartGame();
+    }
+
+    async Task StartGame()
+    {
+        IsGameRunning = true;
+        Pots.Clear();
+        AddPot();
+
+        ClearBoardCards();
+        InitPlayers();
+        ClearWinners();
+        await DealerSelection();
+        await Task.Delay(CurrentTimeout * 2);
+        _randomList = CommonTools.GetRandomList();
+        _pos = 0;
+        ShowData(AutoPlay);
+        await Task.Delay(CurrentTimeout);
+        await Preflop();
+        await Task.Delay(CurrentTimeout);
+        if (NumberOfActivePlayers == 1)
+        {
+            Finish(ActivePlayersIds);
+            return;
+        }
+        await Flop();
+        await Task.Delay(CurrentTimeout);
+        if (NumberOfActivePlayers == 1)
+        {
+            Finish(ActivePlayersIds);
+            return;
+        }
+        await Turn();
+        await Task.Delay(CurrentTimeout);
+        if (NumberOfActivePlayers == 1)
+        {
+            Finish(ActivePlayersIds);
+            return;
+        }
+        await River();
+        await Task.Delay(CurrentTimeout);
+        if (NumberOfActivePlayers == 1)
+        {
+            Finish(ActivePlayersIds);
+            return;
+        }
+        List<int> ids = await Shutdown();
+        Finish(ids);
+
+        void Finish(List<int> allIds)
+        {
+            ShowData(true);
+            foreach (Pot pot in Pots)
+            {
+                List<int> ids = pot.GetIds(allIds);
+                ids.ForEach(id => PlayerObjects[id].Update(PlayerObject.Operation.SetStack, pot.Value / ids.Count));
+                ids.ForEach(id => PlayerObjects[id].Update(PlayerObject.Operation.SetWinner, true));
+                //pot.Clear();
+            }
+            ClearPots();
+            IsGameRunning = false;
+        }
+    }
+
     async Task<int> MyAction()
     {
         PlayerObjects[_myId].Update(PlayerObject.Operation.SetThinks, true);
@@ -163,82 +238,7 @@ public class PlayPokerBase : ComponentBase
         _ = await PlayerObjects[_myId].ChangeBet(MyBet, action, true);
         PlayerObjects[_myId].Update(PlayerObject.Operation.SetThinks, false);
         await Task.Delay(CurrentTimeout);
-    }
-
-    public async Task NewGame()
-    {
-        //List<string> cards = new List<string>() { "2♣Q♠2♦J♦2♠10♣A♠", "Q♥2♥2♦J♦2♠10♣A♠" };
-        //List<string> cards = new List<string>() { "8♠A♦3♦6♠7♠6♣4♥", "10♦9♦3♦6♠7♠6♣4♥" };
-        //List<int> ids = await TestWinners(cards);
-
-        //await TestAllIn();
-
-        //await TestNetwork();
-
-        if (IsGameRunning) return;
-        await StartGame();
-    }
-
-    async Task StartGame()
-    {
-        IsGameRunning = true;
-        Pots.Clear();
-        AddPot();
-        
-        ClearBoardCards();
-        InitPlayers();
-        ClearWinners();
-        await DealerSelection();
-        await Task.Delay(CurrentTimeout * 2);
-        _randomList = CommonTools.GetRandomList();
-        _pos = 0;
-        ShowData(AutoPlay);
-        await Task.Delay(CurrentTimeout);
-        await Preflop();
-        await Task.Delay(CurrentTimeout);        
-        if(NumberOfActivePlayers == 1)
-        {
-            Finish(ActivePlayersIds);
-            return;
-        }
-        await Flop();
-        await Task.Delay(CurrentTimeout);        
-        if (NumberOfActivePlayers == 1)
-        {
-            Finish(ActivePlayersIds);
-            return;
-        }
-        await Turn();
-        await Task.Delay(CurrentTimeout);
-        if (NumberOfActivePlayers == 1)
-        {
-            Finish(ActivePlayersIds);
-            return;
-        }
-        await River();
-        await Task.Delay(CurrentTimeout);        
-        if (NumberOfActivePlayers == 1)
-        {
-            Finish(ActivePlayersIds);
-            return;
-        }
-        List<int> ids = await Shutdown();
-        Finish(ids);
-
-        void Finish(List<int> allIds)
-        {
-            ShowData(true);
-            foreach (Pot pot in Pots)
-            {
-                List<int> ids = pot.GetIds(allIds);
-                ids.ForEach(id => PlayerObjects[id].Update(PlayerObject.Operation.SetStack, pot.Value / ids.Count));
-                ids.ForEach(id => PlayerObjects[id].Update(PlayerObject.Operation.SetWinner, true));
-                //pot.Clear();
-            }
-            ClearPots();
-            IsGameRunning = false;
-        }
-    }
+    }   
 
     void ShowData(bool show) => PlayerObjects.Where(p => p.Id != _myId).ToList()
             .ForEach(p => p.Update(PlayerObject.Operation.SetShowData, show));    
