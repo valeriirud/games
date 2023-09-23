@@ -94,7 +94,8 @@ public class PlayPokerBase : ComponentBase
     public string BetTitle => MyBet < PlayerObjects[_myId].Stack ? $"Bet {MyBet}" : "All-In";
 
     public bool MyBetNotCorrect => MyBet + PlayerObjects[_myId].Bet < MaxBet 
-        || MyBet > PlayerObjects[_myId].Stack;
+        || MyBet > PlayerObjects[_myId].Stack || (_dealerId != _myId - 1 && MyBet < _bigBlind) 
+        || (_dealerId == _myId - 1 && (MyBet < _bigBlind && MyBet != _smallBlind));
 
     public bool CheckNotAllowed => ActivePlayers.Any(p => p.Bet > 0);
 
