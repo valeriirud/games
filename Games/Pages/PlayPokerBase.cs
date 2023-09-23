@@ -97,7 +97,8 @@ public class PlayPokerBase : ComponentBase
         || MyBet > PlayerObjects[_myId].Stack || (_dealerId != _myId - 1 && MyBet < _bigBlind) 
         || (_dealerId == _myId - 1 && (MyBet < _bigBlind && MyBet != _smallBlind));
 
-    public bool CheckNotAllowed => ActivePlayers.Any(p => p.Bet > 0);
+    //public bool CheckNotAllowed => ActivePlayers.Any(p => p.Bet > 0);
+    public bool CheckNotAllowed => ActivePlayers.Any(p => p.Bet != MaxBet);
 
     List<PlayerObject> ActivePlayers => 
         PlayerObjects.Where(p => p.IsActive == true && p.IsVisible == true).ToList();   
@@ -182,6 +183,7 @@ public class PlayPokerBase : ComponentBase
 
         void Finish(List<int> allIds)
         {
+            IsMyAction = false;
             ShowData(true);
             foreach (Pot pot in Pots)
             {
