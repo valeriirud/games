@@ -21,17 +21,17 @@ public class PlayPokerBase : ComponentBase
     public Card?[] BoardCards { get; } = new Card[NumberOfCommunityCards];
 
     bool _isGameRunning = false;
-    public bool IsGameRunning 
-    { 
-        get => _isGameRunning; 
+    public bool IsGameRunning
+    {
+        get => _isGameRunning;
         set
         {
             _isGameRunning = value;
             IsGameRunning_Changed();
         }
     }
-    
-    public bool AutoPlay { get; set; } = true;    
+
+    public bool AutoPlay { get; set; } = true;
 
     bool _isMyAction;
     public bool IsMyAction
@@ -49,7 +49,7 @@ public class PlayPokerBase : ComponentBase
     {
         get => _currentTimeout;
         set
-        {            
+        {
             _currentTimeout = value;
             if (_currentTimeout < 200 || _currentTimeout > 5000)
             {
@@ -58,7 +58,7 @@ public class PlayPokerBase : ComponentBase
         }
     }
 
-    int _currentTableMax = Definitions.TableMax;
+    int _currentTableMax = TableMax;
     public int CurrentTableMax
     {
         get => _currentTableMax;
@@ -84,21 +84,32 @@ public class PlayPokerBase : ComponentBase
     public int MyBet
     {
         get => _myBet;
-        set 
-        { 
+        set
+        {
             _myBet = value;
             MyBet_Changed();
-        }            
+        }
     }
 
     public string BetTitle => MyBet < PlayerObjects[_myId].Stack ? $"Bet {MyBet}" : "All-In";
 
-    public bool MyBetNotCorrect => MyBet + PlayerObjects[_myId].Bet < MaxBet 
-        || MyBet > PlayerObjects[_myId].Stack || (_dealerId != _myId - 1 && MyBet < _bigBlind) 
-        || (_dealerId == _myId - 1 && (MyBet < _bigBlind && MyBet != _smallBlind));
+    public bool MyBetNotCorrect
+    {
+        get
+        {             
+            //Console.WriteLine($"MyId:{_myId} DealerId:{_dealerId} MyBet:{MyBet} " +
+            //    $"Bet:{PlayerObjects[_myId].Bet} MaxBet:{MaxBet}");
+            return MyBet + PlayerObjects[_myId].Bet < MaxBet
+        || MyBet > PlayerObjects[_myId].Stack || (_myId != SmallBlindId && MyBet < _bigBlind)
+        || (_myId == SmallBlindId && (MyBet < _bigBlind && MyBet != _smallBlind));
+        }
+    }
 
     //public bool CheckNotAllowed => ActivePlayers.Any(p => p.Bet > 0);
     public bool CheckNotAllowed => ActivePlayers.Any(p => p.Bet != MaxBet);
+
+    public int SmallBlindId => GetNextPlayerId(_dealerId);
+    public int BigBlindId => GetNextPlayerId(SmallBlindId);
 
     List<PlayerObject> ActivePlayers => 
         PlayerObjects.Where(p => p.IsActive == true && p.IsVisible == true).ToList();   
@@ -213,6 +224,7 @@ public class PlayPokerBase : ComponentBase
 
     public async Task Fold()
     {
+        IsMyAction = false;
         PlayerObjects[_myId].Fold();
         PlayerObjects[_myId].Update(PlayerObject.Operation.SetThinks, false);        
         await Task.Delay(CurrentTimeout);
@@ -220,6 +232,7 @@ public class PlayPokerBase : ComponentBase
 
     public async Task Check()
     {
+        IsMyAction = false;
         PlayerObjects[_myId].Update(PlayerObject.Operation.SetState, true);
         await PlayerObjects[_myId].ChangeBet(0, PlayerAction.Check, true);
         PlayerObjects[_myId].Update(PlayerObject.Operation.SetThinks, false);        
@@ -228,6 +241,9 @@ public class PlayPokerBase : ComponentBase
 
     public async Task Bet()
     {
+        //if (! PlayerObjects[_myId].IsThinks) return;
+        if (!IsMyAction) return;
+        IsMyAction = false;
         PlayerObjects[_myId].Update(PlayerObject.Operation.SetState, true);
         PlayerAction action = PlayerAction.Call;
         if(MyBet > MaxBet)

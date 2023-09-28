@@ -245,10 +245,8 @@ public class PlayerObject
     void SetMessage(object value)
     {
         Message = value as string ?? string.Empty;
-        if(string.IsNullOrEmpty(_message))
-        {
-            Message = (State ?? true) ? Name : PlayerAction.Fold.Description();
-        }
+        if (!string.IsNullOrEmpty(_message)) return;
+        Message = (State ?? true) ? Name : PlayerAction.Fold.Description();        
     }
     void SetName(object value) 
     {
@@ -291,11 +289,9 @@ public class PlayerObject
     {
         bool state = Convert.ToBoolean(value);
         IsThinks = state;
-        if (IsThinks)
-        {
-            Action = PlayerAction.Thinks;
-            Message = Action.Description();
-        }
+        if (!IsThinks) return;
+        Action = PlayerAction.Thinks;
+        Message = Action.Description();        
     }
 
     void SetWinner(object value) => IsWinner = Convert.ToBoolean(value);
@@ -304,8 +300,7 @@ public class PlayerObject
 
     public int GetOdds(string commonCards, int numberOfPlayers)
     {        
-        WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", 
-            numberOfPlayers);
+        WinInfo winInfo = Hand.GetProbabilityOfWinningByMonteCarlo($"{Cards}{commonCards}", numberOfPlayers);
         return winInfo.Probability;
     }
 
@@ -320,7 +315,6 @@ public class PlayerObject
         Odds = winInfo.Probability;
         int stackOdds = GetPercent(maxBet, Stack) + 1;
         int potOdds = GetPercent(maxBet, pot) + 1;
-
         int multiplier = Odds / 10;
         if(multiplier > 0)
         {
@@ -336,10 +330,7 @@ public class PlayerObject
             if (maxBet - Bet > bigBlind * 3) return Fold();
             bet = maxBet - Bet;
         }
-        if (Bet + bet < maxBet)
-        {
-            return Fold();
-        }
+        if (Bet + bet < maxBet && Odds < 90) return Fold();        
         if (Bet + bet < maxBet + bigBlind*2 || Bet >= Stack)
         {
             bet = maxBet - Bet;
